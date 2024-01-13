@@ -12,14 +12,3 @@ main {
   width: 800px;
   overflow: hidden;
 }
-
-.circle{
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 25px;
-  width: 25px;
-  border-radius: 50%;
-  cursor: pointer;
-  background-color: black;
-}

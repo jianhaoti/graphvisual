@@ -14,10 +14,11 @@ const Graph = () => {
 
   // Lclick container: Node creation & selection
   const handleContainerClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    const containerRect = e.currentTarget.getBoundingClientRect();
     const newNode = {
       id: `node-${Date.now()}`, // Example ID, ensure it's unique
-      x: e.clientX,
-      y: e.clientY
+      x: e.clientX - containerRect.left,
+      y: e.clientY - containerRect.top
     };
     
     setNodes(prevNodes => [...prevNodes, newNode]);

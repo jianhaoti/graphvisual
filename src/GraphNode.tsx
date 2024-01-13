@@ -24,7 +24,7 @@ const Node: React.FC<NodeProps> = ({node, isSelected, onClick, onContextMenu }) 
       ref={nodeRef}
       cx={node.x}
       cy={node.y}
-      r={10}
+      r={5}
       fill={useSelect(node.id, 'darkred') ? 'darkred' : 'black'}
       onClick={() => onClick(node.id)}
       onContextMenu={e => onContextMenu(e, node.id)}
