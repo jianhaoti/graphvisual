@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from "react";
 
-function useDraggerSVG(id: string, ref: React.RefObject<SVGElement>, setIsDragging: React.Dispatch<React.SetStateAction<boolean>>) {
+function useDraggerSVG(id: string, ref: React.RefObject<SVGElement>) {
     const isClicked = useRef(false);
     const coords = useRef({
         startX: 0,
@@ -24,12 +24,10 @@ function useDraggerSVG(id: string, ref: React.RefObject<SVGElement>, setIsDraggi
 
         const onMouseUp = () => {
             isClicked.current = false;
-            setIsDragging(false); // Drag state reset
         };
 
         const onMouseMove = (e: MouseEvent) => {
             if (!isClicked.current || !target) return;
-            setIsDragging(true); // Drag state activated
 
             const dx = e.clientX - coords.current.startX;
             const dy = e.clientY - coords.current.startY;
@@ -55,7 +53,7 @@ function useDraggerSVG(id: string, ref: React.RefObject<SVGElement>, setIsDraggi
             window.removeEventListener('mouseup', onMouseUp);
             window.removeEventListener('mousemove', onMouseMove);
         };
-    }, [id, ref, setIsDragging]); // Depend on 'ref' so hook updates if element changes
+    }, [id, ref]); // Depend on 'ref' so hook updates if element changes
 }
 
 export default useDraggerSVG;

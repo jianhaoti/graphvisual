@@ -56,7 +56,6 @@ const Graph = () => {
           isSelected={node.id === selectedNode}
           onClick={() => setSelectedNode(node.id)}
           onContextMenu={e => handleNodeContextMenu(e, node.id)}
-          setIsDragging={setIsDragging}
         />
         ))}
       </svg>
