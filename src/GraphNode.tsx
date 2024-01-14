@@ -1,7 +1,5 @@
 // GraphNode.tsx
 import React, { useRef } from 'react';
-import useDraggerSVG from './useDraggerSVG';
-import useSelect from './useSelect';
 
 interface NodeProps {
   node: {
@@ -17,7 +15,7 @@ interface NodeProps {
 const Node: React.FC<NodeProps> = ({node, isSelected, onClick, onContextMenu }) => {
   const nodeRef = useRef<SVGCircleElement | null>(null);
   // Call useDragger hook to enable dragging for the node element
-  useDraggerSVG(node.id, nodeRef);
+  //useDraggerSVG(node.id, nodeRef);
   
   return (
     <circle
@@ -25,7 +23,7 @@ const Node: React.FC<NodeProps> = ({node, isSelected, onClick, onContextMenu }) 
       cx={node.x}
       cy={node.y}
       r={5}
-      fill={useSelect(node.id, 'darkred') ? 'darkred' : 'black'}
+      fill={isSelected ? 'darkred' : 'black'}
       onClick={() => onClick(node.id)}
       onContextMenu={e => onContextMenu(e, node.id)}
       style={{ cursor: 'grab' }} // Set the cursor style for better UX

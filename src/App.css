@@ -4,8 +4,7 @@ main {
   width: 100vw;
   place-items: center;
 }
-
-.container{
+.container {
   position: relative;
   border: 1px solid black;
   height: 800px;

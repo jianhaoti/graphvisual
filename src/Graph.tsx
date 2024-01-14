@@ -44,7 +44,8 @@ const Graph = () => {
       onContextMenu={handleContainerContextMenu}
       onClick={handleContainerClick}
     >
-      {nodes.map(node => (
+      <svg width ="100" height = "100">
+        {nodes.map(node => (
         <Node
           key={node.id}
           node={node}
@@ -52,7 +53,8 @@ const Graph = () => {
           onClick={() => setSelectedNode(node.id)}
           onContextMenu={e => handleNodeContextMenu(e, node.id)}
         />
-      ))}
+        ))}
+      </svg>
     </div>
   );
 };
