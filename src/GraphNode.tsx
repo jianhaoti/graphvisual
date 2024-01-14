@@ -19,7 +19,7 @@ const Node: React.FC<NodeProps> = ({node, isSelected, onClick, onContextMenu }) 
   useDraggerSVG(node.id, nodeRef);
   
   return (
-    <circle
+    <circle className="graph-node" 
       key = {node.id}
       ref={nodeRef} 
       cx={node.x}
@@ -29,6 +29,7 @@ const Node: React.FC<NodeProps> = ({node, isSelected, onClick, onContextMenu }) 
       onClick={() => onClick(node.id)}
       onContextMenu={e => onContextMenu(e, node.id)}
       style={{ cursor: 'grab' }} // Set the cursor style for better UX
+      
     />
   );
 };

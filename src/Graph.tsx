@@ -21,6 +21,8 @@ const Graph = () => {
 
   // Lclick container: Node creation & selection
   const handleMouseUp = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (e.target && (e.target as Element).classList.contains('graph-node')) return;
+    
     if (e.button === 0){ 
         const clickDuration = new Date().getTime() - (clickStartTime.current || new Date().getTime());
 
