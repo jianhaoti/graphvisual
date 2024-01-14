@@ -1,5 +1,5 @@
 // Graph.tsx
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import Node from './GraphNode';
 
 interface Node {
@@ -11,11 +11,17 @@ interface Node {
 const Graph = () => {
   const [nodes, setNodes] = useState<Node[]>([]); // Node list
   const [selectedNode, setSelectedNode] = useState<string | null>(null); // ID which node is selected
-  const [isDragging, setIsDragging] = useState(false);
+  const clickStartTime = useRef<number | null>(null);
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    clickStartTime.current = new Date().getTime();
+  };
 
   // Lclick container: Node creation & selection
-  const handleContainerClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if(!isDragging){
+  const handleMouseUp = (e: React.MouseEvent<HTMLDivElement>) => {
+    const clickDuration = new Date().getTime() - (clickStartTime.current || new Date().getTime());
+
+    if(clickDuration < 200){
       const svgRect = e.currentTarget.getBoundingClientRect();
       const newNode = {
         id: `node-${Date.now()}`, // Example ID, ensure it's unique
@@ -26,6 +32,7 @@ const Graph = () => {
       
       setNodes(prevNodes => [...prevNodes, newNode]);
       setSelectedNode(newNode.id);
+      clickStartTime.current = null;
     }
   } 
 
@@ -45,7 +52,8 @@ const Graph = () => {
 
   return (
     <div className = "container" 
-      onClick = {e => handleContainerClick(e)}
+      onMouseDown = {handleMouseDown}
+      onMouseUp = {handleMouseUp}
       onContextMenu = {e => handleContainerContextMenu(e)}
     >
       <svg width ="200" height = "200">
