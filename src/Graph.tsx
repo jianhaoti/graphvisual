@@ -14,25 +14,29 @@ const Graph = () => {
   const clickStartTime = useRef<number | null>(null);
 
   const handleMouseDown = (e: React.MouseEvent) => {
-    clickStartTime.current = new Date().getTime();
+    if (e.button === 0){
+      clickStartTime.current = new Date().getTime()
+    };
   };
 
   // Lclick container: Node creation & selection
   const handleMouseUp = (e: React.MouseEvent<HTMLDivElement>) => {
-    const clickDuration = new Date().getTime() - (clickStartTime.current || new Date().getTime());
+    if (e.button === 0){ 
+        const clickDuration = new Date().getTime() - (clickStartTime.current || new Date().getTime());
 
-    if(clickDuration < 200){
-      const svgRect = e.currentTarget.getBoundingClientRect();
-      const newNode = {
-        id: `node-${Date.now()}`, // Example ID, ensure it's unique
-        x: e.clientX - svgRect.left,
-        y: e.clientY - svgRect.top
-      };
-      console.log("New node id is: ", newNode.id, "at (x,y) = (", newNode.x, newNode.y, ")");
-      
-      setNodes(prevNodes => [...prevNodes, newNode]);
-      setSelectedNode(newNode.id);
-      clickStartTime.current = null;
+      if(clickDuration < 200){
+        const svgRect = e.currentTarget.getBoundingClientRect();
+        const newNode = {
+          id: `node-${Date.now()}`, // Example ID, ensure it's unique
+          x: e.clientX - svgRect.left,
+          y: e.clientY - svgRect.top
+        };
+        console.log("New node id is: ", newNode.id, "at (x,y) = (", newNode.x, newNode.y, ")");
+        
+        setNodes(prevNodes => [...prevNodes, newNode]);
+        setSelectedNode(newNode.id);
+        clickStartTime.current = null;
+      }
     }
   } 
 
