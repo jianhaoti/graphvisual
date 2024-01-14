@@ -11,19 +11,22 @@ interface Node {
 const Graph = () => {
   const [nodes, setNodes] = useState<Node[]>([]); // Node list
   const [selectedNode, setSelectedNode] = useState<string | null>(null); // ID which node is selected
+  const [isDragging, setIsDragging] = useState(false);
 
   // Lclick container: Node creation & selection
   const handleContainerClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    const svgRect = e.currentTarget.getBoundingClientRect();
-    const newNode = {
-      id: `node-${Date.now()}`, // Example ID, ensure it's unique
-      x: e.clientX - svgRect.left,
-      y: e.clientY - svgRect.top
-    };
-    console.log("New node id is: ", newNode.id, "at (x,y) = ", newNode.x, newNode.y);
-    
-    setNodes(prevNodes => [...prevNodes, newNode]);
-    setSelectedNode(newNode.id);
+    if(!isDragging){
+      const svgRect = e.currentTarget.getBoundingClientRect();
+      const newNode = {
+        id: `node-${Date.now()}`, // Example ID, ensure it's unique
+        x: e.clientX - svgRect.left,
+        y: e.clientY - svgRect.top
+      };
+      console.log("New node id is: ", newNode.id, "at (x,y) = (", newNode.x, newNode.y, ")");
+      
+      setNodes(prevNodes => [...prevNodes, newNode]);
+      setSelectedNode(newNode.id);
+    }
   } 
 
   // Rclick container: n/a 
@@ -38,7 +41,6 @@ const Graph = () => {
     
     const updatedNodes = nodes.filter(node => node.id !== nodeId);
     setNodes(updatedNodes);
-    setSelectedNode(null); // Optionally unselect the node if it's deleted
   };
 
   return (
@@ -54,6 +56,7 @@ const Graph = () => {
           isSelected={node.id === selectedNode}
           onClick={() => setSelectedNode(node.id)}
           onContextMenu={e => handleNodeContextMenu(e, node.id)}
+          setIsDragging={setIsDragging}
         />
         ))}
       </svg>

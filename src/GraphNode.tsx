@@ -9,14 +9,15 @@ interface NodeProps {
     y: number;
   };
   isSelected: boolean;
+  setIsDragging: React.Dispatch<React.SetStateAction<boolean>>;  
   onClick: (nodeId: string) => void;
   onContextMenu: (e: React.MouseEvent, nodeId: string) => void;
 }
 
-const Node: React.FC<NodeProps> = ({node, isSelected, onClick, onContextMenu }) => {
+const Node: React.FC<NodeProps> = ({node, isSelected, setIsDragging, onClick, onContextMenu }) => {
   const nodeRef = useRef<SVGCircleElement | null>(null);
   // Call useDragger hook to enable dragging for the node element
-  useDraggerSVG(node.id, nodeRef);
+  useDraggerSVG(node.id, nodeRef, setIsDragging);
   
   return (
     <circle

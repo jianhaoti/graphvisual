@@ -8,11 +8,12 @@ main {
   position: relative;
   border: 1px solid black;
   height: 800px;
-  width: 800px;
   overflow: hidden;
-  width: 100%; /* or any specific size */
-  height: 100vh; /* or any specific size */
+  width: 50vw; /* or any specific size */
+  height: 50vh; /* or any specific size */
   display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .container svg {

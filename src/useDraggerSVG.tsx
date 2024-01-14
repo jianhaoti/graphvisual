@@ -1,13 +1,13 @@
 import React, { useRef, useEffect } from "react";
 
-function useDraggerSVG(id: string, ref: React.RefObject<SVGElement>): void {
+function useDraggerSVG(id: string, ref: React.RefObject<SVGElement>, setIsDragging: React.Dispatch<React.SetStateAction<boolean>>) {
     const isClicked = useRef(false);
     const coords = useRef({
         startX: 0,
         startY: 0,
         lastX: 0,
         lastY: 0
-    });
+    }); 
 
     useEffect(() => {
         if (!ref.current) return;
@@ -17,18 +17,19 @@ function useDraggerSVG(id: string, ref: React.RefObject<SVGElement>): void {
 
         const onMouseDown = (e: MouseEvent) => {
             isClicked.current = true;
+    
             coords.current.startX = e.clientX;
             coords.current.startY = e.clientY;
         };
 
         const onMouseUp = () => {
             isClicked.current = false;
-            // Update lastX and lastY if needed for subsequent drags
-            // This depends on how you want to handle the dragging logic
+            setIsDragging(false); // Drag state reset
         };
 
         const onMouseMove = (e: MouseEvent) => {
             if (!isClicked.current || !target) return;
+            setIsDragging(true); // Drag state activated
 
             const dx = e.clientX - coords.current.startX;
             const dy = e.clientY - coords.current.startY;
@@ -54,7 +55,7 @@ function useDraggerSVG(id: string, ref: React.RefObject<SVGElement>): void {
             window.removeEventListener('mouseup', onMouseUp);
             window.removeEventListener('mousemove', onMouseMove);
         };
-    }, [id, ref]); // Depend on 'ref' so hook updates if element changes
+    }, [id, ref, setIsDragging]); // Depend on 'ref' so hook updates if element changes
 }
 
 export default useDraggerSVG;
