@@ -1,5 +1,6 @@
 // GraphNode.tsx
 import React, { useRef } from 'react';
+import useDraggerSVG from './useDraggerSVG';
 
 interface NodeProps {
   node: {

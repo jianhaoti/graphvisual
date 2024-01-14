@@ -10,4 +10,12 @@ main {
   height: 800px;
   width: 800px;
   overflow: hidden;
+  width: 100%; /* or any specific size */
+  height: 100vh; /* or any specific size */
+  display: flex;
+}
+
+.container svg {
+  width: 100%;
+  height: 100%;
 }
