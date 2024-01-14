@@ -16,14 +16,15 @@ interface NodeProps {
 const Node: React.FC<NodeProps> = ({node, isSelected, onClick, onContextMenu }) => {
   const nodeRef = useRef<SVGCircleElement | null>(null);
   // Call useDragger hook to enable dragging for the node element
-  //useDraggerSVG(node.id, nodeRef);
+  useDraggerSVG(node.id, nodeRef);
   
   return (
     <circle
       key = {node.id}
+      ref={nodeRef} 
       cx={node.x}
       cy={node.y}
-      r={5}
+      r={10}
       fill={isSelected ? 'darkred' : 'black'}
       onClick={() => onClick(node.id)}
       onContextMenu={e => onContextMenu(e, node.id)}

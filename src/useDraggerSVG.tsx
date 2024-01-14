@@ -10,6 +10,8 @@ function useDraggerSVG(id: string, ref: React.RefObject<SVGElement>): void {
     });
 
     useEffect(() => {
+        if (!ref.current) return;
+
         const target = ref.current;
         if (!target) throw new Error("Element with given ref doesn't exist.");
 
