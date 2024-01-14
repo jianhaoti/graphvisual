@@ -1,8 +1,8 @@
 main {
-  display: grid;
-  height: 100vh;
-  width: 100vw;
-  place-items: center;
+    display: grid;
+    height: 100vh;
+    width: 100vw;
+    place-items: center;
 }
 .container {
   position: relative;

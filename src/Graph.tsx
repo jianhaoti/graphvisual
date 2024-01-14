@@ -14,12 +14,12 @@ const Graph = () => {
 
   // Lclick container: Node creation & selection
   const handleContainerClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    const containerRect = e.currentTarget.getBoundingClientRect();
     const newNode = {
       id: `node-${Date.now()}`, // Example ID, ensure it's unique
-      x: e.clientX - containerRect.left,
-      y: e.clientY - containerRect.top
+      x: e.clientX,
+      y: e.clientY
     };
+    console.log("New node id is: ", newNode.id, "at (x,y) = ", newNode.x, newNode.y);
     
     setNodes(prevNodes => [...prevNodes, newNode]);
     setSelectedNode(newNode.id);
@@ -27,6 +27,7 @@ const Graph = () => {
 
   // Rclick container: n/a 
   const handleContainerContextMenu = (e: React.MouseEvent)=> {
+    console.log("Right click on canvas")
     e.preventDefault();
   };
 
@@ -40,11 +41,11 @@ const Graph = () => {
   };
 
   return (
-    <div className="container" 
-      onContextMenu={handleContainerContextMenu}
-      onClick={handleContainerClick}
+    <div className = "container" 
+      onClick = {e => handleContainerClick(e)}
+      onContextMenu = {e => handleContainerContextMenu(e)}
     >
-      <svg width ="100" height = "100">
+      <svg width ="200" height = "200">
         {nodes.map(node => (
         <Node
           key={node.id}

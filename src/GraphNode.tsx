@@ -19,7 +19,7 @@ const Node: React.FC<NodeProps> = ({node, isSelected, onClick, onContextMenu }) 
   
   return (
     <circle
-      ref={nodeRef}
+      key = {node.id}
       cx={node.x}
       cy={node.y}
       r={5}
