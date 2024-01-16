@@ -11,7 +11,8 @@ interface Node {
 const Graph = () => {
   const [nodes, setNodes] = useState<Node[]>([]); // Node list
   const [selectedNode, setSelectedNode] = useState<string | null>(null); // ID which node is selected
-  const clickStartTime = useRef<number | null>(null);
+
+  const clickStartTime = useRef<number | null>(null); // For detecting click vs hold
 
   const handleMouseDown = (e: React.MouseEvent) => {
     if (e.button === 0){
@@ -21,19 +22,21 @@ const Graph = () => {
 
   // Lclick container: Node creation & selection
   const handleMouseUp = (e: React.MouseEvent<HTMLDivElement>) => {
+    // If click a node, don't create a new node 
     if (e.target && (e.target as Element).classList.contains('graph-node')) return;
-    
+
+    // Otherwise, on canvas click check if short or long click
     if (e.button === 0){ 
         const clickDuration = new Date().getTime() - (clickStartTime.current || new Date().getTime());
 
-      if(clickDuration < 200){
+      if(clickDuration < 200){ // short click creates a node
         const svgRect = e.currentTarget.getBoundingClientRect();
         const newNode = {
-          id: `node-${Date.now()}`, // Example ID, ensure it's unique
+          id: `node-${Date.now()}`, 
           x: e.clientX - svgRect.left,
           y: e.clientY - svgRect.top
         };
-        console.log("New node id is: ", newNode.id, "at (x,y) = (", newNode.x, newNode.y, ")");
+        console.log("New node id is: ", newNode.id, "at (x,y) = (", newNode.x, newNode.y, ") is draggable.");
         
         setNodes(prevNodes => [...prevNodes, newNode]);
         setSelectedNode(newNode.id);
@@ -44,11 +47,10 @@ const Graph = () => {
 
   // Rclick container: n/a 
   const handleContainerContextMenu = (e: React.MouseEvent)=> {
-    console.log("Right click on canvas")
-    e.preventDefault();
+      e.preventDefault();
   };
 
-  // Rclick node: delete & (unhighlight) 
+  // Rclick node: delete & unhighlight
   const handleNodeContextMenu = (e: React.MouseEvent, nodeId: string) => {
     e.preventDefault(); // Prevent the default context menu behavior
     
@@ -67,8 +69,11 @@ const Graph = () => {
         <Node
           key={node.id}
           node={node}
+          
+          // 1 Lclick
           isSelected={node.id === selectedNode}
           onClick={() => setSelectedNode(node.id)}
+          
           onContextMenu={e => handleNodeContextMenu(e, node.id)}
         />
         ))}
