@@ -1,5 +1,5 @@
 // Graph.tsx
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Node from './GraphNode';
 
 interface Node {
@@ -10,10 +10,35 @@ interface Node {
   
 const Graph = () => {
   const [nodes, setNodes] = useState<Node[]>([]); // Node list
+
   const [selectedNode, setSelectedNode] = useState<string | null>(null); // ID which node is selected
 
   const clickStartTime = useRef<number | null>(null); // For detecting click vs hold
 
+  const [spaceDown, setIsSpaceDown] = useState(false);
+
+  // Detect if space is pressed
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.code === 'Space') {
+        setIsSpaceDown(true);
+      }
+    };
+    const handleKeyUp = (e: KeyboardEvent) => {
+      if (e.code === 'Space') {
+        setIsSpaceDown(false);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+    };
+  }, []);
+  
   const handleMouseDown = (e: React.MouseEvent) => {
     if (e.button === 0){
       clickStartTime.current = new Date().getTime()
@@ -22,11 +47,12 @@ const Graph = () => {
 
   // Lclick container: Node creation & selection
   const handleMouseUp = (e: React.MouseEvent<HTMLDivElement>) => {
+
     // If click a node, don't create a new node 
     if (e.target && (e.target as Element).classList.contains('graph-node')) return;
 
     // Otherwise, on canvas click check if short or long click
-    if (e.button === 0){ 
+    if (e.button === 0 && !spaceDown){ 
         const clickDuration = new Date().getTime() - (clickStartTime.current || new Date().getTime());
 
       if(clickDuration < 200){ // short click creates a node
@@ -50,6 +76,15 @@ const Graph = () => {
       e.preventDefault();
   };
 
+  // Lclick node: edge creation or select
+  const handleNodeClick = (nodeId:string) =>{
+    if(!spaceDown){
+      setSelectedNode(nodeId)
+    }
+    else{
+      
+    }    
+  }
   // Rclick node: delete & unhighlight
   const handleNodeContextMenu = (e: React.MouseEvent, nodeId: string) => {
     e.preventDefault(); // Prevent the default context menu behavior
@@ -70,9 +105,10 @@ const Graph = () => {
           key={node.id}
           node={node}
           
+          isSpaceDown = {spaceDown}
           // 1 Lclick
           isSelected={node.id === selectedNode}
-          onClick={() => setSelectedNode(node.id)}
+          onClick={() => handleNodeClick(node.id)}
           
           onContextMenu={e => handleNodeContextMenu(e, node.id)}
         />
