@@ -41,32 +41,40 @@ const Graph = () => {
   
   const handleMouseDown = (e: React.MouseEvent) => {
     if (e.button === 0){
-      clickStartTime.current = new Date().getTime()
+      clickStartTime.current = new Date().getTime() // Drag or clck info
+      if (spaceDown && e){
+
+      }
     };
   };
 
-  // Lclick container: Node creation & selection
+  // Lclick container: Selection or Node creation 
   const handleMouseUp = (e: React.MouseEvent<HTMLDivElement>) => {
 
     // If click a node, don't create a new node 
     if (e.target && (e.target as Element).classList.contains('graph-node')) return;
 
     // Otherwise, on canvas click check if short or long click
-    if (e.button === 0 && !spaceDown){ 
-        const clickDuration = new Date().getTime() - (clickStartTime.current || new Date().getTime());
+    if (e.button === 0){
+      if(!spaceDown){ // Node creation
+          const clickDuration = new Date().getTime() - (clickStartTime.current || new Date().getTime());
 
-      if(clickDuration < 200){ // short click creates a node
-        const svgRect = e.currentTarget.getBoundingClientRect();
-        const newNode = {
-          id: `node-${Date.now()}`, 
-          x: e.clientX - svgRect.left,
-          y: e.clientY - svgRect.top
-        };
-        console.log("New node id is: ", newNode.id, "at (x,y) = (", newNode.x, newNode.y, ") is draggable.");
+        if(clickDuration < 200){ // short click creates a node
+          const svgRect = e.currentTarget.getBoundingClientRect();
+          const newNode = {
+            id: `node-${Date.now()}`, 
+            x: e.clientX - svgRect.left,
+            y: e.clientY - svgRect.top
+          };
+          console.log("New node id is: ", newNode.id, "at (x,y) = (", newNode.x, newNode.y, ") is draggable.");
+          
+          setNodes(prevNodes => [...prevNodes, newNode]);
+          setSelectedNode(newNode.id);
+          clickStartTime.current = null;
+        }
+      }
+      else{
         
-        setNodes(prevNodes => [...prevNodes, newNode]);
-        setSelectedNode(newNode.id);
-        clickStartTime.current = null;
       }
     }
   } 
