@@ -11,21 +11,26 @@ interface Node {
 
 interface Edge {
   id1: string;
-  id2: string;
-  x1: number;
+  x1: number ;
   y1: number;
-  x2: number;
-  y2: number;
+  
+  id2: string| null;
+  x2: number | null;
+  y2: number| null;
 }
   
 const Graph = () => {
   const [nodes, setNodes] = useState<Node[]>([]); // Nodes list
   const [edges, setEdges] = useState<Edge[]>([]) // Edges list
 
+  const currentNodeRef = useRef<SVGCircleElement| null>(null);
+  const [tempEdge, setTempEdge] = useState<Edge|null>(null);
   const [selectedNode, setSelectedNode] = useState<string | null>(null); // ID which node is selected
 
-  const clickStartTime = useRef<number | null>(null); // Detecting click vs hold
-  const [spaceDown, setIsSpaceDown] = useState(false); // Detecting when space bar is held down.
+  const clickStartTime = useRef<number | null>(null); // For detecting click vs hold
+  
+  const [isMouseDown, setIsMouseDown] = useState(false);
+  const [isSpaceDown, setIsSpaceDown] = useState(false); 
 
   // Detect if space is pressed
   useEffect(() => {
@@ -49,47 +54,97 @@ const Graph = () => {
     };
   }, []);
 
+  const handleEdgeCreation = (node: SVGCircleElement) => {
+    const newEdge = {
+      id1: node.id, 
+      x1: node.cx.baseVal.value, // Accessing the 'cx' value for circles
+      y1: node.cy.baseVal.value,  // Accessing the 'cy' value for circles
+      id2: null,
+      x2: null,
+      y2: null        
+    }
+    setTempEdge(newEdge);
+    //console.log("New edge starts at node: ", newEdge.id1, "at (x,y) = (", newEdge.x1, newEdge.y1, ").");
+  }       
+  const handleSpaceDown = (e: React.KeyboardEvent) =>{
+    if (e.code === 'Space' && isMouseDown && currentNodeRef.current){
+      setIsSpaceDown(true);
+      handleEdgeCreation(currentNodeRef.current);
+      console.log(tempEdge);
+      }
+    }
+  
+  const handleSpaceUp = (e: React.KeyboardEvent) => {
+    if (e.code === 'Space') {
+      setIsSpaceDown(false);
+    }
+  };
+  
   const handleMouseDown = (e: React.MouseEvent) => {
     if (e.button === 0){
-      clickStartTime.current = new Date().getTime() // Drag or clck info to be used
-        
-      if (spaceDown && (e.target && (e.target as Element).classList.contains('graph-node'))){
-        const nodeElement = e.target as SVGCircleElement; // Correctly cast to SVGCircleElement
-        const newEdge = {
-          id1: nodeElement.id, 
-          x1: nodeElement.cx.baseVal.value, // Accessing the 'cx' value for circles
-          y1: nodeElement.cy.baseVal.value  // Accessing the 'cy' value for circles
+      setIsMouseDown(true)
+      clickStartTime.current = new Date().getTime() // 
+      
+      // If clicked on a node
+      if(e.target && (e.target as Element).classList.contains('graph-node')){
+        const element = e.target as SVGCircleElement;
+        currentNodeRef.current = element;
+
+        if (isSpaceDown){ 
+        handleEdgeCreation(element); // Adjust handleEdgeCreation to accept node data
         }
-        // console.log("Edge starts at node: ", newEdge.id1, "at (x,y) = (", newEdge.x1, newEdge.y1, ").");
-      }       
+      }
     };
   };
 
   // Lclick container: Selection or Node creation 
   const handleMouseUp = (e: React.MouseEvent<HTMLDivElement>) => {
-    // If click a node, don't create a new node 
-    if (e.target && (e.target as Element).classList.contains('graph-node')) return;
+    if (e.button === 0){
+      setIsMouseDown(false);
+      currentNodeRef.current = null;
 
-    // Otherwise, on canvas click check if short or long click
-    if (e.button === 0 && !spaceDown){
-      // Node creation
       const clickDuration = new Date().getTime() - (clickStartTime.current || new Date().getTime());
 
-      if(clickDuration < 200){ // short click creates a node
-        const svgRect = e.currentTarget.getBoundingClientRect();
-        const newNode = {
-          id: `node-${Date.now()}`, 
-          x: e.clientX - svgRect.left,
-          y: e.clientY - svgRect.top
-        };
-        console.log("New node id is: ", newNode.id, "at (x,y) = (", newNode.x, newNode.y, ") is draggable.");
+      // Node creation conditions (3)
+      if (!isSpaceDown){ // Must not hold spacebar
+        // Must click on canvas
+        if (e.target && (e.target as Element).classList.contains('graph-node')) return;
         
-        setNodes(prevNodes => [...prevNodes, newNode]);
-        setSelectedNode(newNode.id);
-        clickStartTime.current = null;
+        if(clickDuration < 200){ // Must be shortclick
+          const svgRect = e.currentTarget.getBoundingClientRect();
+          const newNode = {
+            id: `node-${Date.now()}`, 
+            x: e.clientX - svgRect.left,
+            y: e.clientY - svgRect.top
+          };
+          // console.log("New node id is: ", newNode.id, "at (x,y) = (", newNode.x, newNode.y, ") is draggable.");
+          
+          setNodes(prevNodes => [...prevNodes, newNode]);
+          setSelectedNode(newNode.id);
+          clickStartTime.current = null;
+        }
+      }      
+      // Edge creation if space is held and ends at another node
+      // Need to check to not allow multiple edges
+      else{
+        //console.log("space is held down");
+        // If spacebar is released before completeing the edge, reset.
+        if (!tempEdge){
+          setTempEdge(null);
+          return;
+        }  
+
+        if (e.target && (e.target as Element).classList.contains('graph-node')){
+          const endNode = (e.target as Element);
+          
+          // If end at the same node, reset
+          if (endNode.id === tempEdge.id1){
+            //console.log("No self-loops allowed.");
+          }
+        }
       }
-    }
-  } 
+    } 
+  }
 
   // Rclick container: n/a 
   const handleContainerContextMenu = (e: React.MouseEvent)=> {
@@ -100,6 +155,7 @@ const Graph = () => {
   const handleNodeClick = (nodeId:string) =>{
     setSelectedNode(nodeId)
   }
+  
   // Rclick node: delete & unhighlight
   const handleNodeContextMenu = (e: React.MouseEvent, nodeId: string) => {
     e.preventDefault(); // Prevent the default context menu behavior
@@ -112,6 +168,11 @@ const Graph = () => {
     <div className = "container" 
       onMouseDown = {handleMouseDown}
       onMouseUp = {handleMouseUp}
+      
+      tabIndex={0} // Makes the div focusable
+      onKeyDown={handleSpaceDown}
+      onKeyUp={handleSpaceUp}
+
       onContextMenu = {e => handleContainerContextMenu(e)}
     >
       <svg width ="200" height = "200">
@@ -120,7 +181,7 @@ const Graph = () => {
           key={node.id}
           node={node}
           
-          isSpaceDown = {spaceDown}
+          isSpaceDown = {isSpaceDown}
           // 1 Lclick
           isSelected={node.id === selectedNode}
           onClick={() => handleNodeClick(node.id)}
@@ -131,6 +192,5 @@ const Graph = () => {
       </svg>
     </div>
   );
-};
-
+}
 export default Graph;
