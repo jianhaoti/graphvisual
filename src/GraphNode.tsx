@@ -30,7 +30,7 @@ const Node: React.FC<NodeProps> = ({node, isSelected, isSpaceDown, onClick, onCo
 
   return (
     <circle className="graph-node" 
-      key = {node.id}
+      id = {node.id}
       ref={nodeRef} 
       cx={node.x}
       cy={node.y}
