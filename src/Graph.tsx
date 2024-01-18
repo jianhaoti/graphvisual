@@ -32,27 +32,6 @@ const Graph = () => {
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [isSpaceDown, setIsSpaceDown] = useState(false); 
 
-  // Detect if space is pressed
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.code === 'Space') {
-        setIsSpaceDown(true);
-      }
-    };
-    const handleKeyUp = (e: KeyboardEvent) => {
-      if (e.code === 'Space') {
-        setIsSpaceDown(false);
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    window.addEventListener('keyup', handleKeyUp);
-
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-      window.removeEventListener('keyup', handleKeyUp);
-    };
-  }, []);
 
   const handleEdgeCreation = (node: SVGCircleElement) => {
     const newEdge = {
@@ -64,18 +43,19 @@ const Graph = () => {
       y2: null        
     }
     setTempEdge(newEdge);
-    //console.log("New edge starts at node: ", newEdge.id1, "at (x,y) = (", newEdge.x1, newEdge.y1, ").");
+    // console.log("New edge starts at", newEdge.id1, "at (x,y) = (", newEdge.x1, newEdge.y1, ").");
   }       
   const handleSpaceDown = (e: React.KeyboardEvent) =>{
-    if (e.code === 'Space' && isMouseDown && currentNodeRef.current){
-      setIsSpaceDown(true);
-      handleEdgeCreation(currentNodeRef.current);
-      console.log(tempEdge);
+    if(!isSpaceDown){
+      if (e.code === 'Space' && isMouseDown && currentNodeRef.current){
+        setIsSpaceDown(true);
+        handleEdgeCreation(currentNodeRef.current);
       }
     }
+  }
   
   const handleSpaceUp = (e: React.KeyboardEvent) => {
-    if (e.code === 'Space') {
+    if(e.code =='Space'){
       setIsSpaceDown(false);
     }
   };
@@ -91,7 +71,7 @@ const Graph = () => {
         currentNodeRef.current = element;
 
         if (isSpaceDown){ 
-        handleEdgeCreation(element); // Adjust handleEdgeCreation to accept node data
+          handleEdgeCreation(element); 
         }
       }
     };
@@ -135,11 +115,26 @@ const Graph = () => {
         }  
 
         if (e.target && (e.target as Element).classList.contains('graph-node')){
-          const endNode = (e.target as Element);
+          const endNode = e.target as SVGCircleElement
           
           // If end at the same node, reset
-          if (endNode.id === tempEdge.id1){
-            //console.log("No self-loops allowed.");
+          if (tempEdge?.id1 === endNode.id) {
+            // No self loops allowed
+            setTempEdge(null);
+          }
+          else {
+            // Correctly access the properties of the SVGCircleElement
+            const updatedEdge = {
+              ...tempEdge,
+              id2: endNode.id,
+              x2: endNode.cx.baseVal.value,
+              y2: endNode.cy.baseVal.value
+            };
+            setTempEdge(updatedEdge); // Update the temp edge
+            // console.log("Edge ends at", updatedEdge.id2, "at (x,y) = (", updatedEdge.x2, updatedEdge.x1, ").");
+            setEdges(edges => [...edges, updatedEdge]);
+            console.log(edges);
+            setTempEdge(null);
           }
         }
       }
@@ -181,9 +176,10 @@ const Graph = () => {
           key={node.id}
           node={node}
           
-          isSpaceDown = {isSpaceDown}
           // 1 Lclick
+          
           isSelected={node.id === selectedNode}
+          isSpaceDown = {isSpaceDown}
           onClick={() => handleNodeClick(node.id)}
           
           onContextMenu={e => handleNodeContextMenu(e, node.id)}
