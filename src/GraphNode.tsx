@@ -9,23 +9,17 @@ interface NodeProps {
     y: number;
   };
   isSelected: boolean;
-  isSpaceDown: boolean
+  isDraggable: boolean
   onClick: (nodeId: string) => void;
 
   onContextMenu: (e: React.MouseEvent, nodeId: string) => void;
 }
 
-const Node: React.FC<NodeProps> = ({node, isSelected, isSpaceDown, onClick, onContextMenu}) => {
+const Node: React.FC<NodeProps> = ({node, isSelected, isDraggable, onClick, onContextMenu}) => {
   const nodeRef = useRef<SVGCircleElement | null>(null);
   
   // Node is draggable if node is selected and space is not held.
-  let draggable = false;
-  if (isSelected && !isSpaceDown){
-    draggable = true;}
-  else{
-    draggable = false;}
-
-  useDraggerSVG(node.id, nodeRef, draggable);
+  useDraggerSVG(node.id, nodeRef, isDraggable);
 
 
   return (

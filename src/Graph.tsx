@@ -31,17 +31,21 @@ const Graph = () => {
   
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [isSpaceDown, setIsSpaceDown] = useState(false); 
+  const [isDraggable, setIsDraggable] = useState(false); 
+
   
   // Detect if space is pressed
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.code === 'Space') {
         setIsSpaceDown(true);
+        setIsDraggable(false);
       }
     };
     const handleKeyUp = (e: KeyboardEvent) => {
       if (e.code === 'Space') {
         setIsSpaceDown(false);
+        setIsDraggable(true);
       }
     };
 
@@ -102,7 +106,7 @@ const Graph = () => {
   // Lclick container: Selection or Node creation 
   const handleMouseUp = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.button === 0){
-      setIsMouseDown(false);
+      setIsMouseDown(false);      
       currentNodeRef.current = null;
 
       const clickDuration = new Date().getTime() - (clickStartTime.current || new Date().getTime());
@@ -201,7 +205,7 @@ const Graph = () => {
           // 1 Lclick
           
           isSelected={node.id === selectedNode}
-          isSpaceDown = {isSpaceDown}
+          isDraggable = {(node.id === selectedNode) && isDraggable}
           onClick={() => handleNodeClick(node.id)}
           
           onContextMenu={e => handleNodeContextMenu(e, node.id)}
