@@ -31,6 +31,28 @@ const Graph = () => {
   
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [isSpaceDown, setIsSpaceDown] = useState(false); 
+  
+  // Detect if space is pressed
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.code === 'Space') {
+        setIsSpaceDown(true);
+      }
+    };
+    const handleKeyUp = (e: KeyboardEvent) => {
+      if (e.code === 'Space') {
+        setIsSpaceDown(false);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+    };
+  }, []);
 
 
   const handleEdgeCreation = (node: SVGCircleElement) => {
@@ -55,7 +77,7 @@ const Graph = () => {
   }
   
   const handleSpaceUp = (e: React.KeyboardEvent) => {
-    if(e.code =='Space'){
+    if(e.code ==='Space'){
       setIsSpaceDown(false);
     }
   };
