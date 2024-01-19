@@ -103,7 +103,9 @@ const Graph = () => {
   const handleSpaceUp = (e: React.KeyboardEvent) => {
     if (e.code === 'Space') {
       setIsSpaceDown(false);
-      if (isMouseDown) {
+      
+      // The !tempEdge prevents all dragging after space is pressed, even if it was previously dragging
+      if (isMouseDown && !tempEdge) {
         setIsDraggable(true);
       }
     }
