@@ -68,7 +68,7 @@ const Graph = () => {
     }
     setTempEdge(newEdge);
     setIsDraggable(false);
-    // console.log("New edge starts at", newEdge.id1, "at (x,y) = (", newEdge.x1, newEdge.y1, ").");
+    console.log("New edge starts at", newEdge.id1, "at (x,y) = (", newEdge.x1, newEdge.y1, ").");
   }       
   const handleSpaceDown = (e: React.KeyboardEvent) =>{
     if(!isSpaceDown){
@@ -83,7 +83,7 @@ const Graph = () => {
     if(e.code ==='Space'){
       setIsSpaceDown(false);
       if(isMouseDown){
-        setIsDraggable(true)
+        setIsDraggable(false)
       }
     }
   };
@@ -171,7 +171,6 @@ const Graph = () => {
             console.log(edges);
             setTempEdge(null);
             setIsDraggable(true);
-
           }
         }
       }
