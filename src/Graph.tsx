@@ -1,5 +1,5 @@
 // Graph.tsx
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import Node from './GraphNode';
 import Edge from './GraphEdge';
 
@@ -42,6 +42,19 @@ const Graph = () => {
     console.log('Edges updated:', edges);
   }, [edges]); */
   
+  const deleteSelected = useCallback(() => {
+    if (selectedNode) {
+      // Logic to delete selected node
+      setNodes(nodes => nodes.filter(node => node.id !== selectedNode));
+      setEdges(edges => edges.filter(edge => edge.id1 !== selectedNode && edge.id2 !== selectedNode));
+      setSelectedNode(null);
+    } else if (selectedEdge) {
+      // Logic to delete selected edge
+      setEdges(edges => edges.filter(edge => `${edge.id1}-${edge.id2}` !== selectedEdge));
+      setSelectedEdge(null);
+    }
+  }, [selectedNode, selectedEdge, setNodes, setEdges]);
+
   // Detect if space is pressed
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -67,7 +80,7 @@ const Graph = () => {
       window.removeEventListener('keyup', handleKeyUp);
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [selectedNode, selectedEdge]);  
+  }, [deleteSelected]);  
 
   const handleNodeDrag = (nodeId: string, newPosition: { x: number; y: number }) => {
     setEdges(currentEdges => currentEdges.map(edge => {
@@ -249,20 +262,7 @@ const Graph = () => {
     setSelectedEdge(null);
   };
 
-
-  const deleteSelected = () => {
-    if (selectedNode) {
-      // Logic to delete selected node
-      setNodes(nodes => nodes.filter(node => node.id !== selectedNode));
-      setEdges(edges => edges.filter(edge => edge.id1 !== selectedNode && edge.id2 !== selectedNode));
-      setSelectedNode(null);
-    } else if (selectedEdge) {
-      // Logic to delete selected edge
-      setEdges(edges => edges.filter(edge => `${edge.id1}-${edge.id2}` !== selectedEdge));
-      setSelectedEdge(null);
-    }
-  };
-
+  
   // Double click reverses orientation
   const handleEdgeDoubleClick = (reverseThisEdge: EdgeType) =>{
     // Preventative measure
