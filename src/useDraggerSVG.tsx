@@ -63,7 +63,7 @@ function useDraggerSVG(
             window.removeEventListener('mouseup', onMouseUp);
             window.removeEventListener('mousemove', onMouseMove);
         };
-    }, [id, ref, draggable]); // Depend on 'ref' so hook updates if element changes
+    }, [id, ref, draggable, onDrag]); // Depend on 'ref' so hook updates if element changes
 }
 
 export default useDraggerSVG;

@@ -1,5 +1,5 @@
 // GraphNode.tsx
-import React, { useRef } from 'react';
+import React, { useRef, useCallback } from 'react';
 import useDraggerSVG from './useDraggerSVG';
 
 interface NodeProps {
@@ -18,12 +18,21 @@ interface NodeProps {
 const Node: React.FC<NodeProps> = ({node, isSelected, isDraggable, onClick, onContextMenu, onDrag}) => {
   const nodeRef = useRef<SVGCircleElement | null>(null);
   
+  // Memoize the onDrag callback
+  const memoizedOnDrag = useCallback(
+    (id: string, newPosition: { x: number; y: number }) => {
+      onDrag(id, newPosition);
+    },
+    [onDrag] // Dependency array, add any other dependencies if needed
+  );
+
   // Node is draggable if node is selected and space is not held.
-  useDraggerSVG(node.id, nodeRef, isDraggable, onDrag);
+  useDraggerSVG(node.id, nodeRef, isDraggable, memoizedOnDrag);
 
 
   return (
-    <circle className="graph-node" 
+    <circle 
+      className="graph-node" 
       id = {node.id}
       ref={nodeRef} 
       cx={node.x}
