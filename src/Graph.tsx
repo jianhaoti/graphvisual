@@ -103,7 +103,7 @@ const Graph = () => {
   const handleSpaceUp = (e: React.KeyboardEvent) => {
     if (e.code === 'Space') {
       setIsSpaceDown(false);
-      
+
       // The !tempEdge prevents all dragging after space is pressed, even if it was previously dragging
       if (isMouseDown && !tempEdge) {
         setIsDraggable(true);
@@ -112,6 +112,15 @@ const Graph = () => {
   };
 
   const handleMouseDown = (e: React.MouseEvent) => {
+    // Middle Mouse 
+    if (e.button === 1) { 
+      if (e.target && (e.target as Element).classList.contains('graph-node')) {
+          const element = e.target as SVGCircleElement;
+          handleEdgeCreation(element); // Start creating the edge
+      }
+   }
+
+    // Left Click
     if (e.button === 0) {
       setIsMouseDown(true);
       if (!isSpaceDown) {
@@ -132,6 +141,40 @@ const Graph = () => {
   };
 
   const handleMouseUp = (e: React.MouseEvent<HTMLDivElement>) => {
+    // Middle Mouse
+    if (e.button === 1) { // Middle mouse button
+      if (!tempEdge) {
+        setTempEdge(null);
+        setIsDraggable(false);
+        return;
+      }
+
+      if (e.target && (e.target as Element).classList.contains('graph-node')) {
+          // Complete the edge creation if it ends on a different node
+          const endNode = e.target as SVGCircleElement;
+          const edgeExists = edges.some(edge => edge.id1 === tempEdge?.id1 && edge.id2 === endNode.id);
+          if (tempEdge?.id1 === endNode.id) {
+            setTempEdge(null);
+          } else {
+            if (!edgeExists) {
+              const updatedEdge = {
+                ...tempEdge,
+                id2: endNode.id,
+                x2: endNode.cx.baseVal.value,
+                y2: endNode.cy.baseVal.value
+              };
+              setEdges(edges => [...edges, updatedEdge]);
+              setTempEdge(null);
+
+              setSelectedNode(endNode.id);
+              setIsDraggable(true)
+              return;
+            }
+          }
+      } 
+      setIsDraggable(false);
+    }
+    // Left Click
     if (e.button === 0) {
       setIsMouseDown(false);
       currentNodeRef.current = null;
@@ -143,9 +186,6 @@ const Graph = () => {
       if (!isSpaceDown) {
         setSelectedEdge(null);
 
-        // The problem is here. If false, then a dragged node shoots to cursor upon a fast click. 
-        // If true, then after edge creation, the tail node upon click enteres drag state without
-        // holding down left click.
         if (e.target && (e.target as Element).classList.contains('graph-node')) {
           setIsDraggable(true);
           return;
@@ -168,7 +208,9 @@ const Graph = () => {
           setIsDraggable(true);
           return;
         }
-      } else {
+      } 
+      // Spcae is not held
+      else {
         if (!tempEdge) {
           setTempEdge(null);
           setIsDraggable(false);
