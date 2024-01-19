@@ -264,7 +264,7 @@ const Graph = () => {
   };
 
   // Double click reverses orientation
-  const handeEdgeDoubleClick = (reverseThisEdge: EdgeType) =>{
+  const handleEdgeDoubleClick = (reverseThisEdge: EdgeType) =>{
     // Preventative measure
     if (!reverseThisEdge.id2) return;
 
@@ -279,6 +279,10 @@ const Graph = () => {
       y2:reverseThisEdge.y1 as number
     }
     setEdges([...newEdges, reversedEdge]); // Add the reversed edge
+    
+    // Also select the reversed edge
+    const reversedId = `${reversedEdge.id1}-${reversedEdge.id2}`;
+    handleEdgeClick(reversedId);
   }
 
 
@@ -315,7 +319,7 @@ const Graph = () => {
             edge={edge}
             isSelected = {selectedEdge === `${edge.id1}-${edge.id2}`}
             onClick={handleEdgeClick}  
-            onDoubleClick = {handeEdgeDoubleClick} 
+            onDoubleClick = {handleEdgeDoubleClick} 
             onContextMenu={handleEdgeContextMenu}  
             />
         ))}

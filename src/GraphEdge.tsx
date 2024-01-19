@@ -58,6 +58,7 @@ const Edge: React.FC<GraphEdgeProps> = ({edge, isSelected, onClick, onDoubleClic
 
   const handleEdgeDoubleClick = () => {
     onDoubleClick(edge);
+  
   };
 
 
