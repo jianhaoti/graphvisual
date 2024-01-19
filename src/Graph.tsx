@@ -48,6 +48,9 @@ const Graph = () => {
       if (e.code === 'Space') {
         setIsSpaceDown(true);
       }
+      if (e.code === 'Backspace') {
+        deleteSelected();
+      }
     };
     const handleKeyUp = (e: KeyboardEvent) => {
       if (e.code === 'Space') {
@@ -57,12 +60,14 @@ const Graph = () => {
 
     window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('keyup', handleKeyUp);
+    window.addEventListener('keydown', handleKeyDown);
 
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
+      window.removeEventListener('keydown', handleKeyDown);
     };
-  }, []);  
+  }, [selectedNode, selectedEdge]);  
 
   const handleNodeDrag = (nodeId: string, newPosition: { x: number; y: number }) => {
     setEdges(currentEdges => currentEdges.map(edge => {
@@ -242,6 +247,20 @@ const Graph = () => {
     e.preventDefault();
     setEdges(edges => edges.filter(edge => `${edge.id1}-${edge.id2}` !== edgeId));
     setSelectedEdge(null);
+  };
+
+
+  const deleteSelected = () => {
+    if (selectedNode) {
+      // Logic to delete selected node
+      setNodes(nodes => nodes.filter(node => node.id !== selectedNode));
+      setEdges(edges => edges.filter(edge => edge.id1 !== selectedNode && edge.id2 !== selectedNode));
+      setSelectedNode(null);
+    } else if (selectedEdge) {
+      // Logic to delete selected edge
+      setEdges(edges => edges.filter(edge => `${edge.id1}-${edge.id2}` !== selectedEdge));
+      setSelectedEdge(null);
+    }
   };
 
 

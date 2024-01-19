@@ -17,7 +17,8 @@ interface NodeProps {
 
 const Node: React.FC<NodeProps> = ({node, isSelected, isDraggable, onClick, onContextMenu, onDrag}) => {
   const nodeRef = useRef<SVGCircleElement | null>(null);
-  
+  const radius = 6;
+
   // Memoize the onDrag callback
   const memoizedOnDrag = useCallback(
     (id: string, newPosition: { x: number; y: number }) => {
@@ -37,7 +38,7 @@ const Node: React.FC<NodeProps> = ({node, isSelected, isDraggable, onClick, onCo
       ref={nodeRef} 
       cx={node.x}
       cy={node.y}
-      r={10}
+      r={radius}
       fill={isSelected ? 'darkred' : 'black'}
 
       onClick={() => onClick(node.id)}

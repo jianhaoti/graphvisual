@@ -16,7 +16,7 @@ interface GraphEdgeProps{
 }
 
 const Edge: React.FC<GraphEdgeProps> = ({edge, isSelected, onClick, onContextMenu}) => {
-  const nodeRadius = 10;
+  const nodeRadius = 6;
 
   if (edge.x2 === null || edge.y2 === null) {
     return null; // Or some placeholder representation
@@ -91,7 +91,7 @@ const Edge: React.FC<GraphEdgeProps> = ({edge, isSelected, onClick, onContextMen
         y1={adjustedStartY} 
         x2={adjustedEndX} 
         y2={adjustedEndY} 
-        strokeWidth={2} 
+        strokeWidth={1} 
         onClick={handleEdgeClick}
         onContextMenu={handleEdgeContextMenu}  
         stroke={isSelected ? 'darkred' : 'black'}
@@ -106,7 +106,7 @@ const Edge: React.FC<GraphEdgeProps> = ({edge, isSelected, onClick, onContextMen
         x2={arrowMidX + offsetX}
         y2={arrowMidY + offsetY}
         stroke="transparent" // Make this line invisible
-        strokeWidth={2}
+        strokeWidth={1}
         markerEnd={`url(#${arrowheadId})`}
         onClick={handleEdgeClick}
         onContextMenu={handleEdgeContextMenu}  
