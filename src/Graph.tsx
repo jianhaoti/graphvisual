@@ -217,10 +217,10 @@ const Graph = () => {
                 x2: endNode.cx.baseVal.value,
                 y2: endNode.cy.baseVal.value
               };
-              setTempEdge(updatedEdge); // Update the temp edge
               // console.log("Edge ends at", updatedEdge.id2, "at (x,y) = (", updatedEdge.x2, updatedEdge.x1, ").");
               setEdges(edges => [...edges, updatedEdge]);
               setTempEdge(null);
+              setSelectedNode(endNode.id)
               setIsDraggable(true);
             }
           }
