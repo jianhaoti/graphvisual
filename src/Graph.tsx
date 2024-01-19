@@ -25,13 +25,17 @@ const Graph = () => {
 
   const currentNodeRef = useRef<SVGCircleElement| null>(null);
   const [tempEdge, setTempEdge] = useState<Edge|null>(null);
+
   const [selectedNode, setSelectedNode] = useState<string | null>(null); // ID which node is selected
+  const [selectedEdge, setSelectedEdge] = useState<string | null>(null); // ID which node is selected
 
   const clickStartTime = useRef<number | null>(null); // For detecting click vs hold
   
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [isSpaceDown, setIsSpaceDown] = useState(false); 
   const [isDraggable, setIsDraggable] = useState(true); 
+  const [edgeClicked, setEdgeClicked] = useState(false); 
+
 
   // For debugging purposes which need synchonous data, use the following below
   /* useEffect(() => {
@@ -119,17 +123,33 @@ const Graph = () => {
           handleEdgeCreation(element); 
         }
       }
+      // If clicked on an edge, just select the edge
+      if(e.target && (e.target as Element).classList.contains('graph-edge')){
+        setEdgeClicked(true);
+      }
+
     };
   };
 
   // Lclick container: Selection or Node creation 
   const handleMouseUp = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.button === 0){
+      // Exit if clicked an edge
+      if(edgeClicked){
+        setEdgeClicked(false);
+        return;
+      }
+
       setIsMouseDown(false);      
       currentNodeRef.current = null;
 
       const clickDuration = new Date().getTime() - (clickStartTime.current || new Date().getTime());
 
+      // If an edge is selected, do not create a new node
+      if (selectedEdge){
+        return;
+      } 
+      
       // Node creation conditions (3)
       if (!isSpaceDown){ // Must not hold spacebar
         // Must click on canvas
@@ -199,15 +219,31 @@ const Graph = () => {
   // Lclick node: edge creation or select
   const handleNodeClick = (nodeId:string) =>{
     setSelectedNode(nodeId)
+    setSelectedEdge(null)
   }
+
+  // Handle edge selection
+  const handleEdgeClick = (edgeId: string) => {
+    setSelectedEdge(edgeId);
+    setSelectedNode(null)
+  };
+
+
   
   // Rclick node: delete & unhighlight
   const handleNodeContextMenu = (e: React.MouseEvent, nodeId: string) => {
     e.preventDefault(); // Prevent the default context menu behavior
-    
-    const updatedNodes = nodes.filter(node => node.id !== nodeId);
-    setNodes(updatedNodes);
+    setNodes(nodes => nodes.filter(node => node.id !== nodeId));
+    setEdges(edges => edges.filter(edge => edge.id1 !== nodeId && edge.id2 !== nodeId));
   };
+
+  // Handle edge deletion
+  const handleEdgeContextMenu = (e: React.MouseEvent, edgeId: string) => {
+    e.preventDefault();
+    setEdges(edges => edges.filter(edge => `${edge.id1}-${edge.id2}` !== edgeId));
+    setSelectedEdge(null);
+  };
+
 
   return (
     <div className = "container" 
@@ -237,8 +273,13 @@ const Graph = () => {
         />
         ))}
         {edges.filter(edge => edge.x2 !== null && edge.y2 !== null).map(edge => (
-          <Edge key={`${edge.id1}-${edge.id2}`} 
-          edge={edge} />
+          <Edge 
+            key={`${edge.id1}-${edge.id2}`} 
+            edge={edge}
+            isSelected = {selectedEdge === `${edge.id1}-${edge.id2}`}
+            onClick={handleEdgeClick}  // Add this prop
+            onContextMenu={handleEdgeContextMenu}  // Add this prop
+            />
         ))}
       </svg>
     </div>
