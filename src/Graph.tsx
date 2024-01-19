@@ -149,7 +149,6 @@ const Graph = () => {
           return;
         }
 
-
         if (clickDuration < 200) {
           const svgRect = e.currentTarget.getBoundingClientRect();
           const newNode = {
@@ -157,9 +156,15 @@ const Graph = () => {
             x: e.clientX - svgRect.left,
             y: e.clientY - svgRect.top
           };
+          
           setNodes(prevNodes => [...prevNodes, newNode]);
-          setSelectedNode(newNode.id);
+
+          // Reset this data
           clickStartTime.current = null;
+          
+          setSelectedNode(newNode.id);
+          setIsDraggable(true);
+          return;
         }
       } else {
         if (!tempEdge) {
@@ -182,8 +187,8 @@ const Graph = () => {
               };
               setEdges(edges => [...edges, updatedEdge]);
               setTempEdge(null);
+
               setSelectedNode(endNode.id);
-              console.log(selectedNode, "is selected")
               setIsDraggable(true)
               return;
             }
