@@ -38,9 +38,9 @@ const Graph = () => {
 
 
   // For debugging purposes which need synchonous data, use the following below
-   useEffect(() => {
+  /* useEffect(() => {
     console.log(isMouseDown);
-  }, [isMouseDown]); 
+  }, [isMouseDown]); */
   
   const deleteSelected = useCallback(() => {
     if (selectedNode) {
@@ -157,28 +157,25 @@ const Graph = () => {
       const clickDuration = new Date().getTime() - (clickStartTime.current || new Date().getTime());
 
       // Exit if edge was clicked. This avoid creating node if edge
-      if(edgeClicked && edgeClicked){
+      if(edgeClicked){
         setEdgeClicked(false);
-        console.log("test1")
-        return;
-      } 
-
-      // If clicked on a selected, do not create a new node
-      if (selectedEdge){
-        console.log("test2")
         return;
       } 
 
       // Node creation conditions (3)
-      if (!isSpaceDown){ // Must not hold spacebar
-        // Must click on canvas
-       // console.log("test")
+      // 1. Must not hold spacebar
+      if (!isSpaceDown){ 
+        // This line prevents highlighting both the edge and the node after selecting an edge.
+        setSelectedEdge(null)
+
+        // 2. Must click on canvas       
         if (e.target && (e.target as Element).classList.contains('graph-node')){ 
           setIsDraggable(false)
           return;
         }
         
-        if(clickDuration < 200){ // Must be shortclick
+        // 3. Must be shortclick
+        if(clickDuration < 200){ 
           const svgRect = e.currentTarget.getBoundingClientRect();
           const newNode = {
             id: `node-${Date.now()}`, 
