@@ -38,9 +38,9 @@ const Graph = () => {
 
 
   // For debugging purposes which need synchonous data, use the following below
-  /* useEffect(() => {
-    console.log('Edges updated:', edges);
-  }, [edges]); */
+   useEffect(() => {
+    console.log(isMouseDown);
+  }, [isMouseDown]); 
   
   const deleteSelected = useCallback(() => {
     if (selectedNode) {
@@ -130,8 +130,7 @@ const Graph = () => {
       if(!isSpaceDown){
         setIsDraggable(true)
       }
-      clickStartTime.current = new Date().getTime() // 
-      
+      clickStartTime.current = new Date().getTime() //       
       // If clicked on a node
       if(e.target && (e.target as Element).classList.contains('graph-node')){
         const element = e.target as SVGCircleElement;
@@ -153,26 +152,31 @@ const Graph = () => {
   const handleMouseUp = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.button === 0){
       // Exit if clicked an edge
-      if(edgeClicked){
-        setEdgeClicked(false);
-        return;
-      }
-
       setIsMouseDown(false);      
       currentNodeRef.current = null;
-
       const clickDuration = new Date().getTime() - (clickStartTime.current || new Date().getTime());
 
-      // If an edge is selected, do not create a new node
-      if (selectedEdge){
+      // Exit if edge was clicked. This avoid creating node if edge
+      if(edgeClicked && edgeClicked){
+        setEdgeClicked(false);
+        console.log("test1")
         return;
       } 
-      
+
+      // If clicked on a selected, do not create a new node
+      if (selectedEdge){
+        console.log("test2")
+        return;
+      } 
+
       // Node creation conditions (3)
       if (!isSpaceDown){ // Must not hold spacebar
         // Must click on canvas
-        setIsDraggable(true)
-        if (e.target && (e.target as Element).classList.contains('graph-node')) return;
+       // console.log("test")
+        if (e.target && (e.target as Element).classList.contains('graph-node')){ 
+          setIsDraggable(false)
+          return;
+        }
         
         if(clickDuration < 200){ // Must be shortclick
           const svgRect = e.currentTarget.getBoundingClientRect();
@@ -181,7 +185,7 @@ const Graph = () => {
             x: e.clientX - svgRect.left,
             y: e.clientY - svgRect.top
           };
-          // console.log("New node id is: ", newNode.id, "at (x,y) = (", newNode.x, newNode.y, ") is draggable.");
+          //console.log("New node id is: ", newNode.id, "at (x,y) = (", newNode.x, newNode.y, ") is draggable.");
           
           setNodes(prevNodes => [...prevNodes, newNode]);
           setSelectedNode(newNode.id);
@@ -193,7 +197,7 @@ const Graph = () => {
         // If spacebar is released before completeing the edge, reset.
          if (!tempEdge){
           setTempEdge(null);
-          setIsDraggable(true);
+          setIsDraggable(true)
           return;
         }  
 
@@ -205,7 +209,6 @@ const Graph = () => {
           // If end at the same node, reset
           if (tempEdge?.id1 === endNode.id) {
             // No self loops allowed
-            setIsDraggable(true);
             setTempEdge(null);
           }
           else {
@@ -220,12 +223,13 @@ const Graph = () => {
               // console.log("Edge ends at", updatedEdge.id2, "at (x,y) = (", updatedEdge.x2, updatedEdge.x1, ").");
               setEdges(edges => [...edges, updatedEdge]);
               setTempEdge(null);
-              setSelectedNode(endNode.id)
-              setIsDraggable(true);
+              // After edge creation, set selected to end node. 
+              setSelectedNode(endNode.id) // Might need to change this in the future to edge selection. Not sure yet.
             }
           }
         }
       }
+      setIsDraggable(true)
     } 
   }
 
