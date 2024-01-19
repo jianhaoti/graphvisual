@@ -1,7 +1,12 @@
 //useDraggerSVG.tsx
 import React, { useRef, useEffect } from "react";
 
-function useDraggerSVG(id: string, ref: React.RefObject<SVGElement>, draggable: boolean) {
+function useDraggerSVG(
+    id: string, 
+    ref: React.RefObject<SVGElement>, 
+    draggable: boolean,
+    onDrag: (id: string, newPosition: { x: number; y: number }) => void
+    ) {
     const isClicked = useRef(false);
     const coords = useRef({
         startX: 0,
@@ -43,6 +48,10 @@ function useDraggerSVG(id: string, ref: React.RefObject<SVGElement>, draggable: 
             // Update the start coordinates for the next move
             coords.current.startX = e.clientX;
             coords.current.startY = e.clientY;
+            
+            if (onDrag) {
+                onDrag(id, { x: cx, y: cy });
+            }
         };
 
         target.addEventListener('mousedown', onMouseDown);

@@ -34,9 +34,9 @@ const Graph = () => {
   const [isDraggable, setIsDraggable] = useState(true); 
 
   // For debugging purposes which need synchonous data, use the following below
-   useEffect(() => {
+  /* useEffect(() => {
     console.log('Edges updated:', edges);
-  }, [edges]); 
+  }, [edges]); */
   
   // Detect if space is pressed
   useEffect(() => {
@@ -59,6 +59,17 @@ const Graph = () => {
       window.removeEventListener('keyup', handleKeyUp);
     };
   }, []);  
+
+  const handleNodeDrag = (nodeId: string, newPosition: { x: number; y: number }) => {
+    setEdges(currentEdges => currentEdges.map(edge => {
+      if (edge.id1 === nodeId) {
+        return { ...edge, x1: newPosition.x, y1: newPosition.y };
+      } else if (edge.id2 === nodeId) {
+        return { ...edge, x2: newPosition.x, y2: newPosition.y };
+      }
+      return edge;
+    }));
+  };
 
   const handleEdgeCreation = (node: SVGCircleElement) => {
     const newEdge = {
@@ -219,10 +230,15 @@ const Graph = () => {
           
           isSelected={node.id === selectedNode}
           isDraggable = {(node.id === selectedNode) && isDraggable}
-          onClick={() => handleNodeClick(node.id)}
-          
+
+          onClick={() => handleNodeClick(node.id)}  
+          onDrag={handleNodeDrag}
           onContextMenu={e => handleNodeContextMenu(e, node.id)}
         />
+        ))}
+        {edges.filter(edge => edge.x2 !== null && edge.y2 !== null).map(edge => (
+          <Edge key={`${edge.id1}-${edge.id2}`} 
+          edge={edge} />
         ))}
       </svg>
     </div>

@@ -1,19 +1,29 @@
 import React from 'react';
+interface GraphEdgeProps{
+  edge: {
+    id1: string;
+    x1: number;
+    y1: number;
 
-interface GraphEdgeProps {
-  id1: string;
-  id2: string;
-  x1: number;
-  y1: number;
-  x2: number;
-  y2: number;
-  // You can add more props for styling, like stroke color, width, etc.
-}
+    id2: string | null;
+    x2: number | null;
+    y2: number | null;
+  };}
 
-const Edge: React.FC<GraphEdgeProps> = ({ x1, y1, x2, y2 }) => {
+const Edge: React.FC<GraphEdgeProps> = ({edge}) => {
+  if (edge.x2 === null || edge.y2 === null) {
+    return null; // Or some placeholder representation
+  }
+  
   return (
-    <line x1={x1} y1={y1} x2={x2} y2={y2} stroke="black" strokeWidth={2} />
-    // Customize the stroke and strokeWidth as needed
+    <line 
+    x1={edge.x1} 
+    y1={edge.y1} 
+    x2={edge.x2} 
+    y2={edge.y2} 
+    stroke="black" 
+    strokeWidth={2} 
+    />
   );
 };
 
