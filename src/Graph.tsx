@@ -1,61 +1,46 @@
-// Graph.tsx
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import Node from './GraphNode';
 import Edge from './GraphEdge';
 
 interface Node {
-    id: string;
-    x: number;
-    y: number;
-  }
+  id: string;
+  x: number;
+  y: number;
+}
 
 interface EdgeType {
   id1: string;
   x1: number;
   y1: number;
-  
-  id2: string| null;
+  id2: string | null;
   x2: number | null;
-  y2: number| null;
+  y2: number | null;
 }
-  
+
 const Graph = () => {
-  const [nodes, setNodes] = useState<Node[]>([]); // Nodes list
-  const [edges, setEdges] = useState<EdgeType[]>([]) // Edges list
-
-  const currentNodeRef = useRef<SVGCircleElement| null>(null);
-  const [tempEdge, setTempEdge] = useState<EdgeType|null>(null);
-
-  const [selectedNode, setSelectedNode] = useState<string | null>(null); // ID which node is selected
-  const [selectedEdge, setSelectedEdge] = useState<string | null>(null); // ID which node is selected
-
-  const clickStartTime = useRef<number | null>(null); // For detecting click vs hold
-  
+  const [nodes, setNodes] = useState<Node[]>([]);
+  const [edges, setEdges] = useState<EdgeType[]>([]);
+  const currentNodeRef = useRef<SVGCircleElement | null>(null);
+  const [tempEdge, setTempEdge] = useState<EdgeType | null>(null);
+  const [selectedNode, setSelectedNode] = useState<string | null>(null);
+  const [selectedEdge, setSelectedEdge] = useState<string | null>(null);
+  const clickStartTime = useRef<number | null>(null);
   const [isMouseDown, setIsMouseDown] = useState(false);
-  const [isSpaceDown, setIsSpaceDown] = useState(false); 
-  const [isDraggable, setIsDraggable] = useState(true); 
-  const [edgeClicked, setEdgeClicked] = useState(false); 
+  const [isSpaceDown, setIsSpaceDown] = useState(false);
+  const [isDraggable, setIsDraggable] = useState(true);
+  const [edgeClicked, setEdgeClicked] = useState(false);
 
-
-  // For debugging purposes which need synchonous data, use the following below
-  /* useEffect(() => {
-    console.log(isMouseDown);
-  }, [isMouseDown]); */
-  
   const deleteSelected = useCallback(() => {
     if (selectedNode) {
-      // Logic to delete selected node
       setNodes(nodes => nodes.filter(node => node.id !== selectedNode));
       setEdges(edges => edges.filter(edge => edge.id1 !== selectedNode && edge.id2 !== selectedNode));
       setSelectedNode(null);
     } else if (selectedEdge) {
-      // Logic to delete selected edge
       setEdges(edges => edges.filter(edge => `${edge.id1}-${edge.id2}` !== selectedEdge));
       setSelectedEdge(null);
     }
   }, [selectedNode, selectedEdge, setNodes, setEdges]);
 
-  // Detect if space is pressed
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.code === 'Space') {
@@ -80,7 +65,7 @@ const Graph = () => {
       window.removeEventListener('keyup', handleKeyUp);
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [deleteSelected]);  
+  }, [deleteSelected]);
 
   const handleNodeDrag = (nodeId: string, newPosition: { x: number; y: number }) => {
     setEdges(currentEdges => currentEdges.map(edge => {
@@ -95,237 +80,196 @@ const Graph = () => {
 
   const handleEdgeCreation = (node: SVGCircleElement) => {
     const newEdge = {
-      id1: node.id, 
-      x1: node.cx.baseVal.value, // Accessing the 'cx' value for circles
-      y1: node.cy.baseVal.value,  // Accessing the 'cy' value for circles
+      id1: node.id,
+      x1: node.cx.baseVal.value,
+      y1: node.cy.baseVal.value,
       id2: null,
       x2: null,
-      y2: null        
+      y2: null
     }
     setTempEdge(newEdge);
     setIsDraggable(false);
-    // console.log("New edge starts at", newEdge.id1, "at (x,y) = (", newEdge.x1, newEdge.y1, ").");
-  }       
-  const handleSpaceDown = (e: React.KeyboardEvent) =>{
-    if(!isSpaceDown){
-      if (e.code === 'Space' && isMouseDown && currentNodeRef.current){
+  };
+
+  const handleSpaceDown = (e: React.KeyboardEvent) => {
+    if (!isSpaceDown) {
+      if (e.code === 'Space' && isMouseDown && currentNodeRef.current) {
         setIsSpaceDown(true);
         handleEdgeCreation(currentNodeRef.current);
       }
     }
-  }
-  
+  };
+
   const handleSpaceUp = (e: React.KeyboardEvent) => {
-    if(e.code ==='Space'){
+    if (e.code === 'Space') {
       setIsSpaceDown(false);
-      if(isMouseDown){
-        setIsDraggable(false)
+      if (isMouseDown) {
+        setIsDraggable(true);
       }
     }
   };
-  
+
   const handleMouseDown = (e: React.MouseEvent) => {
-    if (e.button === 0){
-      setIsMouseDown(true)
-      if(!isSpaceDown){
-        setIsDraggable(true)
+    if (e.button === 0) {
+      setIsMouseDown(true);
+      if (!isSpaceDown) {
+        setIsDraggable(true);
       }
-      clickStartTime.current = new Date().getTime() //       
-      // If clicked on a node
-      if(e.target && (e.target as Element).classList.contains('graph-node')){
+      clickStartTime.current = new Date().getTime();
+      if (e.target && (e.target as Element).classList.contains('graph-node')) {
         const element = e.target as SVGCircleElement;
         currentNodeRef.current = element;
-
-        if (isSpaceDown){ 
-          handleEdgeCreation(element); 
+        if (isSpaceDown) {
+          handleEdgeCreation(element);
         }
       }
-      // If clicked on an edge, just select the edge
-      if(e.target && (e.target as Element).classList.contains('graph-edge')){
+      if (e.target && (e.target as Element).classList.contains('graph-edge')) {
         setEdgeClicked(true);
       }
-
     };
   };
 
-  // Lclick container: Selection or Node creation 
   const handleMouseUp = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (e.button === 0){
-      // Exit if clicked an edge
-      setIsMouseDown(false);      
+    if (e.button === 0) {
+      setIsMouseDown(false);
       currentNodeRef.current = null;
       const clickDuration = new Date().getTime() - (clickStartTime.current || new Date().getTime());
-
-      // Exit if edge was clicked. This avoid creating node if edge
-      if(edgeClicked){
+      if (edgeClicked) {
         setEdgeClicked(false);
         return;
-      } 
+      }
+      if (!isSpaceDown) {
+        setSelectedEdge(null);
 
-      // Node creation conditions (3)
-      // 1. Must not hold spacebar
-      if (!isSpaceDown){ 
-        // This line prevents highlighting both the edge and the node after selecting an edge.
-        setSelectedEdge(null)
-
-        // 2. Must click on canvas       
-        if (e.target && (e.target as Element).classList.contains('graph-node')){ 
-          setIsDraggable(false)
+        // The problem is here. If false, then a dragged node shoots to cursor upon a fast click. 
+        // If true, then after edge creation, the tail node upon click enteres drag state without
+        // holding down left click.
+        if (e.target && (e.target as Element).classList.contains('graph-node')) {
+          setIsDraggable(true);
           return;
         }
-        
-        // 3. Must be shortclick
-        if(clickDuration < 200){ 
+
+
+        if (clickDuration < 200) {
           const svgRect = e.currentTarget.getBoundingClientRect();
           const newNode = {
-            id: `node-${Date.now()}`, 
+            id: `node-${Date.now()}`,
             x: e.clientX - svgRect.left,
             y: e.clientY - svgRect.top
           };
-          //console.log("New node id is: ", newNode.id, "at (x,y) = (", newNode.x, newNode.y, ") is draggable.");
-          
           setNodes(prevNodes => [...prevNodes, newNode]);
           setSelectedNode(newNode.id);
           clickStartTime.current = null;
         }
-      }      
-      // Edge creation if space is held and ends at another node
-      else{
-        // If spacebar is released before completeing the edge, reset.
-         if (!tempEdge){
+      } else {
+        if (!tempEdge) {
           setTempEdge(null);
-          setIsDraggable(true)
+          setIsDraggable(false);
           return;
-        }  
-
-        if (e.target && (e.target as Element).classList.contains('graph-node')){
-          
-          const endNode = e.target as SVGCircleElement
+        }
+        if (e.target && (e.target as Element).classList.contains('graph-node')) {
+          const endNode = e.target as SVGCircleElement;
           const edgeExists = edges.some(edge => edge.id1 === tempEdge?.id1 && edge.id2 === endNode.id);
-
-          // If end at the same node, reset
           if (tempEdge?.id1 === endNode.id) {
-            // No self loops allowed
             setTempEdge(null);
-          }
-          else {
-            if(!edgeExists){
-              // Correctly access the properties of the SVGCircleElement
+          } else {
+            if (!edgeExists) {
               const updatedEdge = {
                 ...tempEdge,
                 id2: endNode.id,
                 x2: endNode.cx.baseVal.value,
                 y2: endNode.cy.baseVal.value
               };
-              // console.log("Edge ends at", updatedEdge.id2, "at (x,y) = (", updatedEdge.x2, updatedEdge.x1, ").");
               setEdges(edges => [...edges, updatedEdge]);
               setTempEdge(null);
-              // After edge creation, set selected to end node. 
-              setSelectedNode(endNode.id) // Might need to change this in the future to edge selection. Not sure yet.
+              setSelectedNode(endNode.id);
+              console.log(selectedNode, "is selected")
+              setIsDraggable(true)
+              return;
             }
           }
         }
       }
-      setIsDraggable(true)
-    } 
-  }
-
-  // Rclick container: n/a 
-  const handleContainerContextMenu = (e: React.MouseEvent)=> {
-      e.preventDefault();
+      setIsDraggable(false);
+    }
   };
 
-  // Lclick node: edge creation or select
-  const handleNodeClick = (nodeId:string) =>{
-    setSelectedNode(nodeId)
-    setSelectedEdge(null)
-  }
+  const handleContainerContextMenu = (e: React.MouseEvent) => {
+    e.preventDefault();
+  };
 
-  // Handle edge selection
+  const handleNodeClick = (nodeId: string) => {
+    setSelectedNode(nodeId);
+    setSelectedEdge(null);
+  };
+
   const handleEdgeClick = (edgeId: string) => {
     setSelectedEdge(edgeId);
-    setSelectedNode(null)
+    setSelectedNode(null);
   };
 
-
-  
-  // Rclick node: delete & unhighlight
   const handleNodeContextMenu = (e: React.MouseEvent, nodeId: string) => {
-    e.preventDefault(); // Prevent the default context menu behavior
+    e.preventDefault();
     setNodes(nodes => nodes.filter(node => node.id !== nodeId));
     setEdges(edges => edges.filter(edge => edge.id1 !== nodeId && edge.id2 !== nodeId));
   };
 
-  // Handle edge deletion
   const handleEdgeContextMenu = (e: React.MouseEvent, edgeId: string) => {
     e.preventDefault();
     setEdges(edges => edges.filter(edge => `${edge.id1}-${edge.id2}` !== edgeId));
     setSelectedEdge(null);
   };
 
-  
-  // Double click reverses orientation
-  const handleEdgeDoubleClick = (reverseThisEdge: EdgeType) =>{
-    // Preventative measure
+  const handleEdgeDoubleClick = (reverseThisEdge: EdgeType) => {
     if (!reverseThisEdge.id2) return;
-
-    const newEdges = edges.filter(e => e.id1 !== reverseThisEdge.id1 || e.id2 !== reverseThisEdge.id2); // Remove the original edge
+    const newEdges = edges.filter(e => e.id1 !== reverseThisEdge.id1 || e.id2 !== reverseThisEdge.id2);
     const reversedEdge = {
-      id1:reverseThisEdge.id2 as string,
+      id1: reverseThisEdge.id2 as string,
       x1: reverseThisEdge.x2 as number,
       y1: reverseThisEdge.y2 as number,
-
-      id2:reverseThisEdge.id1 as string,
+      id2: reverseThisEdge.id1 as string,
       x2: reverseThisEdge.x1 as number,
-      y2:reverseThisEdge.y1 as number
+      y2: reverseThisEdge.y1 as number
     }
-    setEdges([...newEdges, reversedEdge]); // Add the reversed edge
-    
-    // Also select the reversed edge
+    setEdges([...newEdges, reversedEdge]);
     const reversedId = `${reversedEdge.id1}-${reversedEdge.id2}`;
     handleEdgeClick(reversedId);
-  }
-
+  };
 
   return (
-    <div className = "container" 
-      onMouseDown = {handleMouseDown}
-      onMouseUp = {handleMouseUp}
-      
-      tabIndex={0} // Makes the div focusable
+    <div className="container"
+      onMouseDown={handleMouseDown}
+      onMouseUp={handleMouseUp}
+      tabIndex={0}
       onKeyDown={handleSpaceDown}
       onKeyUp={handleSpaceUp}
-
-      onContextMenu = {e => handleContainerContextMenu(e)}
+      onContextMenu={e => handleContainerContextMenu(e)}
     >
-      <svg width ="200" height = "200">
+      <svg width="200" height="200">
         {nodes.map(node => (
-        <Node
-          key={node.id}
-          node={node}
-          
-          // 1 Lclick
-          
-          isSelected={node.id === selectedNode}
-          isDraggable = {(node.id === selectedNode) && isDraggable}
-
-          onClick={() => handleNodeClick(node.id)} 
-          onDrag={handleNodeDrag}
-          onContextMenu={e => handleNodeContextMenu(e, node.id)}
-        />
+          <Node
+            key={node.id}
+            node={node}
+            isSelected={node.id === selectedNode}
+            isDraggable={(node.id === selectedNode) && isDraggable}
+            onClick={() => handleNodeClick(node.id)}
+            onDrag={handleNodeDrag}
+            onContextMenu={e => handleNodeContextMenu(e, node.id)}
+          />
         ))}
         {edges.filter(edge => edge.x2 !== null && edge.y2 !== null).map(edge => (
-          <Edge 
-            key={`${edge.id1}-${edge.id2}`} 
+          <Edge
+            key={`${edge.id1}-${edge.id2}`}
             edge={edge}
-            isSelected = {selectedEdge === `${edge.id1}-${edge.id2}`}
-            onClick={handleEdgeClick}  
-            onDoubleClick = {handleEdgeDoubleClick} 
-            onContextMenu={handleEdgeContextMenu}  
-            />
+            isSelected={selectedEdge === `${edge.id1}-${edge.id2}`}
+            onClick={handleEdgeClick}
+            onDoubleClick={handleEdgeDoubleClick}
+            onContextMenu={handleEdgeContextMenu}
+          />
         ))}
       </svg>
     </div>
   );
 }
+
 export default Graph;
