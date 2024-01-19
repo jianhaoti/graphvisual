@@ -11,7 +11,7 @@ interface Node {
 
 interface Edge {
   id1: string;
-  x1: number ;
+  x1: number;
   y1: number;
   
   id2: string| null;
@@ -33,6 +33,10 @@ const Graph = () => {
   const [isSpaceDown, setIsSpaceDown] = useState(false); 
   const [isDraggable, setIsDraggable] = useState(true); 
 
+  // For debugging purposes which need synchonous data, use the following below
+  /* useEffect(() => {
+    console.log('Edges updated:', edges);
+  }, [edges]); */
   
   // Detect if space is pressed
   useEffect(() => {
@@ -54,8 +58,7 @@ const Graph = () => {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
     };
-  }, []);
-
+  }, []);  
 
   const handleEdgeCreation = (node: SVGCircleElement) => {
     const newEdge = {
@@ -166,7 +169,7 @@ const Graph = () => {
               y2: endNode.cy.baseVal.value
             };
             setTempEdge(updatedEdge); // Update the temp edge
-            // console.log("Edge ends at", updatedEdge.id2, "at (x,y) = (", updatedEdge.x2, updatedEdge.x1, ").");
+            console.log("Edge ends at", updatedEdge.id2, "at (x,y) = (", updatedEdge.x2, updatedEdge.x1, ").");
             setEdges(edges => [...edges, updatedEdge]);
             console.log(edges);
             setTempEdge(null);
