@@ -15,10 +15,9 @@ interface GraphEdgeProps{
   onClick: (edgeId: string) => void;
   onDoubleClick: (edge: Edge) => void;
   onContextMenu: (e: React.MouseEvent, edgeId: string) => void;
-  singleClickTimer: React.RefObject<number | undefined>; // Add this line
 }
 
-const Edge: React.FC<GraphEdgeProps> = ({edge, isSelected, singleClickTimer, onClick, onDoubleClick, onContextMenu}) => {
+const Edge: React.FC<GraphEdgeProps> = ({edge, isSelected, onClick, onDoubleClick, onContextMenu}) => {
   const nodeRadius = 10;
 
   // Only return fully constructed edges
@@ -53,15 +52,11 @@ const Edge: React.FC<GraphEdgeProps> = ({edge, isSelected, singleClickTimer, onC
   const arrowMidX = adjustedStartX + dirX * arrowPlacementFactor;
   const arrowMidY = adjustedStartY + dirY * arrowPlacementFactor;
 
-  const handleEdgeClick = (edgeId) => {
-    clearTimeout(singleClickTimer.current);
-    singleClickTimer.current = setTimeout(() => {
-      onClick(edgeId);
-    }, 250);
+  const handleEdgeClick = () => {
+    onClick(edgeId)
   };
 
-  const handleEdgeDoubleClick = (edge) => {
-    clearTimeout(singleClickTimer.current);
+  const handleEdgeDoubleClick = () => {
     onDoubleClick(edge);
   };
 

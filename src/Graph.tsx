@@ -22,18 +22,20 @@ interface EdgeType {
 const Graph = () => {
   const [nodes, setNodes] = useState<Node[]>([]); // Nodes list
   const [edges, setEdges] = useState<EdgeType[]>([]) // Edges list
-  
-  const [selectedNode, setSelectedNode] = useState<string | null>(null); // ID which node is selected
-  const [selectedEdge, setSelectedEdge] = useState<string | null>(null); // ID which edge is selected
+
+  const currentNodeRef = useRef<SVGCircleElement| null>(null);
   const [tempEdge, setTempEdge] = useState<EdgeType|null>(null);
+
+  const [selectedNode, setSelectedNode] = useState<string | null>(null); // ID which node is selected
+  const [selectedEdge, setSelectedEdge] = useState<string | null>(null); // ID which node is selected
+
+  const clickStartTime = useRef<number | null>(null); // For detecting click vs hold
+  
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [isSpaceDown, setIsSpaceDown] = useState(false); 
   const [isDraggable, setIsDraggable] = useState(true); 
   const [edgeClicked, setEdgeClicked] = useState(false); 
-  
-  const currentNodeRef = useRef<SVGCircleElement| null>(null);
-  const clickStartTime = useRef<number | null>(null); // For detecting click vs hold
-  const singleClickTimer = useRef<number | undefined>(undefined);
+
 
   // For debugging purposes which need synchonous data, use the following below
   /* useEffect(() => {
@@ -224,6 +226,14 @@ const Graph = () => {
     setSelectedNode(nodeId)
     setSelectedEdge(null)
   }
+
+  // Handle edge selection
+  const handleEdgeClick = (edgeId: string) => {
+    setSelectedEdge(edgeId);
+    setSelectedNode(null)
+  };
+
+
   
   // Rclick node: delete & unhighlight
   const handleNodeContextMenu = (e: React.MouseEvent, nodeId: string) => {
@@ -253,23 +263,9 @@ const Graph = () => {
     }
   };
 
-  // Handle edge selection
-  const handleEdgeClick = (edgeId: string) => {
-    setSelectedEdge(edgeId);
-    setSelectedNode(null)
-    
-    singleClickTimer.current = window.setTimeout(() => {
-      singleClickTimer.current = undefined;
-    }, 250);
-  }
-
   // Double click reverses orientation
   const handeEdgeDoubleClick = (reverseThisEdge: EdgeType) =>{
-    if (singleClickTimer.current) {
-      clearTimeout(singleClickTimer.current);
-      singleClickTimer.current = undefined;
-    }
-      // Preventative measure
+    // Preventative measure
     if (!reverseThisEdge.id2) return;
 
     const newEdges = edges.filter(e => e.id1 !== reverseThisEdge.id1 || e.id2 !== reverseThisEdge.id2); // Remove the original edge
@@ -321,7 +317,6 @@ const Graph = () => {
             onClick={handleEdgeClick}  
             onDoubleClick = {handeEdgeDoubleClick} 
             onContextMenu={handleEdgeContextMenu}  
-            singleClickTimer={singleClickTimer}
             />
         ))}
       </svg>
