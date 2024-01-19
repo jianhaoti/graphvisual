@@ -9,7 +9,7 @@ interface Node {
     y: number;
   }
 
-interface Edge {
+interface EdgeType {
   id1: string;
   x1: number;
   y1: number;
@@ -21,21 +21,19 @@ interface Edge {
   
 const Graph = () => {
   const [nodes, setNodes] = useState<Node[]>([]); // Nodes list
-  const [edges, setEdges] = useState<Edge[]>([]) // Edges list
-
-  const currentNodeRef = useRef<SVGCircleElement| null>(null);
-  const [tempEdge, setTempEdge] = useState<Edge|null>(null);
-
-  const [selectedNode, setSelectedNode] = useState<string | null>(null); // ID which node is selected
-  const [selectedEdge, setSelectedEdge] = useState<string | null>(null); // ID which node is selected
-
-  const clickStartTime = useRef<number | null>(null); // For detecting click vs hold
+  const [edges, setEdges] = useState<EdgeType[]>([]) // Edges list
   
+  const [selectedNode, setSelectedNode] = useState<string | null>(null); // ID which node is selected
+  const [selectedEdge, setSelectedEdge] = useState<string | null>(null); // ID which edge is selected
+  const [tempEdge, setTempEdge] = useState<EdgeType|null>(null);
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [isSpaceDown, setIsSpaceDown] = useState(false); 
   const [isDraggable, setIsDraggable] = useState(true); 
   const [edgeClicked, setEdgeClicked] = useState(false); 
-
+  
+  const currentNodeRef = useRef<SVGCircleElement| null>(null);
+  const clickStartTime = useRef<number | null>(null); // For detecting click vs hold
+  const singleClickTimer = useRef<number | undefined>(undefined);
 
   // For debugging purposes which need synchonous data, use the following below
   /* useEffect(() => {
@@ -226,14 +224,6 @@ const Graph = () => {
     setSelectedNode(nodeId)
     setSelectedEdge(null)
   }
-
-  // Handle edge selection
-  const handleEdgeClick = (edgeId: string) => {
-    setSelectedEdge(edgeId);
-    setSelectedNode(null)
-  };
-
-
   
   // Rclick node: delete & unhighlight
   const handleNodeContextMenu = (e: React.MouseEvent, nodeId: string) => {
@@ -263,6 +253,38 @@ const Graph = () => {
     }
   };
 
+  // Handle edge selection
+  const handleEdgeClick = (edgeId: string) => {
+    setSelectedEdge(edgeId);
+    setSelectedNode(null)
+    
+    singleClickTimer.current = window.setTimeout(() => {
+      singleClickTimer.current = undefined;
+    }, 250);
+  }
+
+  // Double click reverses orientation
+  const handeEdgeDoubleClick = (reverseThisEdge: EdgeType) =>{
+    if (singleClickTimer.current) {
+      clearTimeout(singleClickTimer.current);
+      singleClickTimer.current = undefined;
+    }
+      // Preventative measure
+    if (!reverseThisEdge.id2) return;
+
+    const newEdges = edges.filter(e => e.id1 !== reverseThisEdge.id1 || e.id2 !== reverseThisEdge.id2); // Remove the original edge
+    const reversedEdge = {
+      id1:reverseThisEdge.id2 as string,
+      x1: reverseThisEdge.x2 as number,
+      y1: reverseThisEdge.y2 as number,
+
+      id2:reverseThisEdge.id1 as string,
+      x2: reverseThisEdge.x1 as number,
+      y2:reverseThisEdge.y1 as number
+    }
+    setEdges([...newEdges, reversedEdge]); // Add the reversed edge
+  }
+
 
   return (
     <div className = "container" 
@@ -286,7 +308,7 @@ const Graph = () => {
           isSelected={node.id === selectedNode}
           isDraggable = {(node.id === selectedNode) && isDraggable}
 
-          onClick={() => handleNodeClick(node.id)}  
+          onClick={() => handleNodeClick(node.id)} 
           onDrag={handleNodeDrag}
           onContextMenu={e => handleNodeContextMenu(e, node.id)}
         />
@@ -296,8 +318,10 @@ const Graph = () => {
             key={`${edge.id1}-${edge.id2}`} 
             edge={edge}
             isSelected = {selectedEdge === `${edge.id1}-${edge.id2}`}
-            onClick={handleEdgeClick}  // Add this prop
-            onContextMenu={handleEdgeContextMenu}  // Add this prop
+            onClick={handleEdgeClick}  
+            onDoubleClick = {handeEdgeDoubleClick} 
+            onContextMenu={handleEdgeContextMenu}  
+            singleClickTimer={singleClickTimer}
             />
         ))}
       </svg>

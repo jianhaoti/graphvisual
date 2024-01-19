@@ -1,38 +1,33 @@
 import React from 'react';
 
-interface GraphEdgeProps{
-  edge: {
-    id1: string;
-    x1: number;
-    y1: number;
+type Edge = {
+  id1: string;
+  x1: number;
+  y1: number;
+  id2: string | null;
+  x2: number | null;
+  y2: number | null;
+};
 
-    id2: string | null;
-    x2: number | null;
-    y2: number | null;
-  };
+interface GraphEdgeProps{
+  edge: Edge;
   isSelected: boolean;
   onClick: (edgeId: string) => void;
+  onDoubleClick: (edge: Edge) => void;
   onContextMenu: (e: React.MouseEvent, edgeId: string) => void;
+  singleClickTimer: React.RefObject<number | undefined>; // Add this line
 }
 
-const Edge: React.FC<GraphEdgeProps> = ({edge, isSelected, onClick, onContextMenu}) => {
-  const nodeRadius = 6;
+const Edge: React.FC<GraphEdgeProps> = ({edge, isSelected, singleClickTimer, onClick, onDoubleClick, onContextMenu}) => {
+  const nodeRadius = 10;
 
+  // Only return fully constructed edges
   if (edge.x2 === null || edge.y2 === null) {
-    return null; // Or some placeholder representation
+    return null; 
   }
 
   const edgeId = `${edge.id1}-${edge.id2}`;
   const arrowheadId = `arrowhead-${edge.id1}-${edge.id2}`;
-
-  /*
-  // Calculate midpoint of the edge
-  const midX = (edge.x1 + edge.x2) / 2;
-  const midY = (edge.y1 + edge.y2) / 2;
-
-  // Calculate offsets for a short line segment near the midpoint
-  const offsetX = (edge.x2 - edge.x1) / 30; // Adjust divisor for the length of the segment
-  const offsetY = (edge.y2 - edge.y1) / 30; // Adjust divisor for the length of the segment */
 
   // Calculate direction vector
   const dirX = edge.x2 - edge.x1;
@@ -58,10 +53,19 @@ const Edge: React.FC<GraphEdgeProps> = ({edge, isSelected, onClick, onContextMen
   const arrowMidX = adjustedStartX + dirX * arrowPlacementFactor;
   const arrowMidY = adjustedStartY + dirY * arrowPlacementFactor;
 
-  const handleEdgeClick = (e: React.MouseEvent) => {
-    e.stopPropagation(); // Prevent event from bubbling up
-    onClick(edgeId);
+  const handleEdgeClick = (edgeId) => {
+    clearTimeout(singleClickTimer.current);
+    singleClickTimer.current = setTimeout(() => {
+      onClick(edgeId);
+    }, 250);
   };
+
+  const handleEdgeDoubleClick = (edge) => {
+    clearTimeout(singleClickTimer.current);
+    onDoubleClick(edge);
+  };
+
+
 
   const handleEdgeContextMenu = (e: React.MouseEvent) => {
     e.stopPropagation(); // Prevent event from bubbling up
@@ -91,11 +95,12 @@ const Edge: React.FC<GraphEdgeProps> = ({edge, isSelected, onClick, onContextMen
         y1={adjustedStartY} 
         x2={adjustedEndX} 
         y2={adjustedEndY} 
-        strokeWidth={1} 
+        strokeWidth={2} 
         onClick={handleEdgeClick}
+        onDoubleClick={handleEdgeDoubleClick}
         onContextMenu={handleEdgeContextMenu}  
         stroke={isSelected ? 'darkred' : 'black'}
-        style={{ cursor: 'grab' }} // Set the cursor style for better UX
+        style={{ cursor: 'pointer' }} // Set the cursor style for better UX
 
       />
 
@@ -109,8 +114,9 @@ const Edge: React.FC<GraphEdgeProps> = ({edge, isSelected, onClick, onContextMen
         strokeWidth={1}
         markerEnd={`url(#${arrowheadId})`}
         onClick={handleEdgeClick}
+        onDoubleClick={handleEdgeDoubleClick}
         onContextMenu={handleEdgeContextMenu}  
-        style={{ cursor: 'grab' }} // Set the cursor style for better UX
+        style={{ cursor: 'pointer' }} // Set the cursor style for better UX
       />
     </g>
   );
