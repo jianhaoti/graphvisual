@@ -34,9 +34,9 @@ const Graph = () => {
   const [isDraggable, setIsDraggable] = useState(true); 
 
   // For debugging purposes which need synchonous data, use the following below
-  /* useEffect(() => {
+   useEffect(() => {
     console.log('Edges updated:', edges);
-  }, [edges]); */
+  }, [edges]); 
   
   // Detect if space is pressed
   useEffect(() => {
@@ -71,7 +71,7 @@ const Graph = () => {
     }
     setTempEdge(newEdge);
     setIsDraggable(false);
-    console.log("New edge starts at", newEdge.id1, "at (x,y) = (", newEdge.x1, newEdge.y1, ").");
+    // console.log("New edge starts at", newEdge.id1, "at (x,y) = (", newEdge.x1, newEdge.y1, ").");
   }       
   const handleSpaceDown = (e: React.KeyboardEvent) =>{
     if(!isSpaceDown){
@@ -140,9 +140,7 @@ const Graph = () => {
         }
       }      
       // Edge creation if space is held and ends at another node
-      // Need to check to not allow multiple edges
       else{
-        //console.log("space is held down");
         // If spacebar is released before completeing the edge, reset.
          if (!tempEdge){
           setTempEdge(null);
@@ -153,7 +151,8 @@ const Graph = () => {
         if (e.target && (e.target as Element).classList.contains('graph-node')){
           
           const endNode = e.target as SVGCircleElement
-          
+          const edgeExists = edges.some(edge => edge.id1 === tempEdge?.id1 && edge.id2 === endNode.id);
+
           // If end at the same node, reset
           if (tempEdge?.id1 === endNode.id) {
             // No self loops allowed
@@ -161,19 +160,20 @@ const Graph = () => {
             setTempEdge(null);
           }
           else {
-            // Correctly access the properties of the SVGCircleElement
-            const updatedEdge = {
-              ...tempEdge,
-              id2: endNode.id,
-              x2: endNode.cx.baseVal.value,
-              y2: endNode.cy.baseVal.value
-            };
-            setTempEdge(updatedEdge); // Update the temp edge
-            console.log("Edge ends at", updatedEdge.id2, "at (x,y) = (", updatedEdge.x2, updatedEdge.x1, ").");
-            setEdges(edges => [...edges, updatedEdge]);
-            console.log(edges);
-            setTempEdge(null);
-            setIsDraggable(true);
+            if(!edgeExists){
+              // Correctly access the properties of the SVGCircleElement
+              const updatedEdge = {
+                ...tempEdge,
+                id2: endNode.id,
+                x2: endNode.cx.baseVal.value,
+                y2: endNode.cy.baseVal.value
+              };
+              setTempEdge(updatedEdge); // Update the temp edge
+              // console.log("Edge ends at", updatedEdge.id2, "at (x,y) = (", updatedEdge.x2, updatedEdge.x1, ").");
+              setEdges(edges => [...edges, updatedEdge]);
+              setTempEdge(null);
+              setIsDraggable(true);
+            }
           }
         }
       }
