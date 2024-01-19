@@ -31,7 +31,7 @@ const Graph = () => {
   
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [isSpaceDown, setIsSpaceDown] = useState(false); 
-  const [isDraggable, setIsDraggable] = useState(false); 
+  const [isDraggable, setIsDraggable] = useState(true); 
 
   
   // Detect if space is pressed
@@ -39,13 +39,11 @@ const Graph = () => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.code === 'Space') {
         setIsSpaceDown(true);
-        setIsDraggable(false);
       }
     };
     const handleKeyUp = (e: KeyboardEvent) => {
       if (e.code === 'Space') {
         setIsSpaceDown(false);
-        setIsDraggable(true);
       }
     };
 
@@ -69,6 +67,7 @@ const Graph = () => {
       y2: null        
     }
     setTempEdge(newEdge);
+    setIsDraggable(false);
     // console.log("New edge starts at", newEdge.id1, "at (x,y) = (", newEdge.x1, newEdge.y1, ").");
   }       
   const handleSpaceDown = (e: React.KeyboardEvent) =>{
@@ -83,12 +82,18 @@ const Graph = () => {
   const handleSpaceUp = (e: React.KeyboardEvent) => {
     if(e.code ==='Space'){
       setIsSpaceDown(false);
+      if(isMouseDown){
+        setIsDraggable(true)
+      }
     }
   };
   
   const handleMouseDown = (e: React.MouseEvent) => {
     if (e.button === 0){
       setIsMouseDown(true)
+      if(!isSpaceDown){
+        setIsDraggable(true)
+      }
       clickStartTime.current = new Date().getTime() // 
       
       // If clicked on a node
@@ -114,6 +119,7 @@ const Graph = () => {
       // Node creation conditions (3)
       if (!isSpaceDown){ // Must not hold spacebar
         // Must click on canvas
+        setIsDraggable(true)
         if (e.target && (e.target as Element).classList.contains('graph-node')) return;
         
         if(clickDuration < 200){ // Must be shortclick
@@ -135,17 +141,20 @@ const Graph = () => {
       else{
         //console.log("space is held down");
         // If spacebar is released before completeing the edge, reset.
-        if (!tempEdge){
+         if (!tempEdge){
           setTempEdge(null);
+          setIsDraggable(true);
           return;
         }  
 
         if (e.target && (e.target as Element).classList.contains('graph-node')){
+          
           const endNode = e.target as SVGCircleElement
           
           // If end at the same node, reset
           if (tempEdge?.id1 === endNode.id) {
             // No self loops allowed
+            setIsDraggable(true);
             setTempEdge(null);
           }
           else {
@@ -161,6 +170,8 @@ const Graph = () => {
             setEdges(edges => [...edges, updatedEdge]);
             console.log(edges);
             setTempEdge(null);
+            setIsDraggable(true);
+
           }
         }
       }
