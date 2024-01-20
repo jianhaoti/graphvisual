@@ -22,7 +22,6 @@ function useDraggerSVG(
         if (!target) throw new Error("Element with given ref doesn't exist.");
 
         const onMouseDown = (e: MouseEvent) => {
-
             isClicked.current = true;
             coords.current.startX = e.clientX;
             coords.current.startY = e.clientY;

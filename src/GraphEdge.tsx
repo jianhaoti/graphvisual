@@ -61,8 +61,6 @@ const Edge: React.FC<GraphEdgeProps> = ({edge, isSelected, onClick, onDoubleClic
   
   };
 
-
-
   const handleEdgeContextMenu = (e: React.MouseEvent) => {
     e.stopPropagation(); // Prevent event from bubbling up
     onContextMenu(e, edgeId);

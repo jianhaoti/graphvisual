@@ -21,13 +21,14 @@ const Graph = () => {
   const [nodes, setNodes] = useState<Node[]>([]);
   const [edges, setEdges] = useState<EdgeType[]>([]);
   const currentNodeRef = useRef<SVGCircleElement | null>(null);
+
+  const [selectedEdge, setSelectedEdge] = useState<string | null>(null);
+
   const [tempEdge, setTempEdge] = useState<EdgeType | null>(null);
   const [selectedNode, setSelectedNode] = useState<string | null>(null);
-  const [selectedEdge, setSelectedEdge] = useState<string | null>(null);
   const clickStartTime = useRef<number | null>(null);
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [isSpaceDown, setIsSpaceDown] = useState(false);
-  const [isDraggable, setIsDraggable] = useState(true);
   const [edgeClicked, setEdgeClicked] = useState(false);
 
   const deleteSelected = useCallback(() => {
@@ -65,7 +66,13 @@ const Graph = () => {
       window.removeEventListener('keyup', handleKeyUp);
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [deleteSelected]);
+  }, []);
+
+  // This one is for console logging sychonously. 
+  useEffect( () =>{
+    console.log("isDraggable:", selectedNode)
+    console.log(nodes);
+  }, [selectedNode, nodes]);
 
   const handleNodeDrag = (nodeId: string, newPosition: { x: number; y: number }) => {
     setEdges(currentEdges => currentEdges.map(edge => {
@@ -88,10 +95,9 @@ const Graph = () => {
       y2: null
     }
     setTempEdge(newEdge);
-    setIsDraggable(false);
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
+  const handleSpaceDown = (e: React.KeyboardEvent) => {
     if (!isSpaceDown) {
       if (e.code === 'Space' && isMouseDown && currentNodeRef.current) {
         setIsSpaceDown(true);
@@ -100,36 +106,22 @@ const Graph = () => {
     }
   };
 
-  const handleKeyUp = (e: React.KeyboardEvent) => {
+  const handleSpaceUp = (e: React.KeyboardEvent) => {
     if (e.code === 'Space') {
       setIsSpaceDown(false);
-
-      // The !tempEdge prevents all dragging after space is pressed, even if it was previously dragging
-      if (isMouseDown && !tempEdge) {
-        setIsDraggable(true);
-      }
     }
   };
 
   const handleMouseDown = (e: React.MouseEvent) => {
-    // Middle Mouse 
-    if (e.button === 1) { 
-      if (e.target && (e.target as Element).classList.contains('graph-node')) {
-          const element = e.target as SVGCircleElement;
-          handleEdgeCreation(element); // Start creating the edge
-      }
-   }
-
-    // Left Click
     if (e.button === 0) {
       setIsMouseDown(true);
-      if (!isSpaceDown) {
-        setIsDraggable(true);
-      }
       clickStartTime.current = new Date().getTime();
       if (e.target && (e.target as Element).classList.contains('graph-node')) {
         const element = e.target as SVGCircleElement;
         currentNodeRef.current = element;
+        if(!isSpaceDown){
+          setSelectedNode(element.id);
+        }
         if (isSpaceDown) {
           handleEdgeCreation(element);
         }
@@ -141,40 +133,6 @@ const Graph = () => {
   };
 
   const handleMouseUp = (e: React.MouseEvent<HTMLDivElement>) => {
-    // Middle Mouse
-    if (e.button === 1) { // Middle mouse button
-      if (!tempEdge) {
-        setTempEdge(null);
-        setIsDraggable(false);
-        return;
-      }
-
-      if (e.target && (e.target as Element).classList.contains('graph-node')) {
-          // Complete the edge creation if it ends on a different node
-          const endNode = e.target as SVGCircleElement;
-          const edgeExists = edges.some(edge => edge.id1 === tempEdge?.id1 && edge.id2 === endNode.id);
-          if (tempEdge?.id1 === endNode.id) {
-            setTempEdge(null);
-          } else {
-            if (!edgeExists) {
-              const updatedEdge = {
-                ...tempEdge,
-                id2: endNode.id,
-                x2: endNode.cx.baseVal.value,
-                y2: endNode.cy.baseVal.value
-              };
-              setEdges(edges => [...edges, updatedEdge]);
-              setTempEdge(null);
-
-              setSelectedNode(endNode.id);
-              setIsDraggable(true)
-              return;
-            }
-          }
-      } 
-      setIsDraggable(false);
-    }
-    // Left Click
     if (e.button === 0) {
       setIsMouseDown(false);
       currentNodeRef.current = null;
@@ -187,7 +145,8 @@ const Graph = () => {
         setSelectedEdge(null);
 
         if (e.target && (e.target as Element).classList.contains('graph-node')) {
-          setIsDraggable(true);
+          const element = e.target as SVGCircleElement;
+          setSelectedNode(element.id)
           return;
         }
 
@@ -198,22 +157,17 @@ const Graph = () => {
             x: e.clientX - svgRect.left,
             y: e.clientY - svgRect.top
           };
-          
+          console.log("New node: ", newNode);
+          setSelectedNode(newNode.id);
           setNodes(prevNodes => [...prevNodes, newNode]);
 
           // Reset this data
           clickStartTime.current = null;
-          
-          setSelectedNode(newNode.id);
-          setIsDraggable(true);
-          return;
         }
-      } 
-      // Spcae is not held
-      else {
+      } else {
         if (!tempEdge) {
           setTempEdge(null);
-          setIsDraggable(false);
+          setSelectedNode(null);
           return;
         }
         if (e.target && (e.target as Element).classList.contains('graph-node')) {
@@ -230,16 +184,14 @@ const Graph = () => {
                 y2: endNode.cy.baseVal.value
               };
               setEdges(edges => [...edges, updatedEdge]);
-              setTempEdge(null);
-
+              setTempEdge(null);          
               setSelectedNode(endNode.id);
-              setIsDraggable(true)
               return;
             }
           }
         }
       }
-      setIsDraggable(false);
+      setSelectedNode(null);
     }
   };
 
@@ -290,8 +242,8 @@ const Graph = () => {
       onMouseDown={handleMouseDown}
       onMouseUp={handleMouseUp}
       tabIndex={0}
-      onKeyDown={handleKeyDown}
-      onKeyUp={handleKeyUp}
+      onKeyDown={handleSpaceDown}
+      onKeyUp={handleSpaceUp}
       onContextMenu={e => handleContainerContextMenu(e)}
     >
       <svg width="200" height="200">
@@ -300,7 +252,7 @@ const Graph = () => {
             key={node.id}
             node={node}
             isSelected={node.id === selectedNode}
-            isDraggable={(node.id === selectedNode) && isDraggable}
+            isDraggable={(node.id === selectedNode) && !isSpaceDown}
             onClick={() => handleNodeClick(node.id)}
             onDrag={handleNodeDrag}
             onContextMenu={e => handleNodeContextMenu(e, node.id)}
