@@ -56,32 +56,6 @@ const Graph: React.FC <GraphProps> = ({ isOriented }) => {
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [isSpaceDown, setIsSpaceDown] = useState(false);
   const [edgeClicked, setEdgeClicked] = useState(false);
-
-  // For immer
-  /* const updateHistory = () => {
-    const newState: GraphState = {
-      nodes: nodes,
-      edges: edges,
-      selectedNode: selectedNode,
-      selectedEdge: selectedEdge
-    };
-    
-    const newHistory = history.slice(0, currentIndex + 1);
-    newHistory.push(newState);
-    setHistory(newHistory);
-    setCurrentIndex(newHistory.length - 1);
-  };
-  
-  const undo = () => {
-    if (currentIndex > 0) {
-      const previousState = history[currentIndex - 1];
-      setNodes(previousState.nodes);
-      setEdges(previousState.edges);
-      setSelectedNode(previousState.selectedNode);
-      setSelectedEdge(previousState.selectedEdge);
-      setCurrentIndex(currentIndex - 1);
-    }
-  }; */
   
   const deleteSelected = useCallback(() => {
     if (selectedNode) {
@@ -227,6 +201,7 @@ const Graph: React.FC <GraphProps> = ({ isOriented }) => {
     setEdges((prevEdges: EdgeType[]) => [...prevEdges, updatedEdge] as EdgeType[]);   
     setTempEdge(null);          
     setSelectedNode(endNode.id);
+    setSelectedEdge(null);
     //updateHistory();
 
     // Reset the clock
