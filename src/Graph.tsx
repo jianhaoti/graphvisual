@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-// import {produce} from 'immer';
 import Node from './GraphNode';
 import Edge from './GraphEdge';
 
@@ -22,28 +21,9 @@ interface GraphProps {
   isOriented: boolean;
 }
 
-/* interface GraphState {
-  nodes: Node[];
-  edges: EdgeType[];
-  selectedNode: string | null;
-  selectedEdge: string | null;
-} */
 
 const Graph: React.FC <GraphProps> = ({ isOriented }) => {
-  /* const initialGraphState: GraphState = {
-    nodes: [],  // Initial nodes
-    edges: [],  // Initial edges
-    selectedNode: null,  // Initially, no node is selected
-    selectedEdge: null   // Initially, no edge is selected
-  }; */
-
-
-  // For immer's undo
-  /* const [history, setHistory] = useState<GraphState[]>([]);
-  const [currentIndex, setCurrentIndex] = useState(0); */
-
   // Mine
-
   const [nodes, setNodes] = useState<Node[]>([]);
   const [edges, setEdges] = useState<EdgeType[]>([]);
   const currentNodeRef = useRef<SVGCircleElement | null>(null);
@@ -70,12 +50,10 @@ const Graph: React.FC <GraphProps> = ({ isOriented }) => {
           setSelectedEdge(null);
         }
       }
-      //updateHistory();
     } 
     else if (selectedEdge) {
       setEdges(edges => edges.filter(edge => `${edge.id1}-${edge.id2}` !== selectedEdge));
       setSelectedEdge(null);
-      //updateHistory();
     }
   }, [selectedNode, selectedEdge, setNodes, setEdges]);
 
@@ -166,16 +144,16 @@ const Graph: React.FC <GraphProps> = ({ isOriented }) => {
       if (e.target && (e.target as Element).classList.contains('graph-node')) {
         const element = e.target as SVGCircleElement;
         currentNodeRef.current = element;
-        if(!isSpaceDown){
+        /* if(!isSpaceDown){
           setSelectedNode(element.id);
-        }
+        } */
         if (isSpaceDown) {
           handleEdgeCreation(element);
         }
       }
-      if (e.target && (e.target as Element).classList.contains('graph-edge')) {
+      /* if (e.target && (e.target as Element).classList.contains('graph-edge')) {
         setEdgeClicked(true);
-      }
+      } */
     };
   };
 
@@ -188,7 +166,6 @@ const Graph: React.FC <GraphProps> = ({ isOriented }) => {
     };
     setNodes(prevNodes => [...prevNodes, newNode]);
     setSelectedNode(newNode.id)
-    //updateHistory();
   };
 
   const handleEdgeCompletion = (endNode: SVGCircleElement)=>{
@@ -202,7 +179,6 @@ const Graph: React.FC <GraphProps> = ({ isOriented }) => {
     setTempEdge(null);          
     setSelectedNode(endNode.id);
     setSelectedEdge(null);
-    //updateHistory();
 
     // Reset the clock
     clickStartTime.current = null;
