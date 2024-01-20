@@ -91,7 +91,7 @@ const Graph = () => {
     setIsDraggable(false);
   };
 
-  const handleSpaceDown = (e: React.KeyboardEvent) => {
+  const handleKeyDown = (e: React.KeyboardEvent) => {
     if (!isSpaceDown) {
       if (e.code === 'Space' && isMouseDown && currentNodeRef.current) {
         setIsSpaceDown(true);
@@ -100,7 +100,7 @@ const Graph = () => {
     }
   };
 
-  const handleSpaceUp = (e: React.KeyboardEvent) => {
+  const handleKeyUp = (e: React.KeyboardEvent) => {
     if (e.code === 'Space') {
       setIsSpaceDown(false);
 
@@ -290,8 +290,8 @@ const Graph = () => {
       onMouseDown={handleMouseDown}
       onMouseUp={handleMouseUp}
       tabIndex={0}
-      onKeyDown={handleSpaceDown}
-      onKeyUp={handleSpaceUp}
+      onKeyDown={handleKeyDown}
+      onKeyUp={handleKeyUp}
       onContextMenu={e => handleContainerContextMenu(e)}
     >
       <svg width="200" height="200">
