@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import {produce} from 'immer';
+// import {produce} from 'immer';
 import Node from './GraphNode';
 import Edge from './GraphEdge';
 
@@ -17,27 +17,27 @@ interface EdgeType {
   x2: number | null;
   y2: number | null;
 }
-interface GraphState {
+/* interface GraphState {
   nodes: Node[];
   edges: EdgeType[];
   selectedNode: string | null;
   selectedEdge: string | null;
-}
+} */
 
 const Graph = () => {
-  const initialGraphState: GraphState = {
+  /* const initialGraphState: GraphState = {
     nodes: [],  // Initial nodes
     edges: [],  // Initial edges
     selectedNode: null,  // Initially, no node is selected
     selectedEdge: null   // Initially, no edge is selected
-  };
+  }; */
 
 
   // For immer's undo
-  const [history, setHistory] = useState<GraphState[]>([]);
-  const [currentIndex, setCurrentIndex] = useState(0);
+  /* const [history, setHistory] = useState<GraphState[]>([]);
+  const [currentIndex, setCurrentIndex] = useState(0); */
 
-  // My shit
+  // Mine
   const [nodes, setNodes] = useState<Node[]>([]);
   const [edges, setEdges] = useState<EdgeType[]>([]);
   const currentNodeRef = useRef<SVGCircleElement | null>(null);
@@ -53,7 +53,7 @@ const Graph = () => {
   const [isOriented, setIsOriented] = useState(true);
 
   // For immer
-  const updateHistory = () => {
+  /* const updateHistory = () => {
     const newState: GraphState = {
       nodes: nodes,
       edges: edges,
@@ -76,8 +76,7 @@ const Graph = () => {
       setSelectedEdge(previousState.selectedEdge);
       setCurrentIndex(currentIndex - 1);
     }
-  };
-    
+  }; */
   
   const deleteSelected = useCallback(() => {
     if (selectedNode) {
@@ -92,12 +91,12 @@ const Graph = () => {
           setSelectedEdge(null);
         }
       }
-      updateHistory();
+      //updateHistory();
     } 
     else if (selectedEdge) {
       setEdges(edges => edges.filter(edge => `${edge.id1}-${edge.id2}` !== selectedEdge));
       setSelectedEdge(null);
-      updateHistory();
+      //updateHistory();
     }
   }, [selectedNode, selectedEdge, setNodes, setEdges]);
 
@@ -211,7 +210,7 @@ const Graph = () => {
     };
     setNodes(prevNodes => [...prevNodes, newNode]);
     setSelectedNode(newNode.id)
-    updateHistory();
+    //updateHistory();
   };
 
   const handleEdgeCompletion = (endNode: SVGCircleElement)=>{
@@ -224,7 +223,7 @@ const Graph = () => {
     setEdges((prevEdges: EdgeType[]) => [...prevEdges, updatedEdge] as EdgeType[]);   
     setTempEdge(null);          
     setSelectedNode(endNode.id);
-    updateHistory();
+    //updateHistory();
 
     // Reset the clock
     clickStartTime.current = null;
@@ -370,11 +369,6 @@ const Graph = () => {
         onClick = {() => setIsOriented(!isOriented)}
       >
           {isOriented ? "Set Unoriented" : "Set Oriented"}
-        </button>
-        <button 
-          className = 'bottom-right-button'
-          onClick={undo} disabled={currentIndex === 0}>
-            Undo
         </button>
     </div>
   );
