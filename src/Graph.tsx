@@ -210,6 +210,8 @@ const Graph = () => {
 
   const handleContainerContextMenu = (e: React.MouseEvent) => {
     e.preventDefault();
+    setSelectedEdge(null);
+    setSelectedNode(null);
   };
 
   const handleNodeClick = (nodeId: string) => {
