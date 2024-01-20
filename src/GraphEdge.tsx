@@ -12,12 +12,13 @@ type Edge = {
 interface GraphEdgeProps{
   edge: Edge;
   isSelected: boolean;
+  isOriented: boolean;
   onClick: (edgeId: string) => void;
   onDoubleClick: (edge: Edge) => void;
   onContextMenu: (e: React.MouseEvent, edgeId: string) => void;
 }
 
-const Edge: React.FC<GraphEdgeProps> = ({edge, isSelected, onClick, onDoubleClick, onContextMenu}) => {
+const Edge: React.FC<GraphEdgeProps> = ({edge, isSelected, isOriented, onClick, onDoubleClick, onContextMenu}) => {
   const nodeRadius = 10;
 
   // Only return fully constructed edges
@@ -98,7 +99,8 @@ const Edge: React.FC<GraphEdgeProps> = ({edge, isSelected, onClick, onDoubleClic
 
       />
 
-      <line
+      {isOriented && 
+      (<line // Add an arrowhead if the edge is oriented
         className="graph-edge"       
         x1={arrowMidX - offsetX}
         y1={arrowMidY - offsetY}
@@ -111,7 +113,7 @@ const Edge: React.FC<GraphEdgeProps> = ({edge, isSelected, onClick, onDoubleClic
         onDoubleClick={handleEdgeDoubleClick}
         onContextMenu={handleEdgeContextMenu}  
         style={{ cursor: 'pointer' }} // Set the cursor style for better UX
-      />
+      />)} 
     </g>
   );
 };

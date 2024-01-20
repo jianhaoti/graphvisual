@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
+import {produce} from 'immer';
 import Node from './GraphNode';
 import Edge from './GraphEdge';
 
@@ -16,8 +17,27 @@ interface EdgeType {
   x2: number | null;
   y2: number | null;
 }
+interface GraphState {
+  nodes: Node[];
+  edges: EdgeType[];
+  selectedNode: string | null;
+  selectedEdge: string | null;
+}
 
 const Graph = () => {
+  const initialGraphState: GraphState = {
+    nodes: [],  // Initial nodes
+    edges: [],  // Initial edges
+    selectedNode: null,  // Initially, no node is selected
+    selectedEdge: null   // Initially, no edge is selected
+  };
+
+
+  // For immer's undo
+  const [history, setHistory] = useState<GraphState[]>([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  // My shit
   const [nodes, setNodes] = useState<Node[]>([]);
   const [edges, setEdges] = useState<EdgeType[]>([]);
   const currentNodeRef = useRef<SVGCircleElement | null>(null);
@@ -30,7 +50,35 @@ const Graph = () => {
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [isSpaceDown, setIsSpaceDown] = useState(false);
   const [edgeClicked, setEdgeClicked] = useState(false);
+  const [isOriented, setIsOriented] = useState(true);
 
+  // For immer
+  const updateHistory = () => {
+    const newState: GraphState = {
+      nodes: nodes,
+      edges: edges,
+      selectedNode: selectedNode,
+      selectedEdge: selectedEdge
+    };
+    
+    const newHistory = history.slice(0, currentIndex + 1);
+    newHistory.push(newState);
+    setHistory(newHistory);
+    setCurrentIndex(newHistory.length - 1);
+  };
+  
+  const undo = () => {
+    if (currentIndex > 0) {
+      const previousState = history[currentIndex - 1];
+      setNodes(previousState.nodes);
+      setEdges(previousState.edges);
+      setSelectedNode(previousState.selectedNode);
+      setSelectedEdge(previousState.selectedEdge);
+      setCurrentIndex(currentIndex - 1);
+    }
+  };
+    
+  
   const deleteSelected = useCallback(() => {
     if (selectedNode) {
       setNodes(nodes => nodes.filter(node => node.id !== selectedNode));
@@ -44,10 +92,12 @@ const Graph = () => {
           setSelectedEdge(null);
         }
       }
+      updateHistory();
     } 
     else if (selectedEdge) {
       setEdges(edges => edges.filter(edge => `${edge.id1}-${edge.id2}` !== selectedEdge));
       setSelectedEdge(null);
+      updateHistory();
     }
   }, [selectedNode, selectedEdge, setNodes, setEdges]);
 
@@ -78,21 +128,32 @@ const Graph = () => {
   }, [deleteSelected]);
 
   // This one is for console logging sychonously. 
-  useEffect( () =>{
+  /* useEffect( () =>{
     console.log("isDraggable:", selectedNode)
     console.log(nodes);
-  }, [selectedNode, nodes]);
+  }, [selectedNode, nodes]); */
 
   const handleNodeDrag = (nodeId: string, newPosition: { x: number; y: number }) => {
-    setEdges(currentEdges => currentEdges.map(edge => {
+    // Update the position of the dragged node
+    const updatedNodes = nodes.map(node => 
+      node.id === nodeId ? { ...node, x: newPosition.x, y: newPosition.y } : node
+    );
+  
+    // Update edges if needed
+    const updatedEdges = edges.map(edge => {
       if (edge.id1 === nodeId) {
         return { ...edge, x1: newPosition.x, y1: newPosition.y };
       } else if (edge.id2 === nodeId) {
         return { ...edge, x2: newPosition.x, y2: newPosition.y };
       }
       return edge;
-    }));
+    });
+  
+    // Update state and history
+    setNodes(updatedNodes);
+    setEdges(updatedEdges);
   };
+  
 
   const handleEdgeCreation = (node: SVGCircleElement) => {
     const newEdge = {
@@ -141,6 +202,35 @@ const Graph = () => {
     };
   };
 
+  const handleNodeCreation = (e: React.MouseEvent) => {
+    const svgRect = e.currentTarget.getBoundingClientRect();
+    const newNode = {
+      id: `node-${Date.now()}`,
+      x: e.clientX - svgRect.left,
+      y: e.clientY - svgRect.top
+    };
+    setNodes(prevNodes => [...prevNodes, newNode]);
+    setSelectedNode(newNode.id)
+    updateHistory();
+  };
+
+  const handleEdgeCompletion = (endNode: SVGCircleElement)=>{
+    const updatedEdge = {
+      ...tempEdge,
+      id2: endNode.id,
+      x2: endNode.cx.baseVal.value,
+      y2: endNode.cy.baseVal.value
+    };
+    setEdges((prevEdges: EdgeType[]) => [...prevEdges, updatedEdge] as EdgeType[]);   
+    setTempEdge(null);          
+    setSelectedNode(endNode.id);
+    updateHistory();
+
+    // Reset the clock
+    clickStartTime.current = null;
+    return;
+  }
+
   const handleMouseUp = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.button === 0) {
       setIsMouseDown(false);
@@ -153,52 +243,41 @@ const Graph = () => {
       if (!isSpaceDown) {
         setSelectedEdge(null);
 
+        // If normal click on node
         if (e.target && (e.target as Element).classList.contains('graph-node')) {
           const element = e.target as SVGCircleElement;
-          setSelectedNode(element.id)
+          handleNodeClick(element.id);          
           return;
         }
 
         // Node creation
         if (clickDuration < 200) {
-          const svgRect = e.currentTarget.getBoundingClientRect();
-          const newNode = {
-            id: `node-${Date.now()}`,
-            x: e.clientX - svgRect.left,
-            y: e.clientY - svgRect.top
-          };
-          setNodes(prevNodes => [...prevNodes, newNode]);
-          console.log(nodes[-1])
-          // Reset the clock
+          // Reset the clock       
           clickStartTime.current = null;
-          setSelectedNode(newNode.id)
+          handleNodeCreation(e);
           return;
         }
       } else {
+        // If we didn't come from a node, don't do anything
         if (!tempEdge) {
           setTempEdge(null);
           setSelectedNode(null);
           return;
         }
+        // If we land on a node, make the edge if no self-loops
         if (e.target && (e.target as Element).classList.contains('graph-node')) {
           const endNode = e.target as SVGCircleElement;
           const edgeExists = edges.some(edge => edge.id1 === tempEdge?.id1 && edge.id2 === endNode.id);
+          // No self-loops allowed
           if (tempEdge?.id1 === endNode.id) {
             setTempEdge(null);
             setSelectedNode(endNode.id);
             return;
           } 
           else {
+            // All clear to make the edge
             if (!edgeExists) {
-              const updatedEdge = {
-                ...tempEdge,
-                id2: endNode.id,
-                x2: endNode.cx.baseVal.value,
-                y2: endNode.cy.baseVal.value
-              };
-              setEdges(edges => [...edges, updatedEdge]);
-              setTempEdge(null);          
-              setSelectedNode(endNode.id);
+              handleEdgeCompletion(endNode);
               return;
             }
           }
@@ -216,7 +295,7 @@ const Graph = () => {
 
   const handleNodeClick = (nodeId: string) => {
     setSelectedNode(nodeId);
-    setSelectedEdge(null);
+    setSelectedEdge(null)
   };
 
   const handleEdgeClick = (edgeId: string) => {
@@ -281,9 +360,22 @@ const Graph = () => {
             onClick={handleEdgeClick}
             onDoubleClick={handleEdgeDoubleClick}
             onContextMenu={handleEdgeContextMenu}
+            isOriented={isOriented}
           />
         ))}
+
       </svg>
+      <button 
+        className='bottom-left-button'
+        onClick = {() => setIsOriented(!isOriented)}
+      >
+          {isOriented ? "Set Unoriented" : "Set Oriented"}
+        </button>
+        <button 
+          className = 'bottom-right-button'
+          onClick={undo} disabled={currentIndex === 0}>
+            Undo
+        </button>
     </div>
   );
 }

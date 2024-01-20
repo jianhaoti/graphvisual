@@ -20,3 +20,31 @@ main {
   width: 100%;
   height: 100%;
 }
+
+/* Styles for the Undo button */
+.bottom-left-button {
+  position: fixed;
+  bottom: 20px;    /* 20px from the bottom of the viewport */
+  left: 20px;      /* 20px from the left of the viewport */
+  padding: 10px 15px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  z-index: 1000;  /* Ensure the button is above other elements */
+}
+
+/* Styles for the Toggle Orientation button */
+.bottom-right-button {
+  position: fixed;
+  bottom: 20px;    /* 20px from the bottom of the viewport */
+  right: 20px;     /* 20px from the right of the viewport */
+  padding: 10px 15px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  z-index: 1000;  /* Ensure the button is above other elements */
+}
