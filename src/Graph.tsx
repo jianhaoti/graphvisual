@@ -36,7 +36,16 @@ const Graph = () => {
       setNodes(nodes => nodes.filter(node => node.id !== selectedNode));
       setEdges(edges => edges.filter(edge => edge.id1 !== selectedNode && edge.id2 !== selectedNode));
       setSelectedNode(null);
-    } else if (selectedEdge) {
+
+      // If the selected edge has its head or tail as selected ndoe
+      if(selectedEdge){
+        const [edgeId1, edgeId2] = selectedEdge.split('-');
+        if(edgeId1 === selectedNode || edgeId2 === selectedNode){
+          setSelectedEdge(null);
+        }
+      }
+    } 
+    else if (selectedEdge) {
       setEdges(edges => edges.filter(edge => `${edge.id1}-${edge.id2}` !== selectedEdge));
       setSelectedEdge(null);
     }
@@ -66,7 +75,7 @@ const Graph = () => {
       window.removeEventListener('keyup', handleKeyUp);
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, []);
+  }, [deleteSelected]);
 
   // This one is for console logging sychonously. 
   useEffect( () =>{
@@ -150,6 +159,7 @@ const Graph = () => {
           return;
         }
 
+        // Node creation
         if (clickDuration < 200) {
           const svgRect = e.currentTarget.getBoundingClientRect();
           const newNode = {
@@ -157,12 +167,12 @@ const Graph = () => {
             x: e.clientX - svgRect.left,
             y: e.clientY - svgRect.top
           };
-          console.log("New node: ", newNode);
-          setSelectedNode(newNode.id);
           setNodes(prevNodes => [...prevNodes, newNode]);
-
-          // Reset this data
+          console.log(nodes[-1])
+          // Reset the clock
           clickStartTime.current = null;
+          setSelectedNode(newNode.id)
+          return;
         }
       } else {
         if (!tempEdge) {
@@ -205,8 +215,8 @@ const Graph = () => {
   };
 
   const handleEdgeClick = (edgeId: string) => {
-    setSelectedEdge(edgeId);
     setSelectedNode(null);
+    setSelectedEdge(edgeId);
   };
 
   const handleNodeContextMenu = (e: React.MouseEvent, nodeId: string) => {
