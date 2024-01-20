@@ -185,7 +185,10 @@ const Graph = () => {
           const edgeExists = edges.some(edge => edge.id1 === tempEdge?.id1 && edge.id2 === endNode.id);
           if (tempEdge?.id1 === endNode.id) {
             setTempEdge(null);
-          } else {
+            setSelectedNode(endNode.id);
+            return;
+          } 
+          else {
             if (!edgeExists) {
               const updatedEdge = {
                 ...tempEdge,
