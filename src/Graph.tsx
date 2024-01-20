@@ -17,6 +17,11 @@ interface EdgeType {
   x2: number | null;
   y2: number | null;
 }
+
+interface GraphProps {
+  isOriented: boolean;
+}
+
 /* interface GraphState {
   nodes: Node[];
   edges: EdgeType[];
@@ -24,7 +29,7 @@ interface EdgeType {
   selectedEdge: string | null;
 } */
 
-const Graph = () => {
+const Graph: React.FC <GraphProps> = ({ isOriented }) => {
   /* const initialGraphState: GraphState = {
     nodes: [],  // Initial nodes
     edges: [],  // Initial edges
@@ -38,19 +43,19 @@ const Graph = () => {
   const [currentIndex, setCurrentIndex] = useState(0); */
 
   // Mine
+
   const [nodes, setNodes] = useState<Node[]>([]);
   const [edges, setEdges] = useState<EdgeType[]>([]);
   const currentNodeRef = useRef<SVGCircleElement | null>(null);
 
+  const [selectedNode, setSelectedNode] = useState<string | null>(null);
   const [selectedEdge, setSelectedEdge] = useState<string | null>(null);
 
   const [tempEdge, setTempEdge] = useState<EdgeType | null>(null);
-  const [selectedNode, setSelectedNode] = useState<string | null>(null);
   const clickStartTime = useRef<number | null>(null);
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [isSpaceDown, setIsSpaceDown] = useState(false);
   const [edgeClicked, setEdgeClicked] = useState(false);
-  const [isOriented, setIsOriented] = useState(true);
 
   // For immer
   /* const updateHistory = () => {
@@ -127,10 +132,9 @@ const Graph = () => {
   }, [deleteSelected]);
 
   // This one is for console logging sychonously. 
-  /* useEffect( () =>{
-    console.log("isDraggable:", selectedNode)
-    console.log(nodes);
-  }, [selectedNode, nodes]); */
+   useEffect( () =>{
+    console.log("isDraggable:", nodes )
+  }, [nodes]); 
 
   const handleNodeDrag = (nodeId: string, newPosition: { x: number; y: number }) => {
     // Update the position of the dragged node
@@ -312,7 +316,7 @@ const Graph = () => {
     e.preventDefault();
     setEdges(edges => edges.filter(edge => `${edge.id1}-${edge.id2}` !== edgeId));
     setSelectedEdge(null);
-  };
+  };  
 
   const handleEdgeDoubleClick = (reverseThisEdge: EdgeType) => {
     if (!reverseThisEdge.id2) return;
@@ -362,14 +366,7 @@ const Graph = () => {
             isOriented={isOriented}
           />
         ))}
-
       </svg>
-      <button 
-        className='bottom-left-button'
-        onClick = {() => setIsOriented(!isOriented)}
-      >
-          {isOriented ? "Set Unoriented" : "Set Oriented"}
-        </button>
     </div>
   );
 }

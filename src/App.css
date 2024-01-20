@@ -27,7 +27,7 @@ main {
   bottom: 20px;    /* 20px from the bottom of the viewport */
   left: 20px;      /* 20px from the left of the viewport */
   padding: 10px 15px;
-  background-color: #007bff;
+  background-color: #007bff; 
   color: white;
   border: none;
   border-radius: 5px;

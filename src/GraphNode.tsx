@@ -26,6 +26,7 @@ const Node: React.FC<NodeProps> = ({node, isSelected, isDraggable, onClick, onCo
     },
     [onDrag] // Dependency array, add any other dependencies if needed
   );
+  const color = isSelected ? 'darkred' : 'black';
 
   // Node is draggable if node is selected and space is not held.
   useDraggerSVG(node.id, nodeRef, isDraggable, memoizedOnDrag);
@@ -39,7 +40,7 @@ const Node: React.FC<NodeProps> = ({node, isSelected, isDraggable, onClick, onCo
       cx={node.x}
       cy={node.y}
       r={radius}
-      fill={isSelected ? 'darkred' : 'black'}
+      fill={color}
 
       onClick={() => onClick(node.id)}
       onContextMenu={e => onContextMenu(e, node.id)}
