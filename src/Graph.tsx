@@ -98,9 +98,9 @@ const Graph: React.FC <GraphProps> = () => {
   }, [deleteSelected]);
 
   // This one is for console logging sychonously. 
-   useEffect( () =>{
+  /* useEffect( () =>{
     console.log(nodes )
-  }, [nodes]); 
+  }, [nodes]); */
 
   const handleNodeDrag = (nodeId: string, newPosition: { x: number; y: number }) => {
     // Update the position of the dragged node
@@ -314,10 +314,10 @@ const Graph: React.FC <GraphProps> = () => {
     <div className="container container-left"
       onMouseDown={handleMouseDown}
       onMouseUp={handleMouseUp}
-      tabIndex={0}
       onKeyDown={handleSpaceDown}
       onKeyUp={handleSpaceUp}
       onContextMenu={e => handleContainerContextMenu(e)}
+      // tabIndex={0}
     >
       <svg width="200" height="200">
         {nodes.map(node => (
