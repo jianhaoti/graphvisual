@@ -137,26 +137,6 @@ const Graph: React.FC <GraphProps> = ({ isOriented }) => {
     }
   };
 
-  const handleMouseDown = (e: React.MouseEvent) => {
-    if (e.button === 0) {
-      setIsMouseDown(true);
-      clickStartTime.current = new Date().getTime();
-      if (e.target && (e.target as Element).classList.contains('graph-node')) {
-        const element = e.target as SVGCircleElement;
-        currentNodeRef.current = element;
-        /* if(!isSpaceDown){
-          setSelectedNode(element.id);
-        } */
-        if (isSpaceDown) {
-          handleEdgeCreation(element);
-        }
-      }
-      /* if (e.target && (e.target as Element).classList.contains('graph-edge')) {
-        setEdgeClicked(true);
-      } */
-    };
-  };
-
   const handleNodeCreation = (e: React.MouseEvent) => {
     const svgRect = e.currentTarget.getBoundingClientRect();
     const newNode = {
@@ -184,6 +164,26 @@ const Graph: React.FC <GraphProps> = ({ isOriented }) => {
     clickStartTime.current = null;
     return;
   }
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (e.button === 0) {
+      setIsMouseDown(true);
+      clickStartTime.current = new Date().getTime();
+      if (e.target && (e.target as Element).classList.contains('graph-node')) {
+        const element = e.target as SVGCircleElement;
+        currentNodeRef.current = element;
+        /* if(!isSpaceDown){
+          setSelectedNode(element.id);
+        } */
+        if (isSpaceDown) {
+          handleEdgeCreation(element);
+        }
+      }
+      if (e.target && (e.target as Element).classList.contains('graph-edge')) {
+        setEdgeClicked(true);
+      } 
+    };
+  };
 
   const handleMouseUp = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.button === 0) {
