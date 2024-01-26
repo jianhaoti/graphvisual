@@ -1,16 +1,22 @@
 main {
   display: grid;
   grid-template-columns: 1fr 1fr; /* Two columns */
-  gap: 20px; /* Space between columns */
+  grid-template-rows: auto 1fr 1fr; /* Three rows */
+  gap: 20px; /* Space between rows and columns */
   padding: 50px; /* Padding around the grid */
   box-sizing: border-box; /* Include padding in the total width and height */
   height: 100vh;
   width: 100vw;
   overflow: hidden; /* Prevent scrolling in the main container */
-  align-items: center;
+  align-items: start; /* Align items to the start of each row */
   justify-content: center;
   margin: 0; /* Remove default margin */
-  background-color:blanchedalmond;
+  background-color: blanchedalmond;
+}
+
+
+.control-buttons {
+  grid-column: 2; /* Place in the second column */
 }
 
 .container {
@@ -23,12 +29,19 @@ main {
   align-items: center;
   background-color: whitesmoke;
 }
-
-/* ... rest of your CSS ... */
-
-
-/* ... rest of your CSS ... */
-
+.button-group-container {
+  position: absolute;
+  top: 10px; /* Adjust as needed */
+  left: 60%;
+  transform: translateX(-50%); /* Adjust horizontally */
+  z-index: 10; /* Make sure it's above other elements */
+  grid-column: 2;
+  grid-row: 1;
+}
+.active-button {
+  background-color: #007bff; /* or any other style */
+  color: white;
+}
 
 .container svg {
   width: 100%;
@@ -37,10 +50,15 @@ main {
 
 .container-left{
   justify-content: flex-start; /* Aligns content to the left */
+  grid-column: 1;
+  grid-row: 2 / 4; /* Spanning two rows */
+
 }
 
 .container-right {
   justify-content: flex-end; /* Aligns content to the right */
+  grid-column: 2;
+  grid-row: 2 / 4; /* Spanning two rows */
 
 }
 
