@@ -1,25 +1,49 @@
 main {
-    display: grid;
-    height: 100vh;
-    width: 100vw;
-    place-items: center;
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Two columns */
+  gap: 20px; /* Space between columns */
+  padding: 50px; /* Padding around the grid */
+  box-sizing: border-box; /* Include padding in the total width and height */
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden; /* Prevent scrolling in the main container */
+  align-items: center;
+  justify-content: center;
+  margin: 0; /* Remove default margin */
+  background-color:blanchedalmond;
 }
+
 .container {
   position: relative;
   border: 1px solid black;
-  height: 800px;
+  width: calc(100% - 10px); /* Adjust width to account for border and a bit of space */
+  height: calc(50vh - 40px - 2px); /* Adjust for height, padding, gap, and border */
   overflow: hidden;
-  width: 50vw; /* or any specific size */
-  height: 50vh; /* or any specific size */
   display: flex;
-  justify-content: center;
   align-items: center;
+  background-color: whitesmoke;
 }
+
+/* ... rest of your CSS ... */
+
+
+/* ... rest of your CSS ... */
+
 
 .container svg {
   width: 100%;
   height: 100%;
 }
+
+.container-left{
+  justify-content: flex-start; /* Aligns content to the left */
+}
+
+.container-right {
+  justify-content: flex-end; /* Aligns content to the right */
+
+}
+
 
 /* Styles for the Undo button */
 .bottom-left-button {

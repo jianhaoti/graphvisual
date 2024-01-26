@@ -286,7 +286,7 @@ const Graph: React.FC <GraphProps> = ({ isOriented }) => {
   };
 
   return (
-    <div className="container"
+    <div className="container container-left"
       onMouseDown={handleMouseDown}
       onMouseUp={handleMouseUp}
       tabIndex={0}

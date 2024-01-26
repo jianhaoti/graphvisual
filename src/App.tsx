@@ -2,6 +2,7 @@
 import React, {useState}from 'react';
 import './App.css';
 import Graph from './Graph';
+import AlgoWindow from './AlgoWindow';
 
 function App() {  
   const [isOriented, setIsOriented] = useState(true);
@@ -12,7 +13,7 @@ function App() {
 
   return (
     <main>
-        <Graph isOriented={isOriented}/>
+        <Graph isOriented={isOriented}/> <AlgoWindow></AlgoWindow>
         <button 
         className='bottom-left-button'
         onClick = {handleButtonClick}
