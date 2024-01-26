@@ -13,6 +13,12 @@ main {
   margin: 0; /* Remove default margin */
   background-color: blanchedalmond;
 }
+.switch-container {
+  position: absolute;
+  bottom: 10px; /* Adjust as needed */
+  right: 10px; /* Adjust as needed */
+}
+
 
 .control-buttons {
   grid-column: 2; /* Place in the second column */

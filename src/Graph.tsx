@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import Node from './GraphNode';
 import Edge from './GraphEdge';
+import Switch from '@material-ui/core/Switch';
 
 interface Node {
   id: string;
@@ -22,7 +23,7 @@ interface GraphProps {
 }
 
 
-const Graph: React.FC <GraphProps> = ({ isOriented }) => {
+const Graph: React.FC <GraphProps> = () => {
   // Mine
   const [nodes, setNodes] = useState<Node[]>([]);
   const [edges, setEdges] = useState<EdgeType[]>([]);
@@ -36,6 +37,17 @@ const Graph: React.FC <GraphProps> = ({ isOriented }) => {
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [isSpaceDown, setIsSpaceDown] = useState(false);
   const [edgeClicked, setEdgeClicked] = useState(false);
+  const [isOriented, setIsOriented] = useState(true);
+  const [state, setState] = React.useState({
+      checkedA: true,
+      checkedB: true,
+    });
+  
+    const handleOrientationChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+      setState({ ...state, [event.target.name]: event.target.checked });
+      setIsOriented(!isOriented);
+    };
+  
   
   const deleteSelected = useCallback(() => {
     if (selectedNode) {
@@ -318,6 +330,15 @@ const Graph: React.FC <GraphProps> = ({ isOriented }) => {
           />
         ))}
       </svg>
+      <div className="switch-container">
+        <Switch
+          checked={state.checkedB}
+          onChange={handleOrientationChange}
+          color="primary"
+          name="checkedB"
+          inputProps={{ 'aria-label': 'primary checkbox' }}
+        />
+      </div>
     </div>
   );
 }

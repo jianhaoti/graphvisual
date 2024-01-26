@@ -1,59 +1,67 @@
-//App.tsx
-import React, {useState}from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import './App.css';
 import Graph from './Graph';
 import ControlRoom from './ControlRoom';
 import { Button, ButtonGroup } from '@mui/material';
-import { ReactComponent as ArrowheadIcon } from './assets/arrowhead.svg';
-import { ReactComponent as AlgoIcon} from './assets/algoIcon.svg';
-import { ReactComponent as LabelIcon} from './assets/labelIcon.svg';
+import { ReactComponent as AlgoIcon } from './assets/algoIcon.svg';
+import { ReactComponent as LabelIcon } from './assets/labelIcon.svg';
+import TextField from '@material-ui/core/TextField';
 
 function App() {  
-  const [isOriented, setIsOriented] = useState(true);
   const [mode, setMode] = useState("label");
+  const [value, setValue] = useState('Untitled');
+  const textFieldRef = useRef<HTMLInputElement>(null);
+  
+  useEffect(() => {
+    if (textFieldRef.current) {
+      textFieldRef.current.focus();  // Focus the input
+      textFieldRef.current.select(); // Select the text
+    }
+  }, []);
 
-  const handleOrientationClick = () => {
-    setIsOriented(!isOriented);
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setValue(event.target.value);
+  };
+
+  const handleFocus = () => {
+    if (textFieldRef.current) {
+      textFieldRef.current.select();
+    }
   };
 
   const handleLabelClick = () => {
-      setMode("label");
+    setMode("label");
   };
 
   const handleAlgoClick = () => {
-      setMode("algorithm");
+    setMode("algorithm");
   };
 
   return (
     <main>
-      <ButtonGroup className = "graph-buttons" variant="outlined" aria-label="outlined primary button group">
-        <Button
-          onClick={handleOrientationClick}
-          variant={isOriented === true ? "contained" : "outlined"}
-          >
-          <ArrowheadIcon />
-        </Button>
-      </ButtonGroup>
-
-      <div className = "button-group-container">
-        <ButtonGroup className="control-buttons" variant="outlined" aria-label="outlined primary button group">
-            <Button 
-              onClick={handleLabelClick} 
-              variant={mode === "label" ? "contained" : "outlined"}
-              disableElevation = {true}
-            >
+        <div>
+          <TextField
+            id="standard-multiline-flexible"
+            multiline
+            maxRows={1}
+            value={value}
+            onChange={handleChange}
+            onFocus={handleFocus}
+            inputRef={textFieldRef}
+            inputProps={{maxLength: 25}}
+          />
+        </div>
+        <div className="button-group-container">
+          <ButtonGroup className="control-buttons" variant="outlined" aria-label="outlined primary button group">
+            <Button onClick={handleLabelClick} variant={mode === "label" ? "contained" : "outlined"} disableElevation={true}>
               <LabelIcon />
             </Button>
-            <Button 
-              onClick={handleAlgoClick} 
-              variant={mode === "algorithm" ? "contained" : "outlined"}
-              disableElevation = {true}
-            >
+            <Button onClick={handleAlgoClick} variant={mode === "algorithm" ? "contained" : "outlined"} disableElevation={true}>
               <AlgoIcon />
             </Button>
-        </ButtonGroup>
-      </div> 
-      <Graph isOriented={isOriented}/> <ControlRoom/>
+          </ButtonGroup>
+        </div>
+      <Graph isOriented/> <ControlRoom/>
     </main>
   );
 }
