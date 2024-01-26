@@ -38,6 +38,8 @@ const Graph: React.FC <GraphProps> = () => {
   const [isSpaceDown, setIsSpaceDown] = useState(false);
   const [edgeClicked, setEdgeClicked] = useState(false);
   const [isOriented, setIsOriented] = useState(true);
+  const switchContainerRef = useRef(null);
+
   const [state, setState] = React.useState({
       checkedA: true,
       checkedB: true,
@@ -97,7 +99,7 @@ const Graph: React.FC <GraphProps> = () => {
 
   // This one is for console logging sychonously. 
    useEffect( () =>{
-    console.log("isDraggable:", nodes )
+    console.log(nodes )
   }, [nodes]); 
 
   const handleNodeDrag = (nodeId: string, newPosition: { x: number; y: number }) => {
@@ -180,6 +182,12 @@ const Graph: React.FC <GraphProps> = () => {
   const handleMouseDown = (e: React.MouseEvent) => {
     if (e.button === 0) {
       setIsMouseDown(true);
+      // Check if the click is inside the switch container
+      if (e.target instanceof Element && e.target.closest("#mySwitchContainer")) {
+        return; // Do nothing if the click is on or within the switch
+      }
+  
+    
       clickStartTime.current = new Date().getTime();
       if (e.target && (e.target as Element).classList.contains('graph-node')) {
         const element = e.target as SVGCircleElement;
@@ -200,6 +208,11 @@ const Graph: React.FC <GraphProps> = () => {
   const handleMouseUp = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.button === 0) {
       setIsMouseDown(false);
+      if (e.target instanceof Element && e.target.closest("#mySwitchContainer")) {
+        return; // Do nothing if the click is on or within the switch
+      }
+  
+  
       currentNodeRef.current = null;
       const clickDuration = new Date().getTime() - (clickStartTime.current || new Date().getTime());
       if (edgeClicked) {
@@ -332,6 +345,8 @@ const Graph: React.FC <GraphProps> = () => {
       </svg>
       <div className="switch-container">
         <Switch
+          ref={switchContainerRef}
+          id="mySwitchContainer"
           checked={state.checkedB}
           onChange={handleOrientationChange}
           color="primary"
