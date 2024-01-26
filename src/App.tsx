@@ -5,6 +5,8 @@ import Graph from './Graph';
 import ControlRoom from './ControlRoom';
 import { Button, ButtonGroup } from '@mui/material';
 import { ReactComponent as ArrowheadIcon } from './assets/arrowhead.svg';
+import { ReactComponent as AlgoIcon} from './assets/algoIcon.svg';
+import { ReactComponent as LabelIcon} from './assets/labelIcon.svg';
 
 function App() {  
   const [isOriented, setIsOriented] = useState(true);
@@ -40,14 +42,14 @@ function App() {
               variant={mode === "label" ? "contained" : "outlined"}
               disableElevation = {true}
             >
-                Graph Data
+              <LabelIcon />
             </Button>
             <Button 
               onClick={handleAlgoClick} 
               variant={mode === "algorithm" ? "contained" : "outlined"}
               disableElevation = {true}
             >
-              Algorithms
+              <AlgoIcon />
             </Button>
         </ButtonGroup>
       </div> 
