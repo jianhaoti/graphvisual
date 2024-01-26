@@ -14,7 +14,6 @@ main {
   background-color: blanchedalmond;
 }
 
-
 .control-buttons {
   grid-column: 2; /* Place in the second column */
 }
@@ -28,16 +27,9 @@ main {
   display: flex;
   align-items: center;
   background-color: whitesmoke;
+  grid-template-rows: auto 1fr; /* One row for buttons, one larger row for content */  
 }
-.button-group-container {
-  position: absolute;
-  top: 10px; /* Adjust as needed */
-  left: 60%;
-  transform: translateX(-50%); /* Adjust horizontally */
-  z-index: 10; /* Make sure it's above other elements */
-  grid-column: 2;
-  grid-row: 1;
-}
+
 .active-button {
   background-color: #007bff; /* or any other style */
   color: white;
@@ -59,34 +51,4 @@ main {
   justify-content: flex-end; /* Aligns content to the right */
   grid-column: 2;
   grid-row: 2 / 4; /* Spanning two rows */
-
-}
-
-
-/* Styles for the Undo button */
-.bottom-left-button {
-  position: fixed;
-  bottom: 20px;    /* 20px from the bottom of the viewport */
-  left: 20px;      /* 20px from the left of the viewport */
-  padding: 10px 15px;
-  background-color: #007bff; 
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  z-index: 1000;  /* Ensure the button is above other elements */
-}
-
-/* Styles for the Toggle Orientation button */
-.bottom-right-button {
-  position: fixed;
-  bottom: 20px;    /* 20px from the bottom of the viewport */
-  right: 20px;     /* 20px from the right of the viewport */
-  padding: 10px 15px;
-  background-color: #28a745;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  z-index: 1000;  /* Ensure the button is above other elements */
 }

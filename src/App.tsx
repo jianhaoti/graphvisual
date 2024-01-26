@@ -23,13 +23,20 @@ function App() {
 
   return (
     <main>
+      <ButtonGroup className = "graph-buttons" variant="outlined" aria-label="outlined primary button group">
+        <Button
+          onClick={handleOrientationClick}
+        >
+        {isOriented ? "Set Unoriented" : "Set Oriented"}
+        </Button>
+      </ButtonGroup>
+
       <div className = "button-group-container">
         <ButtonGroup className="control-buttons" variant="outlined" aria-label="outlined primary button group">
             <Button 
               onClick={handleLabelClick} 
               variant={mode === "label" ? "contained" : "outlined"}
               disableElevation = {true}
-
             >
                 Label Graph
             </Button>
@@ -42,14 +49,7 @@ function App() {
             </Button>
         </ButtonGroup>
       </div> 
-
       <Graph isOriented={isOriented}/> <ControlRoom/>
-      <button 
-        className='bottom-left-button'
-        onClick = {handleOrientationClick}
-      >
-        {isOriented ? "Set Unoriented" : "Set Oriented"}
-      </button>
     </main>
   );
 }
