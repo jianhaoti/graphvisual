@@ -4,6 +4,7 @@ import './App.css';
 import Graph from './Graph';
 import ControlRoom from './ControlRoom';
 import { Button, ButtonGroup } from '@mui/material';
+import PlayDisabledIcon from '@mui/icons-material/PlayDisabled';
 
 function App() {  
   const [isOriented, setIsOriented] = useState(true);
@@ -26,8 +27,9 @@ function App() {
       <ButtonGroup className = "graph-buttons" variant="outlined" aria-label="outlined primary button group">
         <Button
           onClick={handleOrientationClick}
-        >
-        {isOriented ? "Set Unoriented" : "Set Oriented"}
+          variant={isOriented === true ? "contained" : "outlined"}
+          >
+          <PlayDisabledIcon />
         </Button>
       </ButtonGroup>
 
