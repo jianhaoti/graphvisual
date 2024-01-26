@@ -132,6 +132,7 @@ const Graph = () => {
   };
 
   const handleSpaceDown = (e: React.KeyboardEvent) => {
+    console.log('test')
     if (!isSpaceDown) {
       if (e.code === 'Space' && isMouseDown && currentNodeRef.current) {
         setIsSpaceDown(true);
@@ -181,7 +182,6 @@ const Graph = () => {
       if (e.target instanceof Element && e.target.closest("#mySwitchContainer")) {
         return; // Do nothing if the click is on or within the switch
       }
-  
     
       clickStartTime.current = new Date().getTime();
       if (e.target && (e.target as Element).classList.contains('graph-node')) {
@@ -312,7 +312,7 @@ const Graph = () => {
       onKeyDown={handleSpaceDown}
       onKeyUp={handleSpaceUp}
       onContextMenu={e => handleContainerContextMenu(e)}
-      // tabIndex={0}
+      tabIndex={0}
     >
       <svg width="200" height="200">
         {nodes.map(node => (
