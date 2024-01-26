@@ -19,9 +19,9 @@ main {
   right: 10px; /* Adjust as needed */
 }
 
-.container:focus {
-  outline: none; /* Removes the default outline */
-}
+/*.container:focus {
+  outline: none; /* Removes the default outline 
+} */
 
 .control-buttons {
   grid-column: 2; /* Place in the second column */
