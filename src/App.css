@@ -1,7 +1,7 @@
 main {
   display: grid;
   grid-template-columns: 1fr 1fr; /* Two columns */
-  grid-template-rows: auto 1fr 1fr; /* Three rows */
+  grid-template-rows: auto 2fr 2fr; /* Increase space for windows */
   gap: 20px; /* Space between rows and columns */
   padding: 50px; /* Padding around the grid */
   box-sizing: border-box; /* Include padding in the total width and height */
@@ -20,9 +20,10 @@ main {
 
 .container {
   position: relative;
+  height: 100%; /* Take full height of the grid cell */
   border: 1px solid black;
   width: calc(100% - 10px); /* Adjust width to account for border and a bit of space */
-  height: calc(50vh - 40px - 2px); /* Adjust for height, padding, gap, and border */
+  height: calc(80vh - 40px - 2px); /* Adjust for height, padding, gap, and border */
   overflow: hidden;
   display: flex;
   align-items: center;

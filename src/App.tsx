@@ -4,11 +4,11 @@ import './App.css';
 import Graph from './Graph';
 import ControlRoom from './ControlRoom';
 import { Button, ButtonGroup } from '@mui/material';
-import PlayDisabledIcon from '@mui/icons-material/PlayDisabled';
+import { ReactComponent as ArrowheadIcon } from './assets/arrowhead.svg';
 
 function App() {  
   const [isOriented, setIsOriented] = useState(true);
-  const [mode, setMode] = useState("default");
+  const [mode, setMode] = useState("label");
 
   const handleOrientationClick = () => {
     setIsOriented(!isOriented);
@@ -29,7 +29,7 @@ function App() {
           onClick={handleOrientationClick}
           variant={isOriented === true ? "contained" : "outlined"}
           >
-          <PlayDisabledIcon />
+          <ArrowheadIcon />
         </Button>
       </ButtonGroup>
 
@@ -40,14 +40,14 @@ function App() {
               variant={mode === "label" ? "contained" : "outlined"}
               disableElevation = {true}
             >
-                Label Graph
+                Graph Data
             </Button>
             <Button 
               onClick={handleAlgoClick} 
               variant={mode === "algorithm" ? "contained" : "outlined"}
               disableElevation = {true}
             >
-              Run Algorithm
+              Algorithms
             </Button>
         </ButtonGroup>
       </div> 
