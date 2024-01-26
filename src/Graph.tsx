@@ -18,12 +18,7 @@ interface EdgeType {
   y2: number | null;
 }
 
-interface GraphProps {
-  isOriented: boolean;
-}
-
-
-const Graph: React.FC <GraphProps> = () => {
+const Graph = () => {
   // Mine
   const [nodes, setNodes] = useState<Node[]>([]);
   const [edges, setEdges] = useState<EdgeType[]>([]);

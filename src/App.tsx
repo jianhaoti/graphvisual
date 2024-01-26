@@ -61,7 +61,10 @@ function App() {
             </Button>
           </ButtonGroup>
         </div>
-      <Graph isOriented/> <ControlRoom mode = {mode} />
+      <Graph/> 
+      <ControlRoom 
+        mode = {mode} 
+      />
     </main>
   );
 }
