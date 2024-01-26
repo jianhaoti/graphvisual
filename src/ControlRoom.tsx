@@ -1,6 +1,17 @@
-import React, { useState } from "react";
+import React from "react";
+interface ControlRoomProps {
+    mode: string;
+  }
+  
+const ControlRoom: React.FC<ControlRoomProps> = ({mode}) => {
 
-const ControlRoom = () => {
+    if (mode === "data"){
+
+    }
+
+    if (mode === "algo"){
+
+    }
 
     return (
         <div className="container container-right">

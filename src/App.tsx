@@ -4,11 +4,11 @@ import Graph from './Graph';
 import ControlRoom from './ControlRoom';
 import { Button, ButtonGroup } from '@mui/material';
 import { ReactComponent as AlgoIcon } from './assets/algoIcon.svg';
-import { ReactComponent as LabelIcon } from './assets/labelIcon.svg';
+import { ReactComponent as DataIcon } from './assets/dataIcon.svg';
 import TextField from '@material-ui/core/TextField';
 
 function App() {  
-  const [mode, setMode] = useState("label");
+  const [mode, setMode] = useState("data");
   const [value, setValue] = useState('Untitled');
   const textFieldRef = useRef<HTMLInputElement>(null);
   
@@ -30,11 +30,11 @@ function App() {
   };
 
   const handleLabelClick = () => {
-    setMode("label");
+    setMode("data");
   };
 
   const handleAlgoClick = () => {
-    setMode("algorithm");
+    setMode("algo");
   };
 
   return (
@@ -53,15 +53,15 @@ function App() {
         </div>
         <div className="button-group-container">
           <ButtonGroup className="control-buttons" variant="outlined" aria-label="outlined primary button group">
-            <Button onClick={handleLabelClick} variant={mode === "label" ? "contained" : "outlined"} disableElevation={true}>
-              <LabelIcon />
+            <Button onClick={handleLabelClick} variant={mode === "data" ? "contained" : "outlined"} disableElevation={true}>
+              <DataIcon />
             </Button>
-            <Button onClick={handleAlgoClick} variant={mode === "algorithm" ? "contained" : "outlined"} disableElevation={true}>
+            <Button onClick={handleAlgoClick} variant={mode === "algo" ? "contained" : "outlined"} disableElevation={true}>
               <AlgoIcon />
             </Button>
           </ButtonGroup>
         </div>
-      <Graph isOriented/> <ControlRoom/>
+      <Graph isOriented/> <ControlRoom mode = {mode} />
     </main>
   );
 }
