@@ -77,10 +77,9 @@ const DataRoom: React.FC<DataRoomProps> = ({
       );
     }
     return <span 
-            className= "editableInput"
             onClick={() => setSelectedNode(node.id)}
             >
-              {node.id.length > maxLengthNode ? `${node.id.substring(0, maxLengthNode)}...` : node.id}
+            Node: {node.id.length > maxLengthNode ? `${node.id.substring(0, maxLengthNode)}...` : node.id}
           </span>;
   };
   
