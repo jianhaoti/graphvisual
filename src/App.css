@@ -38,6 +38,7 @@ main {
   align-items: center;
   background-color: #2F2D37;
   grid-template-rows: auto 1fr; /* One row for buttons, one larger row for content */  
+  border-radius: 10px; /* Add rounded corners */
 }
 
 .container svg {
