@@ -5,7 +5,7 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import Node from './GraphNode'; // Adjust the path as necessary
 import Edge from './GraphEdge'; // Adjust the path as necessary
-
+import Divider from '@mui/material/Divider';
 interface DataRoomProps {
   nodes: Node[];
   edges: Edge[];
@@ -30,7 +30,7 @@ const DataRoom: React.FC<DataRoomProps> = ({ nodes, edges, selectedNode, selecte
           ))}
         </List>
       </Container>
-
+    <Divider orientation="vertical" flexItem style={{ backgroundColor: '#706f6f', margin: '0 10px' }} />
       <Container className="dataRoomContainer" style={{ flex: 1 }}>
       <Typography variant="h6" className="dataRoomText">Edges</Typography>
       <List>

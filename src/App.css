@@ -90,7 +90,8 @@ main {
   padding: 20px;
   margin: 10px;
   flex: none; /* Override flex-grow */
-  border: 1px solid #ccc;
+  border: none;
+  /*border: 1px solid #706f6f; */
   border-radius: 4px;
 
   /* Universal hiding of scrollbar */
