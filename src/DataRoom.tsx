@@ -37,8 +37,8 @@ const DataRoom: React.FC<DataRoomProps> = ({ nodes, edges, selectedNode, selecte
         {edges.map((edge, index) => {
           const edgeId = `${edge.id1}-${edge.id2}`; // Identifier for the edge
           const edgeText = isOriented 
-            ? `Edge: ${edge.id1} -> ${edge.id2}`
-            : `Edge: ${edge.id1} - ${edge.id2}`;
+            ? `Edge: ${edge.id1} → ${edge.id2}`
+            : `Edge: ${edge.id1} — ${edge.id2}`;
           
           // Compare edgeId with selectedEdge for highlighting
           return (
