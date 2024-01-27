@@ -114,6 +114,10 @@ function App() {
       /> 
       <ControlRoom 
         mode = {mode} 
+        nodes = {nodes} 
+        edges = {edges}
+        selectedNode={selectedNode} 
+        selectedEdge={selectedEdge}       
       />
     </main>
   );

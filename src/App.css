@@ -75,3 +75,29 @@ main {
 .whiteUnderline .MuiInput-underline:after {
   border-bottom: 2px solid darkgray; /* Underline color when focused */
 }
+
+.control-room {
+  display: flex;
+  justify-content: center; /* Center children horizontally */
+  align-items: center;     /* Center children vertically */
+  padding: 20px;           /* Space from borders */
+  width: 100%;             /* Take full width of the parent */
+}
+/* App.css */
+.dataRoomContainer {
+  height: 500px; /* Fixed height */
+  width: auto;
+  padding: 20px;
+  margin: 10px;
+  flex: none; /* Override flex-grow */
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  overflow-y: auto;
+}
+
+.dataRoomText {
+  color: #E3C46E;
+}
+.dataRoomTextSelected {
+  color: white;
+}
