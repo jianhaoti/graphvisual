@@ -250,17 +250,29 @@ const Graph: React.FC<GraphProps>  = ({
         // If we land on a node, make the edge if no self-loops
         if (e.target && (e.target as Element).classList.contains('graph-node')) {
           const endNode = e.target as SVGCircleElement;
-          const edgeExists = edges.some(edge => edge.id1 === tempEdge?.id1 && edge.id2 === endNode.id);
+
+          // Check if the edge already exists, only allow one direction if oriented
+          const edgeExists = edges.some(edge => 
+            (edge.id1 === tempEdge?.id1 && edge.id2 === endNode.id) ||
+            (edge.id1 === endNode.id && edge.id2 === tempEdge?.id1)
+          );
+                    
           // No self-loops allowed
           if (tempEdge?.id1 === endNode.id) {
             setTempEdge(null);
             setSelectedNode(endNode.id);
             return;
           } 
+
           else {
             // All clear to make the edge
             if (!edgeExists) {
               handleEdgeCompletion(endNode);
+              return;
+            }
+            if(edgeExists){
+              setTempEdge(null);
+              setSelectedNode(endNode.id);
               return;
             }
           }
