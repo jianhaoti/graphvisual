@@ -9,9 +9,10 @@ interface ControlRoomProps {
     edges: Edge[];
     selectedNode: string | null;
     selectedEdge: string | null;
+    isOriented: boolean; 
 }  
   
-const ControlRoom: React.FC<ControlRoomProps> = ({mode, nodes, edges, selectedNode, selectedEdge}) => {
+const ControlRoom: React.FC<ControlRoomProps> = ({mode, nodes, edges, selectedNode, selectedEdge, isOriented}) => {
     return (
         <div className="container container-right">
             <div className="control-room">
@@ -20,7 +21,8 @@ const ControlRoom: React.FC<ControlRoomProps> = ({mode, nodes, edges, selectedNo
                         nodes={nodes} 
                         edges={edges} 
                         selectedNode={selectedNode} 
-                        selectedEdge={selectedEdge}                       
+                        selectedEdge={selectedEdge}        
+                        isOriented={isOriented}               
                     />}
             </div>
         </div>

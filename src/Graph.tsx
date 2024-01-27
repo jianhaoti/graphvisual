@@ -159,7 +159,7 @@ const Graph: React.FC<GraphProps>  = ({
   const handleNodeCreation = (e: React.MouseEvent) => {
     const svgRect = e.currentTarget.getBoundingClientRect();
     const newNode = {
-      id: `node-${Date.now()}`,
+      id: `${Date.now()}`,
       x: e.clientX - svgRect.left,
       y: e.clientY - svgRect.top
     };

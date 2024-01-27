@@ -92,7 +92,14 @@ main {
   flex: none; /* Override flex-grow */
   border: 1px solid #ccc;
   border-radius: 4px;
-  overflow-y: auto;
+
+  /* Universal hiding of scrollbar */
+  -ms-overflow-style: none; /* For Internet Explorer and Edge */
+  scrollbar-width: none; /* For Firefox */
+  overflow-y: scroll; /* Enables scrolling */
+  padding-right: 17px; /* REQUIRES TESTING */
+  margin-right: -17px; /* REQUIRES TESTING */
+
 }
 
 .dataRoomText {
@@ -100,4 +107,12 @@ main {
 }
 .dataRoomTextSelected {
   color: white;
+}
+
+/* App.css */
+/* App.css */
+
+/* App.css */
+.dataRoomContainer::-webkit-scrollbar {
+  display: none; /* Hides the scrollbar */
 }

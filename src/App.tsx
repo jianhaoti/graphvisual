@@ -117,7 +117,8 @@ function App() {
         nodes = {nodes} 
         edges = {edges}
         selectedNode={selectedNode} 
-        selectedEdge={selectedEdge}       
+        selectedEdge={selectedEdge}  
+        isOriented = {isOriented}    
       />
     </main>
   );
