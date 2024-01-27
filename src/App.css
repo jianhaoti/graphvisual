@@ -111,10 +111,17 @@ main {
   color: white;
 }
 
-/* App.css */
-/* App.css */
-
-/* App.css */
 .dataRoomContainer::-webkit-scrollbar {
   display: none; /* Hides the scrollbar */
+}
+/* In your CSS file */
+.editableInput {
+  border: none;
+  background-color: transparent;
+  color: inherit; /* Inherit font color */
+  font-size: inherit; /* Inherit font size */
+  padding: 0;
+  margin: 0;
+  outline: none; /* Removes the default focus outline */
+  width: auto; /* Adjust as needed */
 }

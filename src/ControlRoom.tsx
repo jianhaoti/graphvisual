@@ -7,12 +7,13 @@ interface ControlRoomProps {
     mode: string;
     nodes: Node[];
     edges: Edge[];
-    selectedNode: string | null;
+    selectedNode: string | null; setSelectedNode: React.Dispatch<React.SetStateAction<string | null>>;
     selectedEdge: string | null;
     isOriented: boolean; 
+    onNodeIDChange: (oldId: string, newId: string) => void;
 }  
   
-const ControlRoom: React.FC<ControlRoomProps> = ({mode, nodes, edges, selectedNode, selectedEdge, isOriented}) => {
+const ControlRoom: React.FC<ControlRoomProps> = ({mode, nodes, edges, selectedNode, selectedEdge, isOriented, onNodeIDChange, setSelectedNode}) => {
     return (
         <div className="container container-right">
             <div className="control-room">
@@ -20,9 +21,10 @@ const ControlRoom: React.FC<ControlRoomProps> = ({mode, nodes, edges, selectedNo
                     <DataRoom 
                         nodes={nodes} 
                         edges={edges} 
-                        selectedNode={selectedNode} 
+                        selectedNode={selectedNode} setSelectedNode = {setSelectedNode}
                         selectedEdge={selectedEdge}        
-                        isOriented={isOriented}               
+                        isOriented={isOriented}   
+                        onNodeIDChange={onNodeIDChange}
                     />}
             </div>
         </div>
