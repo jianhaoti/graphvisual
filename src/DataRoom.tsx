@@ -11,16 +11,16 @@ import { editableInputTypes } from '@testing-library/user-event/dist/utils';
 interface DataRoomProps {
   nodes: Node[];
   edges: Edge[];
-  selectedNode: string | null;
-  setSelectedNode: React.Dispatch<React.SetStateAction<string | null>>;
-  selectedEdge: string | null;
+  selectedNode: string | null; setSelectedNode: (nodeId: string | null) => void;  // Updated to a function type
+  selectedEdge: string | null; setSelectedEdge: (edgeId: string | null) => void;  // Updated to a function type
+
   isOriented: boolean;
   onNodeIDChange: (oldId: string, newId: string) => void;
 }
 
 const DataRoom: React.FC<DataRoomProps> = ({ 
-  nodes, edges, selectedNode, selectedEdge, 
-  isOriented, onNodeIDChange, setSelectedNode 
+  nodes, edges, selectedNode, selectedEdge, isOriented, 
+  onNodeIDChange, setSelectedNode, setSelectedEdge
 }) => {
   const maxLengthNode = 25;
   const maxLengthEdge = 40; // Maximum length for the displayed edge name
@@ -92,12 +92,13 @@ const renderEdgeItem = (edge: Edge) => {
         : edgeText;
 
     return (
-        <ListItem 
-            key={edge.id1 + '-' + edge.id2}
-            className={edge.id1 + '-' + edge.id2 === selectedEdge ? 'dataRoomTextSelected' : 'dataRoomText'}
-        >
-            {displayText}
-        </ListItem>
+      <ListItem
+        key={edgeText}
+        onClick={() => setSelectedEdge(edgeText)}
+        className={edgeText === selectedEdge ? 'dataRoomTextSelected' : 'dataRoomText'}
+      >
+        {edge.id1} {isOriented ? '→' : '-'} {edge.id2}
+      </ListItem>
     );
 };
 
@@ -123,8 +124,26 @@ const renderEdgeItem = (edge: Edge) => {
       <Container className="dataRoomContainer" style={{ flex: 1 }}>
         <Typography variant="h6" className="dataRoomText">Edges</Typography>
         <List>
-          {edges.map((edge, index) => renderEdgeItem(edge))}
-        </List>
+        {edges.map((edge, index) => {
+          const edgeId = `${edge.id1}-${edge.id2}`; // Identifier for the edge
+          const edgeText = isOriented 
+            ? `Edge: ${edge.id1} → ${edge.id2}`
+            : `Edge: ${edge.id1} — ${edge.id2}`;
+          
+          // Check if this edge is the selected one
+          const isSelected = edgeId === selectedEdge;
+
+          return (
+            <ListItem 
+              key={index} 
+              onClick={() => setSelectedEdge(edgeId)}
+              className={isSelected ? 'dataRoomTextSelected' : 'dataRoomText'}
+            >
+              {edgeText}
+          </ListItem>
+        );
+      })}
+      </List>
       </Container>
     </div>
   );

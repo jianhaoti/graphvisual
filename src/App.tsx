@@ -63,7 +63,16 @@ function App() {
   const handleAlgoClick = () => {
     setMode("algo");
   };
-
+  const handleNodeSelection = (nodeId: string | null) => {
+    setSelectedNode(nodeId);
+    setSelectedEdge(null); // Clear selected edge when a node is selected
+  };
+  
+  const handleEdgeSelection = (edgeId: string | null) => {
+    setSelectedEdge(edgeId);
+    setSelectedNode(null); // Clear selected node when an edge is selected
+  };
+  
   return (
     <main>
         <div>
@@ -132,10 +141,11 @@ function App() {
         mode = {mode} 
         nodes = {nodes} 
         edges = {edges}
-        selectedNode={selectedNode} setSelectedNode = {setSelectedNode}
-        selectedEdge={selectedEdge}  
+        selectedNode={selectedNode} setSelectedNode = {handleNodeSelection}
+        selectedEdge={selectedEdge} setSelectedEdge = {handleEdgeSelection}
         isOriented = {isOriented}    
-        onNodeIDChange={handleNodeIDChange}      
+        onNodeIDChange={handleNodeIDChange} 
+             
       />
     </main>
   );
