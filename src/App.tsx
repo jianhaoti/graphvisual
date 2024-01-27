@@ -28,6 +28,12 @@ function App() {
       textFieldRef.current.select(); // Select the text
     }
   }, []);
+  const handleKeyDown = (event: React.KeyboardEvent) => {
+    if (event.key === 'Enter') {
+      // Blur the input field when Enter key is pressed
+      textFieldRef.current?.blur();
+    }
+  };
   const handleNodeIDChange = (oldId: string, newId: string) => {
     setNodes(nodes.map(node => node.id === oldId ? { ...node, id: newId } : node));
     setEdges(edges.map(edge => {
@@ -66,6 +72,7 @@ function App() {
             id="standard-multiline-flexible"
             value={value}
             onChange={handleTyping}
+            onKeyDown={handleKeyDown}
             onFocus={handleFocus}
             inputRef={textFieldRef}
             inputProps={{maxLength: 25}}
