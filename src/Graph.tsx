@@ -22,33 +22,36 @@ const CustomSwitch = styled(Switch)(({ theme }) => ({
 
 
 interface GraphProps{
-  nodes: Node[];
-  setNodes: React.Dispatch<React.SetStateAction<Node[]>>;
+  nodes: Node[]; setNodes: React.Dispatch<React.SetStateAction<Node[]>>;
+  edges: Edge[]; setEdges: React.Dispatch<React.SetStateAction<Edge[]>>;
+  selectedNode: string | null; setSelectedNode: React.Dispatch<React.SetStateAction<string | null>>;
+  selectedEdge: string | null; setSelectedEdge: React.Dispatch<React.SetStateAction<string | null>>;
+  isOriented: boolean; setIsOriented: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const Graph: React.FC<GraphProps>  = ({ nodes, setNodes}) => {
+const Graph: React.FC<GraphProps>  = ({ 
+  nodes, setNodes, 
+  edges, setEdges, 
+  selectedNode, setSelectedNode,
+  selectedEdge, setSelectedEdge,
+  isOriented, setIsOriented  
+}) => {
   // Mine
-  const [edges, setEdges] = useState<Edge[]>([]);
   const currentNodeRef = useRef<SVGCircleElement | null>(null);
-
-  const [selectedNode, setSelectedNode] = useState<string | null>(null);
-  const [selectedEdge, setSelectedEdge] = useState<string | null>(null);
-
-  const [tempEdge, setTempEdge] = useState<Edge | null>(null);
   const clickStartTime = useRef<number | null>(null);
-  const [isMouseDown, setIsMouseDown] = useState(false);
-  const [isSpaceDown, setIsSpaceDown] = useState(false);
-  const [edgeClicked, setEdgeClicked] = useState(false);
-  const [isOriented, setIsOriented] = useState(true);
   const switchContainerRef = useRef(null);
 
-  const [state, setState] = React.useState({
+  const [tempEdge, setTempEdge] = useState<Edge | null>(null);
+  const [isMouseDown, setIsMouseDown] = useState(false);
+  const [isSpaceDown, setIsSpaceDown] = useState(false);
+  const [isEdgeClicked, setIsEdgeClicked] = useState(false);
+  const [isSwitchOn, setIsSwitchOn] = React.useState({
       checkedA: true,
       checkedB: true,
     });
   
     const handleOrientationChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-      setState({ ...state, [event.target.name]: event.target.checked });
+      setIsSwitchOn({ ...isSwitchOn, [event.target.name]: event.target.checked });
       setIsOriented(!isOriented);
     };
   
@@ -201,7 +204,7 @@ const Graph: React.FC<GraphProps>  = ({ nodes, setNodes}) => {
         }
       }
       if (e.target && (e.target as Element).classList.contains('graph-edge')) {
-        setEdgeClicked(true);
+        setIsEdgeClicked(true);
       } 
     };
   };
@@ -216,8 +219,8 @@ const Graph: React.FC<GraphProps>  = ({ nodes, setNodes}) => {
   
       currentNodeRef.current = null;
       const clickDuration = new Date().getTime() - (clickStartTime.current || new Date().getTime());
-      if (edgeClicked) {
-        setEdgeClicked(false);
+      if (isEdgeClicked) {
+        setIsEdgeClicked(false);
         return;
       }
       if (!isSpaceDown) {
@@ -348,7 +351,7 @@ const Graph: React.FC<GraphProps>  = ({ nodes, setNodes}) => {
         <CustomSwitch
           ref={switchContainerRef}
           id="mySwitchContainer"
-          checked={state.checkedB}
+          checked={isSwitchOn.checkedB}
           onChange={handleOrientationChange}
           name="checkedB"
           inputProps={{ 'aria-label': 'primary checkbox' }}

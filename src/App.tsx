@@ -7,6 +7,7 @@ import { ReactComponent as AlgoIcon } from './assets/algoIcon.svg';
 import { ReactComponent as DataIcon } from './assets/dataIcon.svg';
 import TextField from '@material-ui/core/TextField';
 import Node from './GraphNode';
+import Edge from './GraphEdge';
 
 
 function App() {  
@@ -16,6 +17,10 @@ function App() {
   
   // Graph Data
   const [nodes, setNodes] = useState<Node[]>([]); // Moved state
+  const [edges, setEdges] = useState<Edge[]>([]);
+  const [selectedNode, setSelectedNode] = useState<string | null>(null);
+  const [selectedEdge, setSelectedEdge] = useState<string | null>(null);
+  const [isOriented, setIsOriented] = useState(true);
 
   useEffect(() => {
     if (textFieldRef.current) {
@@ -24,7 +29,7 @@ function App() {
     }
   }, []);
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleTyping = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValue(event.target.value);
   };
 
@@ -51,7 +56,7 @@ function App() {
             multiline
             maxRows={1}
             value={value}
-            onChange={handleChange}
+            onChange={handleTyping}
             onFocus={handleFocus}
             inputRef={textFieldRef}
             inputProps={{maxLength: 25}}
@@ -79,7 +84,7 @@ function App() {
               style={{ 
                 backgroundColor: '#9f9f9f',
                 border: '.75px none',
-                outline: '.75px none gray',
+                outline: '.75px none',
               }}
             >
               <DataIcon />
@@ -92,7 +97,7 @@ function App() {
               style={{ 
                 backgroundColor: '#9f9f9f',
                 border: '.75px none',
-                outline: '.75px none gray',
+                outline: '.75px none',
                 boxShadow: '0 0 0 0px gray',
               }}
             >
@@ -101,8 +106,11 @@ function App() {
           </ButtonGroup>
         </div>
       <Graph
-        nodes={nodes}
-        setNodes={setNodes}
+        nodes = {nodes} setNodes = {setNodes}
+        edges = {edges} setEdges = {setEdges}
+        selectedNode = {selectedNode} setSelectedNode = {setSelectedNode}
+        selectedEdge = {selectedEdge} setSelectedEdge = {setSelectedEdge}
+        isOriented = {isOriented} setIsOriented = {setIsOriented}
       /> 
       <ControlRoom 
         mode = {mode} 
