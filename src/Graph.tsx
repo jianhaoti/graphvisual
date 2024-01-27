@@ -2,32 +2,39 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 import Node from './GraphNode';
 import Edge from './GraphEdge';
 import Switch from '@material-ui/core/Switch';
+import { styled } from '@mui/material/styles';
 
-interface Node {
-  id: string;
-  x: number;
-  y: number;
+const CustomSwitch = styled(Switch)(({ theme }) => ({
+  '& .MuiSwitch-switchBase': {
+    // thumb color
+    color: theme.palette.primary.main,
+    '&.Mui-checked': {
+      color: theme.palette.primary.main,
+    },
+    '&.Mui-checked + .MuiSwitch-track': {
+      backgroundColor: '#96AACD', // track color when checked
+    },
+  },
+  '& .MuiSwitch-track': {
+    backgroundColor: '#yourUnCheckedTrackColor', // track color when not checked
+  },
+}));
+
+
+interface GraphProps{
+  nodes: Node[];
+  setNodes: React.Dispatch<React.SetStateAction<Node[]>>;
 }
 
-interface EdgeType {
-  id1: string;
-  x1: number;
-  y1: number;
-  id2: string | null;
-  x2: number | null;
-  y2: number | null;
-}
-
-const Graph = () => {
+const Graph: React.FC<GraphProps>  = ({ nodes, setNodes}) => {
   // Mine
-  const [nodes, setNodes] = useState<Node[]>([]);
-  const [edges, setEdges] = useState<EdgeType[]>([]);
+  const [edges, setEdges] = useState<Edge[]>([]);
   const currentNodeRef = useRef<SVGCircleElement | null>(null);
 
   const [selectedNode, setSelectedNode] = useState<string | null>(null);
   const [selectedEdge, setSelectedEdge] = useState<string | null>(null);
 
-  const [tempEdge, setTempEdge] = useState<EdgeType | null>(null);
+  const [tempEdge, setTempEdge] = useState<Edge | null>(null);
   const clickStartTime = useRef<number | null>(null);
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [isSpaceDown, setIsSpaceDown] = useState(false);
@@ -45,14 +52,13 @@ const Graph = () => {
       setIsOriented(!isOriented);
     };
   
-  
   const deleteSelected = useCallback(() => {
     if (selectedNode) {
-      setNodes(nodes => nodes.filter(node => node.id !== selectedNode));
+      setNodes(prevNodes => prevNodes.filter(node => node.id !== selectedNode));
       setEdges(edges => edges.filter(edge => edge.id1 !== selectedNode && edge.id2 !== selectedNode));
       setSelectedNode(null);
 
-      // If the selected edge has its head or tail as selected ndoe
+      // If the selected edge has its head or tail as selected node
       if(selectedEdge){
         const [edgeId1, edgeId2] = selectedEdge.split('-');
         if(edgeId1 === selectedNode || edgeId2 === selectedNode){
@@ -165,7 +171,7 @@ const Graph = () => {
       x2: endNode.cx.baseVal.value,
       y2: endNode.cy.baseVal.value
     };
-    setEdges((prevEdges: EdgeType[]) => [...prevEdges, updatedEdge] as EdgeType[]);   
+    setEdges((prevEdges: Edge[]) => [...prevEdges, updatedEdge] as Edge[]);   
     setTempEdge(null);          
     setSelectedNode(endNode.id);
     setSelectedEdge(null);
@@ -289,7 +295,7 @@ const Graph = () => {
     setSelectedEdge(null);
   };  
 
-  const handleEdgeDoubleClick = (reverseThisEdge: EdgeType) => {
+  const handleEdgeDoubleClick = (reverseThisEdge: Edge) => {
     if (!reverseThisEdge.id2) return;
     const newEdges = edges.filter(e => e.id1 !== reverseThisEdge.id1 || e.id2 !== reverseThisEdge.id2);
     const reversedEdge = {
@@ -339,14 +345,16 @@ const Graph = () => {
         ))}
       </svg>
       <div className="switch-container">
-        <Switch
+        <CustomSwitch
           ref={switchContainerRef}
           id="mySwitchContainer"
           checked={state.checkedB}
           onChange={handleOrientationChange}
-          color="primary"
           name="checkedB"
           inputProps={{ 'aria-label': 'primary checkbox' }}
+          style={{
+            color: '#74A19E', // Changes the thumb color when 'off'
+          }}
         />
       </div>
     </div>

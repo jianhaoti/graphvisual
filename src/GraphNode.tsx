@@ -2,6 +2,12 @@
 import React, { useRef, useCallback } from 'react';
 import useDraggerSVG from './useDraggerSVG';
 
+interface Node {
+  id: string;
+  x: number;
+  y: number;
+}
+
 interface NodeProps {
   node: {
     id: string;
@@ -26,7 +32,7 @@ const Node: React.FC<NodeProps> = ({node, isSelected, isDraggable, onClick, onCo
     },
     [onDrag] // Dependency array, add any other dependencies if needed
   );
-  const color = isSelected ? 'darkred' : 'black';
+  const color = isSelected ? 'white' : '#E3C46E';
 
   // Node is draggable if node is selected and space is not held.
   useDraggerSVG(node.id, nodeRef, isDraggable, memoizedOnDrag);

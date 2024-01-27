@@ -20,6 +20,7 @@ interface GraphEdgeProps{
 
 const Edge: React.FC<GraphEdgeProps> = ({edge, isSelected, isOriented, onClick, onDoubleClick, onContextMenu}) => {
   const nodeRadius = 10;
+  const color = isSelected ? 'white' : '#E3C46E';
 
   // Only return fully constructed edges
   if (edge.x2 === null || edge.y2 === null) {
@@ -80,7 +81,7 @@ const Edge: React.FC<GraphEdgeProps> = ({edge, isSelected, isOriented, onClick, 
         >
         <polygon 
           points="0 0, 10 3.5, 0 7" 
-          fill={isSelected ? 'darkred' : 'black'} 
+          fill={color} 
         />
         </marker>
       </defs>
@@ -94,7 +95,7 @@ const Edge: React.FC<GraphEdgeProps> = ({edge, isSelected, isOriented, onClick, 
         onClick={handleEdgeClick}
         onDoubleClick={handleEdgeDoubleClick}
         onContextMenu={handleEdgeContextMenu}  
-        stroke={isSelected ? 'darkred' : 'black'}
+        stroke={color}
         style={{ cursor: 'pointer' }} // Set the cursor style for better UX
 
       />

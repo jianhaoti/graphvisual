@@ -11,7 +11,7 @@ main {
   align-items: start; /* Align items to the start of each row */
   justify-content: center;
   margin: 0; /* Remove default margin */
-  background-color: blanchedalmond;
+  background-color:#3C3C40;
 }
 .switch-container {
   position: absolute;
@@ -19,9 +19,9 @@ main {
   right: 10px; /* Adjust as needed */
 }
 
-/*.container:focus {
-  outline: none; /* Removes the default outline 
-} */
+.container:focus {
+  outline: none;
+}
 
 .control-buttons {
   grid-column: 2; /* Place in the second column */
@@ -36,13 +36,8 @@ main {
   overflow: hidden;
   display: flex;
   align-items: center;
-  background-color: whitesmoke;
+  background-color: #2F2D37;
   grid-template-rows: auto 1fr; /* One row for buttons, one larger row for content */  
-}
-
-.active-button {
-  background-color: #007bff; /* or any other style */
-  color: white;
 }
 
 .container svg {
@@ -61,4 +56,22 @@ main {
   justify-content: flex-end; /* Aligns content to the right */
   grid-column: 2;
   grid-row: 2 / 4; /* Spanning two rows */
+}
+
+.activeButton {
+  background-color: #28C0B7 !important;
+  color: white; /* Optional: change text color if needed */
+
+  /* Optional: Style for hover state */
+  &:hover {
+    background-color: darken(#96AACD, 10%);
+  }
+}
+
+.whiteUnderline .MuiInput-underline:before {
+  border-bottom: 1px solid darkgray; /* Default underline color */
+}
+
+.whiteUnderline .MuiInput-underline:after {
+  border-bottom: 2px solid darkgray; /* Underline color when focused */
 }
