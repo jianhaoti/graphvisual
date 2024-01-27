@@ -6,6 +6,7 @@ import ListItem from '@mui/material/ListItem';
 import Divider from '@mui/material/Divider';
 import Node from './GraphNode';
 import Edge from './GraphEdge';
+import { editableInputTypes } from '@testing-library/user-event/dist/utils';
 
 interface DataRoomProps {
   nodes: Node[];
@@ -21,7 +22,8 @@ const DataRoom: React.FC<DataRoomProps> = ({
   nodes, edges, selectedNode, selectedEdge, 
   isOriented, onNodeIDChange, setSelectedNode 
 }) => {
-
+  const maxLengthNode = 25;
+  const maxLengthEdge = 40; // Maximum length for the displayed edge name
 
   const renderNodeItem = (node: Node) => {
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -42,15 +44,19 @@ const DataRoom: React.FC<DataRoomProps> = ({
     };
     const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
       const newName = e.target.value;
-      const isDuplicate = nodes.some(n => n.id === newName && n.id !== node.id);
-  
-      if (isDuplicate) {
-        // Option 1: Revert to the original name
-        e.target.value = node.id;
-        alert("This node name already exists. Please choose a different name.");
-  
-        // Option 2: Alternatively, you can implement a more sophisticated error handling mechanism
-        // showError("This node name already exists. Please choose a different name.");
+      const isInvalidName = !newName || nodes.some(n => n.id === newName && n.id !== node.id);
+
+      if (isInvalidName) {
+      // Apply the jiggle animation
+      e.target.classList.add('jiggle');
+
+      // Remove the jiggle class after the animation ends
+      setTimeout(() => {
+        e.target.classList.remove('jiggle');
+      }, 500); // 500ms matches the duration of the jiggle animation
+
+      // Reset the value to the original name
+      e.target.value = node.id;
       } else {
         onNodeIDChange(node.id, newName);
       }
@@ -66,12 +72,36 @@ const DataRoom: React.FC<DataRoomProps> = ({
           onBlur={handleBlur}
           onKeyDown={handleKeyDown}
           onFocus={handleFocus}
+          maxLength={maxLengthNode} // Set the maximum length
         />
       );
     }
-    return <span onClick={() => setSelectedNode(node.id)}>{node.id}</span>;
+    return <span 
+            className= "editableInput"
+            onClick={() => setSelectedNode(node.id)}
+            >
+              {node.id.length > maxLengthNode ? `${node.id.substring(0, maxLengthNode)}...` : node.id}
+          </span>;
   };
   
+const renderEdgeItem = (edge: Edge) => {
+    const edgeText = `Edge: ${edge.id1} ${isOriented ? '→' : '—'} ${edge.id2}`;
+    
+    // Truncate edge text if it's too long
+    const displayText = edgeText.length > maxLengthEdge
+        ? `${edgeText.substring(0, maxLengthEdge - 3)}...`
+        : edgeText;
+
+    return (
+        <ListItem 
+            key={edge.id1 + '-' + edge.id2}
+            className={edge.id1 + '-' + edge.id2 === selectedEdge ? 'dataRoomTextSelected' : 'dataRoomText'}
+        >
+            {displayText}
+        </ListItem>
+    );
+};
+
 
   return (
     <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', gap: '20px', height: '100%' }}>
@@ -94,19 +124,7 @@ const DataRoom: React.FC<DataRoomProps> = ({
       <Container className="dataRoomContainer" style={{ flex: 1 }}>
         <Typography variant="h6" className="dataRoomText">Edges</Typography>
         <List>
-          {edges.map((edge, index) => {
-            const edgeText = isOriented 
-              ? `Edge: ${edge.id1} → ${edge.id2}`
-              : `Edge: ${edge.id1} — ${edge.id2}`;
-            return (
-              <ListItem 
-                key={index} 
-                className={edge.id1 + '-' + edge.id2 === selectedEdge ? 'dataRoomTextSelected' : 'dataRoomText'}
-              >
-                {edgeText}
-              </ListItem>
-            );
-          })}
+          {edges.map((edge, index) => renderEdgeItem(edge))}
         </List>
       </Container>
     </div>

@@ -125,3 +125,26 @@ main {
   outline: none; /* Removes the default focus outline */
   width: auto; /* Adjust as needed */
 }
+@keyframes jiggle {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+.jiggle {
+  animation: jiggle 0.5s ease;
+}
+
+.editableInput, .nodeText {
+  max-width: 100%; /* Limit the width to the parent container */
+  overflow: hidden;
+  text-overflow: ellipsis; /* Add ellipsis for overflowed text */
+  white-space: nowrap; /* Prevent line breaks */
+}
+.nodeItem {
+  max-width: 100%; /* Limit the width to the parent container */
+  overflow: hidden;
+  text-overflow: ellipsis; /* Add ellipsis for overflowed text */
+  white-space: nowrap; /* Prevent line breaks */
+  cursor: pointer;
+}
