@@ -77,9 +77,9 @@ function App() {
               variant={mode === "data" ? "outlined" : "outlined"} 
               disableElevation={true}
               style={{ 
+                backgroundColor: '#9f9f9f',
                 border: '.75px none',
-                outline: '.75px solid gray',
-                boxShadow: '0 0 0 0px gray',
+                outline: '.75px none gray',
               }}
             >
               <DataIcon />
@@ -90,8 +90,9 @@ function App() {
               variant={mode === "algo" ? "outlined" : "outlined"} 
               disableElevation={true}
               style={{ 
+                backgroundColor: '#9f9f9f',
                 border: '.75px none',
-                outline: '.75px solid gray',
+                outline: '.75px none gray',
                 boxShadow: '0 0 0 0px gray',
               }}
             >
