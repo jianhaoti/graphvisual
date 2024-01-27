@@ -64,8 +64,6 @@ function App() {
           <TextField
             className="whiteUnderline"
             id="standard-multiline-flexible"
-            multiline
-            maxRows={1}
             value={value}
             onChange={handleTyping}
             onFocus={handleFocus}
