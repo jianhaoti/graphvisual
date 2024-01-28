@@ -5,7 +5,7 @@ import ControlRoom from './ControlRoom';
 import { Button, ButtonGroup } from '@mui/material';
 import { ReactComponent as AlgoIcon } from './assets/algoIcon.svg';
 import { ReactComponent as DataIcon } from './assets/dataIcon.svg';
-import TextField from '@material-ui/core/TextField';
+import TextField from '@mui/material/TextField';
 import Node from './GraphNode';
 import Edge from './GraphEdge';
 

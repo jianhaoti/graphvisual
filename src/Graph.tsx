@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import Node from './GraphNode';
 import Edge from './GraphEdge';
-import Switch from '@material-ui/core/Switch';
+import Switch from '@mui/material/Switch';
 import { styled } from '@mui/material/styles';
 
 const CustomSwitch = styled(Switch)(({ theme }) => ({
