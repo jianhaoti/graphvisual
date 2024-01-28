@@ -75,7 +75,7 @@ function App() {
   
   return (
     <main>
-        <div>
+        <div className="title-container">
           <TextField
             className="whiteUnderline"
             id="standard-multiline-flexible"

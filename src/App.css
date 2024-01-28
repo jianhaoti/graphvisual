@@ -155,6 +155,8 @@ main {
 * {
   overflow-x: hidden;
 }
+
+/* Hide rightside when too skinny */
 @media screen and (max-width: 768px) {
   .container-right {
       display: none;
@@ -164,3 +166,13 @@ main {
       display: none;
   }
 }
+
+@media screen and (max-height: 550px) {
+  .title-container {
+      display: none;
+  }
+  .button-group-container{
+      display: none;
+  }
+}
+
