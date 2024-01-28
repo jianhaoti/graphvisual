@@ -26,7 +26,6 @@ main {
 .control-buttons {
   grid-column: 2; /* Place in the second column */
 }
-
 .container {
   position: relative;
   height: 100%; /* Take full height of the grid cell */
@@ -45,7 +44,6 @@ main {
   width: 100%;
   height: 100%;
 }
-
 .container-left{
   justify-content: flex-start; /* Aligns content to the left */
   grid-column: 1;
@@ -156,4 +154,13 @@ main {
 
 * {
   overflow-x: hidden;
+}
+@media screen and (max-width: 768px) {
+  .container-right {
+      display: none;
+  }
+
+  .button-group-container{
+      display: none;
+  }
 }
