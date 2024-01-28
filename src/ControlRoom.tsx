@@ -2,6 +2,7 @@ import React from "react";
 import DataRoom from './DataRoom'; 
 import Node from "./GraphNode";
 import Edge from "./GraphEdge";
+import AlgoRoom from './AlgoRoom';
 
 interface ControlRoomProps {
     mode: string;
@@ -26,6 +27,9 @@ const ControlRoom: React.FC<ControlRoomProps> = ({mode, nodes, edges, selectedNo
                         selectedEdge={selectedEdge} setSelectedEdge = {setSelectedEdge}       
                         isOriented={isOriented}   
                         onNodeIDChange={onNodeIDChange}
+                    />}
+                {mode === "algo" && 
+                    <AlgoRoom 
                     />}
             </div>
         </div>

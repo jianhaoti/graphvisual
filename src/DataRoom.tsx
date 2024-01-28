@@ -106,7 +106,7 @@ const renderEdgeItem = (edge: Edge) => {
   return (
     <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', gap: '20px', height: '100%' }}>
       <Container className="dataRoomContainer" style={{ flex: 1 }}>
-        <Typography variant="h6" className="dataRoomText">Nodes</Typography>
+        <Typography variant="h6" className="dataRoomTitle">Nodes</Typography>
         <List>
           {nodes.map((node, index) => (
             <ListItem 
@@ -122,7 +122,7 @@ const renderEdgeItem = (edge: Edge) => {
       <Divider orientation="vertical" flexItem style={{ backgroundColor: '#706f6f', marginLeft: '-20px'  }} />
 
       <Container className="dataRoomContainer" style={{ flex: 1 }}>
-        <Typography variant="h6" className="dataRoomText">Edges</Typography>
+        <Typography variant="h6" className="dataRoomTitle">Edges</Typography>
         <List>
         {edges.map((edge, index) => {
           const edgeId = `${edge.id1}-${edge.id2}`; // Identifier for the edge

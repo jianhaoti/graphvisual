@@ -86,6 +86,7 @@ main {
 }
 /* App.css */
 .dataRoomContainer {
+  min-height: 40px;
   height: 500px; /* Fixed height */
   width: auto;
   padding: 20px;
@@ -147,4 +148,12 @@ main {
   text-overflow: ellipsis; /* Add ellipsis for overflowed text */
   white-space: nowrap; /* Prevent line breaks */
   cursor: pointer;
+}
+.dataRoomTitle {
+  color: #E3C46E;
+}
+
+
+* {
+  overflow-x: hidden;
 }
