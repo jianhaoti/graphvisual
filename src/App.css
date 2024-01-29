@@ -1,3 +1,7 @@
+* {
+  overflow-x: hidden;
+}
+
 main {
   display: grid;
   grid-template-columns: 1fr 1fr; /* Two columns */
@@ -89,16 +93,9 @@ main {
   border: none;
   border-radius: 4px;
   background-color: transparent;
-
-  /* Universal hiding of scrollbar */
-  -ms-overflow-style: none; /* For Internet Explorer and Edge */
-  scrollbar-width: none; /* For Firefox */
-  overflow-y: scroll; /* Enables scrolling */
-  padding-right: 17px; /* REQUIRES TESTING */
-  margin-right: -17px; /* REQUIRES TESTING */
-
-  
+  overflow-y: hidden;
 }
+
 
 .dataRoomText {
   color: #E3C46E;
@@ -145,31 +142,14 @@ main {
   cursor: pointer;
 }  
 
-.dataRoomTitle {
-    position: sticky;
-    background-color: inherit; /* Or set a specific background */
-    z-index: 1; /* Ensure it stays on top of other content */
-    color: #E3C46E;
-}
-
 .List {
   padding-top: 50px; /* Height of the title, adjust accordingly */
 }
 
 
-
-* {
-  overflow-x: hidden;
-}
-
 /* Hide rightside when too skinny */
 @media screen and (max-width: 800px) {
-  .container-right {
-      display: none;
-      display: flex;
-  }
-
-  .button-group-container{
+  .container-right, .button-group-container {
       display: none;
   }
 
@@ -179,13 +159,15 @@ main {
 
 }
 
-@media screen and (max-height: 550px) {
-  .title-container {
-      display: none;
-  }
-  .button-group-container{
+ @media screen and (max-height: 550px) {
+  .title-container, .button-group-container {
       display: none;
   }
 }
 
-
+.dataRoomTitle {
+  position: sticky;
+  background-color: inherit; /* Or set a specific background */
+  z-index: 1; /* Ensure it stays on top of other content */
+  color: #E3C46E;
+}

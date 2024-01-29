@@ -6,7 +6,6 @@ import ListItem from '@mui/material/ListItem';
 import Divider from '@mui/material/Divider';
 import Node from './GraphNode';
 import Edge from './GraphEdge';
-import { editableInputTypes } from '@testing-library/user-event/dist/utils';
 
 interface DataRoomProps {
   nodes: Node[];
@@ -79,35 +78,30 @@ const DataRoom: React.FC<DataRoomProps> = ({
     return <span 
             onClick={() => setSelectedNode(node.id)}
             >
-            Node: {node.id.length > maxLengthNode ? `${node.id.substring(0, maxLengthNode)}...` : node.id}
+            {node.id.length > maxLengthNode ? `${node.id.substring(0, maxLengthNode)}...` : node.id}
           </span>;
   };
   
-const renderEdgeItem = (edge: Edge) => {
-    const edgeText = `Edge: ${edge.id1} ${isOriented ? '→' : '—'} ${edge.id2}`;
-    
-    // Truncate edge text if it's too long
-    const displayText = edgeText.length > maxLengthEdge
-        ? `${edgeText.substring(0, maxLengthEdge - 3)}...`
-        : edgeText;
-
-    return (
-      <ListItem
-        key={edgeText}
-        onClick={() => setSelectedEdge(edgeText)}
-        className={edgeText === selectedEdge ? 'dataRoomTextSelected' : 'dataRoomText'}
-      >
-        {edge.id1} {isOriented ? '→' : '-'} {edge.id2}
-      </ListItem>
-    );
-};
-
-
   return (
     <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', gap: '20px', height: '100%' }}>
       <Container className="dataRoomContainer" style={{ flex: 1 }}>
         <Typography variant="h6" className="dataRoomTitle">Nodes</Typography>
-        <List>
+        <List
+            sx={{
+                overflowY: 'auto',
+                height: 'calc(100% - 20px)', 
+                '&::-webkit-scrollbar': {
+                    width: '0.5px',
+                    
+                },
+                '&::-webkit-scrollbar-track': {
+                    backgroundColor: 'inherit',
+                },
+                '&::-webkit-scrollbar-thumb': {
+                    backgroundColor: '#E3C46E',
+                },
+            }}
+        >
           {nodes.map((node, index) => (
             <ListItem 
               key={index} 
@@ -128,12 +122,27 @@ const renderEdgeItem = (edge: Edge) => {
 
       <Container className="dataRoomContainer" style={{ flex: 1 }}>
         <Typography variant="h6" className="dataRoomTitle">Edges</Typography>
-        <List>
+        <List
+            sx={{
+                overflowY: 'auto',
+                height: 'calc(100% - 20px)', 
+                '&::-webkit-scrollbar': {
+                    width: '0.5px',
+                    
+                },
+                '&::-webkit-scrollbar-track': {
+                    backgroundColor: 'inherit',
+                },
+                '&::-webkit-scrollbar-thumb': {
+                    backgroundColor: '#E3C46E',
+                },
+            }}
+        >
         {edges.map((edge, index) => {
           const edgeId = `${edge.id1}-${edge.id2}`; // Identifier for the edge
           const edgeText = isOriented 
-            ? `Edge: ${edge.id1} → ${edge.id2}`
-            : `Edge: ${edge.id1} — ${edge.id2}`;
+            ? `${edge.id1} → ${edge.id2}`
+            : `${edge.id1} — ${edge.id2}`;
           
           // Check if this edge is the selected one
           const isSelected = edgeId === selectedEdge;
