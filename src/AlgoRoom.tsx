@@ -3,7 +3,7 @@ import { Box, ImageList, ImageListItem } from '@mui/material';
 import AlgoCard from './AlgoCard'; // Import your modified OutlinedCard component
 
 const AlgoRoom: React.FC = () => {
-    const colors = ['#8898AA', '#C7BCC8', '#F7E7EC']
+    const colors = ['#8898AA', '#C7BCC8', '#F4E4EA']
 
     const cardData = [
         { title: 'Card 1', subtitle: 'Subtitle 1', description: 'Description 1' },
