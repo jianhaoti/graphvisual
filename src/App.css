@@ -169,5 +169,5 @@ main {
   position: sticky;
   background-color: inherit; /* Or set a specific background */
   z-index: 1; /* Ensure it stays on top of other content */
-  color: #E3C46E;
+  color: #E3C46E; 
 }

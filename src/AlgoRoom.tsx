@@ -1,19 +1,50 @@
-import React, { useState } from 'react';
-import Bubble from './Bubble';
+import React from 'react';
+import { Box, ImageList, ImageListItem } from '@mui/material';
+import AlgoCard from './AlgoCard'; // Import your modified OutlinedCard component
 
 const AlgoRoom: React.FC = () => {
-    const [expandedBubble, setExpandedBubble] = useState<string | null>(null);
+    const cardData = [
+        { title: 'Card 1', subtitle: 'Subtitle 1', description: 'Description 1' },
+        { title: 'Card 2', subtitle: 'Subtitle 2', description: 'Description 2' },
+        { title: 'Card 1', subtitle: 'Subtitle 1', description: 'Description 1' },
+        { title: 'Card 2', subtitle: 'Subtitle 2', description: 'Description 2' },
+        { title: 'Card 1', subtitle: 'Subtitle 1', description: 'Description 1' },
+        { title: 'Card 2', subtitle: 'Subtitle 2', description: 'Description 2' },
+        { title: 'Card 1', subtitle: 'Subtitle 1', description: 'Description 1' },
+        { title: 'Card 2', subtitle: 'Subtitle 2', description: 'Description 2' },
 
-    const handleBubbleClick = (label: string) => {
-        setExpandedBubble(label);
-    };
+
+        // ... Add more card data as needed
+    ];
 
     return (
-        <div style={{ position: 'relative', width: '100%', height: '500px', border: '1px solid red' }}>
-            <Bubble x={100} y={150} radius={50} color="red" label="BFS" onClick={() => handleBubbleClick("BFS")} expanded={expandedBubble === "BFS"} />
-            <Bubble x={200} y={250} radius={60} color="blue" label="DFS" onClick={() => handleBubbleClick("DFS")} expanded={expandedBubble === "DFS"} />
-            {/* Add more bubbles as needed */}
-        </div>
+        <Box sx={{  padding: '20px', 
+                    maxHeight: '60vh',
+                    overflow: 'auto', 
+                    height: 'calc(100% - 20px)', 
+                    '&::-webkit-scrollbar': {
+                        width: '0.5px',
+                    },
+                    '&::-webkit-scrollbar-track': {
+                        backgroundColor: 'inherit',
+                    },
+                    '&::-webkit-scrollbar-thumb': {
+                        backgroundColor: '#E3C46E',
+                    },
+
+                    }}>
+            <ImageList cols={3} gap={8} style={{ height: 'auto'}}>
+                {cardData.map((item, index) => (
+                    <ImageListItem key={index}>
+                        <AlgoCard
+                            title={item.title}
+                            subtitle={item.subtitle}
+                            description={item.description}
+                        />
+                    </ImageListItem>
+                ))}
+            </ImageList>
+        </Box>
     );
 };
 
