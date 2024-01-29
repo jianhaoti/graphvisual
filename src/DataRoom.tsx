@@ -119,7 +119,12 @@ const renderEdgeItem = (edge: Edge) => {
         </List>
       </Container>
 
-      <Divider orientation="vertical" flexItem style={{ backgroundColor: '#706f6f', marginLeft: '-20px'  }} />
+      <Divider 
+        orientation="vertical" 
+        flexItem 
+        variant="middle"
+        style={{ backgroundColor: '#706f6f', marginLeft: '-20px' }} 
+      />
 
       <Container className="dataRoomContainer" style={{ flex: 1 }}>
         <Typography variant="h6" className="dataRoomTitle">Edges</Typography>

@@ -28,16 +28,15 @@ main {
 }
 .container {
   position: relative;
-  height: 100%; /* Take full height of the grid cell */
   border: 1px solid black;
   width: calc(100% - 10px); /* Adjust width to account for border and a bit of space */
   height: calc(80vh - 40px - 2px); /* Adjust for height, padding, gap, and border */
-  overflow: hidden;
   display: flex;
   align-items: center;
   background-color: #2F2D37;
   grid-template-rows: auto 1fr; /* One row for buttons, one larger row for content */  
   border-radius: 10px; /* Add rounded corners */
+  overflow: hidden;
 }
 
 .container svg {
@@ -47,8 +46,7 @@ main {
 .container-left{
   justify-content: flex-start; /* Aligns content to the left */
   grid-column: 1;
-  grid-row: 2 / 4; /* Spanning two rows */
-
+  grid-row: 2 / 4; /* Spanning two rows */  
 }
 
 .container-right {
@@ -82,17 +80,15 @@ main {
   padding: 20px;           /* Space from borders */
   width: 100%;             /* Take full width of the parent */
 }
-/* App.css */
+
 .dataRoomContainer {
-  min-height: 40px;
-  height: 500px; /* Fixed height */
+  height: 70vh; /* Fixed height */
   width: auto;
   padding: 20px;
   margin: 10px;
-  flex: none; /* Override flex-grow */
   border: none;
-  /*border: 1px solid #706f6f; */
   border-radius: 4px;
+  background-color: transparent;
 
   /* Universal hiding of scrollbar */
   -ms-overflow-style: none; /* For Internet Explorer and Edge */
@@ -101,6 +97,7 @@ main {
   padding-right: 17px; /* REQUIRES TESTING */
   margin-right: -17px; /* REQUIRES TESTING */
 
+  
 }
 
 .dataRoomText {
@@ -146,10 +143,19 @@ main {
   text-overflow: ellipsis; /* Add ellipsis for overflowed text */
   white-space: nowrap; /* Prevent line breaks */
   cursor: pointer;
-}
+}  
+
 .dataRoomTitle {
-  color: #E3C46E;
+    position: sticky;
+    background-color: inherit; /* Or set a specific background */
+    z-index: 1; /* Ensure it stays on top of other content */
+    color: #E3C46E;
 }
+
+.List {
+  padding-top: 50px; /* Height of the title, adjust accordingly */
+}
+
 
 
 * {
@@ -157,14 +163,20 @@ main {
 }
 
 /* Hide rightside when too skinny */
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 800px) {
   .container-right {
       display: none;
+      display: flex;
   }
 
   .button-group-container{
       display: none;
   }
+
+  main {
+    grid-template-columns: 1fr; /* Change to single column */
+  }
+
 }
 
 @media screen and (max-height: 550px) {
@@ -175,4 +187,5 @@ main {
       display: none;
   }
 }
+
 
