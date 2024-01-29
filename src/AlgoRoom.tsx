@@ -3,8 +3,7 @@ import { Box, ImageList, ImageListItem } from '@mui/material';
 import AlgoCard from './AlgoCard'; // Import your modified OutlinedCard component
 
 const AlgoRoom: React.FC = () => {
-    const colors = ['#A0ACBB', '#BDB0BF', '#FADBE4']
-    let colorIndex = 1;
+    const colors = ['#8898AA', '#C7BCC8', '#F7E7EC']
 
     const cardData = [
         { title: 'Card 1', subtitle: 'Subtitle 1', description: 'Description 1' },
@@ -15,9 +14,7 @@ const AlgoRoom: React.FC = () => {
         { title: 'Card 2', subtitle: 'Subtitle 2', description: 'Description 2' },
         { title: 'Card 1', subtitle: 'Subtitle 1', description: 'Description 1' },
         { title: 'Card 2', subtitle: 'Subtitle 2', description: 'Description 2' },
-
-
-        // ... Add more card data as needed
+        { title: 'Card 1', subtitle: 'Subtitle 1', description: 'Description 1' },
     ];
 
     return (
@@ -38,8 +35,7 @@ const AlgoRoom: React.FC = () => {
         }}>
             <ImageList cols={3} gap={8}>
                 {cardData.map((item, index) => {
-                    // Diagonal coloring (with 3 colors)
-                    const row = Math.floor(index / 3);
+                    const row = Math.floor(index / colors.length);
                     const colorIndex = (index + row) % colors.length;
                     const color = colors[colorIndex];
 
