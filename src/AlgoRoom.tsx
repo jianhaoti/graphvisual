@@ -4,8 +4,9 @@ import AlgoCard from './AlgoCard'; // Import your modified OutlinedCard componen
 
 const AlgoRoom: React.FC = () => {
     const colors = ['#8898AA', '#C7BCC8', '#F4E4EA'];
-
     const [isFullTitle, setIsFullTitle] = useState(true);
+    const [selectedAlgo, setSelectedAlgo] = useState<string|null>(null);
+    const [isOpen, setIsOpen] = useState(false);
 
     useEffect(() => {
         const handleResize = () => {
@@ -18,6 +19,14 @@ const AlgoRoom: React.FC = () => {
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
+    const handleCardClick = (algo: string) => {
+        setSelectedAlgo(algo);
+        setIsOpen(true);
+    };
+
+    const handleClose = () => {
+        setIsOpen(false);
+    };
 
     const cardData = [
         { title: 'BFS', grouping: 'Search', description: 'A Drop of Water' },
@@ -25,11 +34,8 @@ const AlgoRoom: React.FC = () => {
         { title: 'Dijkstra', grouping: 'Shortest Path', description: 'Walk Radially' },
         { title: 'Prim', grouping: 'MST', description: 'Connect the Dots' },
         { title: 'Kruskal', grouping: 'MST', description: 'Thinnest Threads' },
-        { title: 'Bellman-Ford', grouping: 'Shortest Path', description: 'Negative Dijkstra' },
         { title: 'A*', grouping: 'Search', description: 'A Guided Wanderer' },
         { title: 'Tarjan', grouping: 'Search', description: 'Unraveling the Knots' },
-        { title: 'Ford-Fulkerson', grouping: 'Flows & Cuts', description: 'Channel the Currents' },
-        { title: 'Gale-Shapley', grouping: 'Matchings', description: 'Stable Marriage' },
         { title: 'Karger', grouping: 'Cuts', description: 'Connected Minima' },
 
     ];
@@ -52,6 +58,7 @@ const AlgoRoom: React.FC = () => {
         }}>
             <ImageList cols={3} gap={6}>
                 {cardData.map((item, index) => {
+                    // Color generator
                     const row = Math.floor(index / 3);
                     const colorIndex = (index + row) % colors.length;
                     const color = colors[colorIndex];
@@ -63,11 +70,14 @@ const AlgoRoom: React.FC = () => {
                                 grouping={item.grouping}
                                 description={item.description}
                                 backgroundColor={color}
+                                onClick={() => handleCardClick(item.title)}
+                                isOpen = {isOpen}
                             />
                         </ImageListItem>
                     );
                 })}
             </ImageList>
+
         </Box>
     );
 };

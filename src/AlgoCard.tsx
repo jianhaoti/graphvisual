@@ -9,10 +9,10 @@ interface AlgoCardProps {
     grouping: string;
     description: string;
     backgroundColor: string;
+    onClick: () => void;
+    isOpen: boolean;
 }
-
-const colors = ['#A0ACBB', '#BDB0BF', '#FADBE4']
-const AlgoCard: React.FC<AlgoCardProps> = ({ title, grouping, description, backgroundColor }) => {
+const AlgoCard: React.FC<AlgoCardProps> = ({ title, grouping, description, backgroundColor, onClick, isOpen }) => {
 
     return (
         <Box sx={{ minWidth: 275 }}>
