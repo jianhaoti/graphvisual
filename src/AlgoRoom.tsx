@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
-import { Box, ImageList, ImageListItem } from '@mui/material';
-import AlgoCard from './AlgoCard'; // Import your modified OutlinedCard component
+import { Box, ImageList, ImageListItem, Dialog, DialogTitle, DialogContent, DialogContentText, IconButton, DialogActions } from '@mui/material';
+import AlgoCard from './AlgoCard'; 
+import CloseIcon from '@mui/icons-material/Close'; 
 
 const AlgoRoom: React.FC = () => {
     const colors = ['#8898AA', '#C7BCC8', '#F4E4EA'];
@@ -19,8 +20,8 @@ const AlgoRoom: React.FC = () => {
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
-    const handleCardClick = (algo: string) => {
-        setSelectedAlgo(algo);
+    const handleCardClick = (title: string) => {
+        setSelectedAlgo(title);
         setIsOpen(true);
     };
 
@@ -37,7 +38,6 @@ const AlgoRoom: React.FC = () => {
         { title: 'A*', grouping: 'Search', description: 'A Guided Wanderer' },
         { title: 'Tarjan', grouping: 'Search', description: 'Unraveling the Knots' },
         { title: 'Karger', grouping: 'Cuts', description: 'Connected Minima' },
-
     ];
     
     return (
@@ -71,7 +71,6 @@ const AlgoRoom: React.FC = () => {
                                 description={item.description}
                                 backgroundColor={color}
                                 onClick={() => handleCardClick(item.title)}
-                                isOpen = {isOpen}
                             />
                         </ImageListItem>
                     );
