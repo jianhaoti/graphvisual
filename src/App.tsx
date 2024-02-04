@@ -16,7 +16,7 @@ function App() {
   const textFieldRef = useRef<HTMLInputElement>(null);
   
   // Graph Data
-  const [nodes, setNodes] = useState<Node[]>([]); // Moved state
+  const [nodes, setNodes] = useState<Node[]>([]); 
   const [edges, setEdges] = useState<Edge[]>([]);
   const [selectedNode, setSelectedNode] = useState<string | null>(null);
   const [selectedEdge, setSelectedEdge] = useState<string | null>(null);
@@ -28,6 +28,7 @@ function App() {
       textFieldRef.current.select(); // Select the text
     }
   }, []);
+
   const handleKeyDown = (event: React.KeyboardEvent) => {
     if (event.key === 'Enter') {
       // Blur the input field when Enter key is pressed
@@ -145,7 +146,7 @@ function App() {
         selectedEdge={selectedEdge} setSelectedEdge = {handleEdgeSelection}
         isOriented = {isOriented}    
         onNodeIDChange={handleNodeIDChange} 
-             
+        setEdges={setEdges}
       />
     </main>
   );

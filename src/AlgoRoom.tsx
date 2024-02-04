@@ -3,7 +3,6 @@ import { Box, ImageList, ImageListItem, Dialog, DialogTitle, DialogContent, Dial
 import AlgoCard from './AlgoCard'; 
 
 const AlgoRoom: React.FC = () => {
-    // const colors = ['#8898AA', '#C7BCC8', '#F4E4EA'];
     const colors = ['#8693AB', '#BDD4E7', '#5d617c'];
 
     const [isFullTitle, setIsFullTitle] = useState(true);

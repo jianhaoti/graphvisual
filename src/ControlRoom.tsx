@@ -7,7 +7,7 @@ import AlgoRoom from './AlgoRoom';
 interface ControlRoomProps {
     mode: string;
     nodes: Node[];
-    edges: Edge[];
+    edges: Edge[]; setEdges: React.Dispatch<React.SetStateAction<Edge[]>>; 
     selectedNode: string | null; setSelectedNode: (nodeId: string | null) => void;  // Updated to a function type
     selectedEdge: string | null; setSelectedEdge: (edgeId: string | null) => void;  // Updated to a function type
 
@@ -15,7 +15,7 @@ interface ControlRoomProps {
     onNodeIDChange: (oldId: string, newId: string) => void;
 }  
   
-const ControlRoom: React.FC<ControlRoomProps> = ({mode, nodes, edges, selectedNode, selectedEdge, isOriented, onNodeIDChange, setSelectedNode, setSelectedEdge}) => {
+const ControlRoom: React.FC<ControlRoomProps> = ({mode, nodes, edges, selectedNode, selectedEdge, isOriented, onNodeIDChange, setSelectedNode, setSelectedEdge, setEdges}) => {
     return (
         <div className="container container-right">
             <div className="control-room">
@@ -27,6 +27,7 @@ const ControlRoom: React.FC<ControlRoomProps> = ({mode, nodes, edges, selectedNo
                         selectedEdge={selectedEdge} setSelectedEdge = {setSelectedEdge}       
                         isOriented={isOriented}   
                         onNodeIDChange={onNodeIDChange}
+                        setEdges={setEdges}
                     />}
                 {mode === "algo" && 
                     <AlgoRoom 

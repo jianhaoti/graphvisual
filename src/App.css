@@ -117,6 +117,10 @@ main {
   margin: 0;
   outline: none; /* Removes the default focus outline */
   width: auto; /* Adjust as needed */
+  -webkit-appearance: none; /* Chrome, Safari, newer versions of Opera.*/
+  -moz-appearance: none;    /* Firefox */
+  appearance: none;         /* Standard syntax; must be included last */
+
 }
 @keyframes jiggle {
   0%, 100% { transform: translateX(0); }
@@ -171,3 +175,5 @@ main {
   z-index: 1; /* Ensure it stays on top of other content */
   color: #E3C46E; 
 }
+
+
