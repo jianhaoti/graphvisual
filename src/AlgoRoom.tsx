@@ -1,10 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import { Box, ImageList, ImageListItem, Dialog, DialogTitle, DialogContent, DialogContentText, IconButton, DialogActions } from '@mui/material';
 import AlgoCard from './AlgoCard'; 
-import CloseIcon from '@mui/icons-material/Close'; 
 
 const AlgoRoom: React.FC = () => {
-    const colors = ['#8898AA', '#C7BCC8', '#F4E4EA'];
+    // const colors = ['#8898AA', '#C7BCC8', '#F4E4EA'];
+    const colors = ['#8693AB', '#BDD4E7', '#5d617c'];
+
     const [isFullTitle, setIsFullTitle] = useState(true);
     const [selectedAlgo, setSelectedAlgo] = useState<string|null>(null);
     const [isOpen, setIsOpen] = useState(false);
@@ -82,4 +83,3 @@ const AlgoRoom: React.FC = () => {
 };
 
 export default AlgoRoom;
-

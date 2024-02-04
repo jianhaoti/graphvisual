@@ -135,7 +135,8 @@ const Graph: React.FC<GraphProps>  = ({
       y1: node.cy.baseVal.value,
       id2: null,
       x2: null,
-      y2: null
+      y2: null,
+      weight: 1
     }
     setTempEdge(newEdge);
   };
@@ -172,7 +173,8 @@ const Graph: React.FC<GraphProps>  = ({
       ...tempEdge,
       id2: endNode.id,
       x2: endNode.cx.baseVal.value,
-      y2: endNode.cy.baseVal.value
+      y2: endNode.cy.baseVal.value,
+      weight: 1
     };
     setEdges((prevEdges: Edge[]) => [...prevEdges, updatedEdge] as Edge[]);   
     setTempEdge(null);          
@@ -319,7 +321,8 @@ const Graph: React.FC<GraphProps>  = ({
       y1: reverseThisEdge.y2 as number,
       id2: reverseThisEdge.id1 as string,
       x2: reverseThisEdge.x1 as number,
-      y2: reverseThisEdge.y1 as number
+      y2: reverseThisEdge.y1 as number,
+      weight: 1
     }
     setEdges([...newEdges, reversedEdge]);
     const reversedId = `${reversedEdge.id1}-${reversedEdge.id2}`;

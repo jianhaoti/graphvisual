@@ -141,8 +141,8 @@ const DataRoom: React.FC<DataRoomProps> = ({
         {edges.map((edge, index) => {
           const edgeId = `${edge.id1}-${edge.id2}`; // Identifier for the edge
           const edgeText = isOriented 
-            ? `${edge.id1} → ${edge.id2}`
-            : `${edge.id1} — ${edge.id2}`;
+            ? `${edge.id1} → ${edge.id2}: ${edge.weight}`
+            : `${edge.id1} — ${edge.id2}: ${edge.weight}`
           
           // Check if this edge is the selected one
           const isSelected = edgeId === selectedEdge;
