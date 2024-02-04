@@ -79,7 +79,6 @@ const DataRoom: React.FC<DataRoomProps> = ({
           </span>;
   };
 
-
   const renderEdgeItem = (edge: Edge) => {
     const edgeId = `${edge.id1}-${edge.id2}`;
     const displayEdgeName = `${edge.id1} ${isOriented ? '→' : '-'} ${edge.id2}:  ${edge.weight} `;
@@ -147,9 +146,6 @@ const DataRoom: React.FC<DataRoomProps> = ({
       </div>
     );
   };
-  
-  
-  
   
   return (
     <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', gap: '20px', height: '100%' }}>
