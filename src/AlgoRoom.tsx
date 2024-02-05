@@ -48,23 +48,29 @@ const AlgoRoom: React.FC = () => {
 
 
     ];
+
+    const handleContextMenu = (e: React.MouseEvent) => {
+        e.preventDefault();
+      }
     
     return (
-        <Box sx={{
-            maxHeight: '60vh', //controls padding
-            backgroundColor: 'transparent',
-            padding: '50px', 
-            overflow: 'auto', 
-            '&::-webkit-scrollbar': {
-                width: '1px',
-            },
-            '&::-webkit-scrollbar-track': {
-                backgroundColor: 'inherit',
-            },
-            '&::-webkit-scrollbar-thumb': {
-                backgroundColor: '#E3C46E',
-            },
-        }}>
+        <Box 
+            onContextMenu = {e => handleContextMenu(e)}
+            sx={{
+                maxHeight: '60vh', //controls padding
+                backgroundColor: 'transparent',
+                padding: '50px', 
+                overflow: 'auto', 
+                '&::-webkit-scrollbar': {
+                    width: '1px',
+                },
+                '&::-webkit-scrollbar-track': {
+                    backgroundColor: 'inherit',
+                },
+                '&::-webkit-scrollbar-thumb': {
+                    backgroundColor: '#E3C46E',
+                },
+            }}>
             <ImageList cols={3} gap={6}>
                 {cardData.map((item, index) => {
                     // Color generator

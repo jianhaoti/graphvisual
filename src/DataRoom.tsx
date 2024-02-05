@@ -152,7 +152,10 @@ const DataRoom: React.FC<DataRoomProps> = ({
   }
   
   return (
-    <div style={{ width: '100%', height: '100%', overflow: 'hidden'}} onContextMenu={e => handleContextMenu(e)}>  {/* this takes up whole right-container when no .control-room*/}
+    // This takes up whole right-container when no .control-room
+    <div style={{ width: '100%', height: '100%', overflow: 'hidden'}} 
+        onContextMenu={e => handleContextMenu(e)}
+    > 
       <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', padding: '10px', height: 'calc(90%)', backgroundColor: 'inherit', overflow: 'hidden' }}>
           <Container className="dataRoomContainer" style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', paddingTop: '2vh' }}>
             <Typography variant="h6" 
