@@ -368,7 +368,7 @@ const Graph: React.FC<GraphProps>  = ({
         </svg>
       </div>
       
-      <div style = {{position:'absolute', bottom:'10px', right:'10px'}} >
+      <div style = {{position:'absolute', bottom:'8px', right:'10px'}} >
         <CustomSwitch
           ref={switchContainerRef}
           id="mySwitchContainer"
