@@ -340,32 +340,35 @@ const Graph: React.FC<GraphProps>  = ({
       onContextMenu={e => handleContainerContextMenu(e)}
       tabIndex={0}
     >
-      <svg width="200" height="200">
-        {nodes.map(node => (
-          <Node
-            key={node.id}
-            node={node}
-            isSelected={node.id === selectedNode}
-            isDraggable={(node.id === selectedNode) && !isSpaceDown}
-            onClick={() => handleNodeClick(node.id)}
-            onDrag={handleNodeDrag}
-            onContextMenu={e => handleNodeContextMenu(e, node.id)}
-          />
-        ))}
-        {edges.filter(edge => edge.x2 !== null && edge.y2 !== null).map(edge => (
-          <Edge
-            key={`${edge.id1}-${edge.id2}`}
-            edge={edge}
-            isSelected={selectedEdge === `${edge.id1}-${edge.id2}`}
-            onClick={handleEdgeClick}
-            onDoubleClick={handleEdgeDoubleClick}
-            onContextMenu={handleEdgeContextMenu}
-            isOriented={isOriented}
-            showWeight = {showWeight}
-          />
-        ))}
-      </svg>
-      <div className="switch-container">
+      <div style={{flex: 1, height: '100%', overflow: 'hidden'}}>
+        <svg width="200" height="200">
+          {nodes.map(node => (
+            <Node
+              key={node.id}
+              node={node}
+              isSelected={node.id === selectedNode}
+              isDraggable={(node.id === selectedNode) && !isSpaceDown}
+              onClick={() => handleNodeClick(node.id)}
+              onDrag={handleNodeDrag}
+              onContextMenu={e => handleNodeContextMenu(e, node.id)}
+            />
+          ))}
+          {edges.filter(edge => edge.x2 !== null && edge.y2 !== null).map(edge => (
+            <Edge
+              key={`${edge.id1}-${edge.id2}`}
+              edge={edge}
+              isSelected={selectedEdge === `${edge.id1}-${edge.id2}`}
+              onClick={handleEdgeClick}
+              onDoubleClick={handleEdgeDoubleClick}
+              onContextMenu={handleEdgeContextMenu}
+              isOriented={isOriented}
+              showWeight = {showWeight}
+            />
+          ))}
+        </svg>
+      </div>
+      
+      <div style = {{position:'absolute', bottom:'10px', right:'10px'}} >
         <CustomSwitch
           ref={switchContainerRef}
           id="mySwitchContainer"
@@ -376,7 +379,7 @@ const Graph: React.FC<GraphProps>  = ({
           style={{
             color: '#74A19E', // Changes the thumb color when 'off'
           }}
-        />
+        />  
       </div>
     </div>
   );

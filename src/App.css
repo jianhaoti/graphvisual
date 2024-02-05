@@ -19,8 +19,8 @@ main {
 }
 .switch-container {
   position: absolute;
-  bottom: 10px; /* Adjust as needed */
-  right: 10px; /* Adjust as needed */
+  bottom: -9px; /* Adjust as needed */
+  right: -9px; /* Adjust as needed */
 }
 
 .container:focus {
@@ -175,5 +175,4 @@ main {
   z-index: 1; /* Ensure it stays on top of other content */
   color: #E3C46E; 
 }
-
 

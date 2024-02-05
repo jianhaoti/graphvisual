@@ -21,7 +21,7 @@ const ControlRoom: React.FC<ControlRoomProps> = ({mode, nodes, edges, selectedNo
                                                   onNodeIDChange, setSelectedNode, setSelectedEdge, setEdges, setShowWeight}) => {
     return (
         <div className="container container-right">
-            <div className="control-room">
+         {/*   <div className="control-room"> */}
                 {mode === "data" && 
                     <DataRoom 
                         nodes={nodes} 
@@ -36,7 +36,7 @@ const ControlRoom: React.FC<ControlRoomProps> = ({mode, nodes, edges, selectedNo
                 {mode === "algo" && 
                     <AlgoRoom 
                     />}
-            </div>
+        {/*    </div> */}
         </div>
     );
 };

@@ -129,7 +129,7 @@ const DataRoom: React.FC<DataRoomProps> = ({
     };
   
     return (
-      <div onClick={() => setSelectedEdge(edgeId)} style={{ display: 'flex', alignItems: 'center' }}>
+      <div onClick={() => setSelectedEdge(edgeId)} style={{ display: 'flex', alignItems: 'center'}}>
         {selectedEdge === edgeId ? (
           <input
             className="editableInput" // Use the className for styles
@@ -148,17 +148,21 @@ const DataRoom: React.FC<DataRoomProps> = ({
   };
   
   return (
-    <div style={{ width: '100%', height: '100%', backgroundColor: 'transparent', overflow: 'hidden' }}> 
-      <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', gap: '20px', height: 'calc(100vh - 40vh)', backgroundColor: 'transparent', overflow: 'hidden' }}>
+    <div style={{ width: '100%', height: '100%', overflow: 'hidden'}}>  {/* this takes up whole right-container when no .control-room*/}
+      <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', height: 'calc(90%)', backgroundColor: 'inherit', overflow: 'hidden' }}>
           <Container className="dataRoomContainer" style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', paddingTop: '2vh' }}>
-            <Typography variant="h6" className="dataRoomTitle">Nodes</Typography>
+            <Typography variant="h6" 
+                        className="dataRoomTitle" 
+                        style = {{overflow: 'hidden'}}
+            >
+              Nodes
+            </Typography>
             <List sx={{ overflowY: 'auto', 
-                        height: 'calc(100% - 10vh)', // prevents it from covering up the title
+                        height: 'calc(100%)', // prevents it from covering up the title
                         '&::-webkit-scrollbar': { width: '0.5px' }, 
                         '&::-webkit-scrollbar-track': { backgroundColor: '#E3C46E' }, 
                         '&::-webkit-scrollbar-thumb': { backgroundColor: '#E3C46E' }, 
                         backgroundColor: 'inhreit',
-                        paddingBottom: '10vh', // Add padding to the bottom, otherwise new nodes won't appear!
                         }}>
               {nodes.map((node, index) => (
                 <ListItem
@@ -171,17 +175,21 @@ const DataRoom: React.FC<DataRoomProps> = ({
             </List>
           </Container>
 
-          <Divider orientation="vertical" flexItem variant="middle" style={{ backgroundColor: '#706f6f', marginLeft: '-20px' }} />
+          <Divider orientation="vertical" flexItem variant="middle" style={{ backgroundColor: '#706f6f', marginLeft: '-5px' }} />
 
           <Container className="dataRoomContainer" style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', paddingTop: '2vh' }}>
-            <Typography variant="h6" className="dataRoomTitle">Edges</Typography>
+            <Typography variant="h6" 
+                        className="dataRoomTitle" 
+                        style = {{overflow: 'hidden'}}
+            >
+              Edges
+            </Typography>
             <List sx={{ overflowY: 'auto', 
-                        height: 'calc(100% - 10vh)', // prevents it from covering up the title
+                        height: 'calc(100%)', // prevents it from covering up the title
                         '&::-webkit-scrollbar': { width: '0.5px' }, 
                         '&::-webkit-scrollbar-track': { backgroundColor: '#E3C46E' }, 
                         '&::-webkit-scrollbar-thumb': { backgroundColor: '#E3C46E' }, 
-                        backgroundColor: 'inherit',
-                        paddingBottom: '10vh' // Add padding to the bottom, otherwise new nodes won't appear!
+                        backgroundColor: 'transparent',
                         }}>
               {edges.map((edge, index) => (
                 <ListItem
@@ -196,22 +204,18 @@ const DataRoom: React.FC<DataRoomProps> = ({
           </Container>
       </div>
       
-      <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', backgroundColor: 'transparent' }}>
+      <div style={{ overflow:'hidden', position: 'absolute', bottom: '14px', right: '3px',display: 'flex', justifyContent: 'flex-end', alignItems: 'center', backgroundColor: 'transparent', height: 'calc(5%)'}}>
       {/* Button or Additional Information */}
-      <Button 
-        onClick={() => setShowWeight(!showWeight)}
-        style={{ 
-          minWidth: '30px', // Adjust minWidth to reduce button size
-          minHeight: '30px', // Adjust minHeight to reduce button size
-          padding: '10px', // Reduce padding to shrink the button
-        }}
-      >
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', backgroundColor: 'inherit' }}>
-        {showWeight ? <ClosedEye  /> : <OpenEye /> }
-        </div>
-      </Button>
-    </div>
-  
+        <Button 
+          onClick={() => setShowWeight(!showWeight)}
+          style={{ 
+          }}
+        >
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', backgroundColor: 'transparent' }}>
+          {showWeight ? <ClosedEye  /> : <OpenEye /> }
+          </div>
+        </Button>
+      </div>
     </div>
   );
   
