@@ -13,9 +13,12 @@ interface ControlRoomProps {
 
     isOriented: boolean; 
     onNodeIDChange: (oldId: string, newId: string) => void;
+
+    showWeight: boolean; setShowWeight: React.Dispatch<React.SetStateAction<boolean>>; 
 }  
   
-const ControlRoom: React.FC<ControlRoomProps> = ({mode, nodes, edges, selectedNode, selectedEdge, isOriented, onNodeIDChange, setSelectedNode, setSelectedEdge, setEdges}) => {
+const ControlRoom: React.FC<ControlRoomProps> = ({mode, nodes, edges, selectedNode, selectedEdge, isOriented, showWeight,
+                                                  onNodeIDChange, setSelectedNode, setSelectedEdge, setEdges, setShowWeight}) => {
     return (
         <div className="container container-right">
             <div className="control-room">
@@ -28,6 +31,7 @@ const ControlRoom: React.FC<ControlRoomProps> = ({mode, nodes, edges, selectedNo
                         isOriented={isOriented}   
                         onNodeIDChange={onNodeIDChange}
                         setEdges={setEdges}
+                        showWeight = {showWeight} setShowWeight = {setShowWeight}
                     />}
                 {mode === "algo" && 
                     <AlgoRoom 

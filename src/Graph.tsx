@@ -27,6 +27,7 @@ interface GraphProps{
   selectedNode: string | null; setSelectedNode: React.Dispatch<React.SetStateAction<string | null>>;
   selectedEdge: string | null; setSelectedEdge: React.Dispatch<React.SetStateAction<string | null>>;
   isOriented: boolean; setIsOriented: React.Dispatch<React.SetStateAction<boolean>>;
+  showWeight: boolean;
 }
 
 const Graph: React.FC<GraphProps>  = ({ 
@@ -34,7 +35,8 @@ const Graph: React.FC<GraphProps>  = ({
   edges, setEdges, 
   selectedNode, setSelectedNode,
   selectedEdge, setSelectedEdge,
-  isOriented, setIsOriented  
+  isOriented, setIsOriented,
+  showWeight 
 }) => {
   // Mine
   const currentNodeRef = useRef<SVGCircleElement | null>(null);
@@ -359,6 +361,7 @@ const Graph: React.FC<GraphProps>  = ({
             onDoubleClick={handleEdgeDoubleClick}
             onContextMenu={handleEdgeContextMenu}
             isOriented={isOriented}
+            showWeight = {showWeight}
           />
         ))}
       </svg>

@@ -1,12 +1,11 @@
-import React, { useEffect, useRef } from 'react';
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import Divider from '@mui/material/Divider';
+import React from 'react';
+import { Button, Container, Typography, List, ListItem, Divider } from '@mui/material';
+
 import Node from './GraphNode';
 import Edge from './GraphEdge';
-import { render } from '@testing-library/react';
+
+import { ReactComponent as OpenEye } from './assets/openEye.svg';
+import { ReactComponent as ClosedEye } from './assets/closedEye.svg';
 
 interface DataRoomProps {
   nodes: Node[];
@@ -16,11 +15,13 @@ interface DataRoomProps {
 
   isOriented: boolean;
   onNodeIDChange: (oldId: string, newId: string) => void;
+
+  showWeight: boolean; setShowWeight: React.Dispatch<React.SetStateAction<boolean>>; 
 }
 
 const DataRoom: React.FC<DataRoomProps> = ({ 
-  nodes, edges, selectedNode, selectedEdge, isOriented, 
-  onNodeIDChange, setSelectedNode, setSelectedEdge, setEdges
+  nodes, edges, selectedNode, selectedEdge, isOriented, showWeight,
+  onNodeIDChange, setSelectedNode, setSelectedEdge, setEdges, setShowWeight
 }) => {
   const maxLengthNode = 25;
 
@@ -81,7 +82,7 @@ const DataRoom: React.FC<DataRoomProps> = ({
 
   const renderEdgeItem = (edge: Edge) => {
     const edgeId = `${edge.id1}-${edge.id2}`;
-    const displayEdgeName = `${edge.id1} ${isOriented ? '→' : '-'} ${edge.id2}:  ${edge.weight} `;
+    const displayEdgeName = `${edge.id1} ${isOriented ? '→' : '-'} ${edge.id2}${showWeight ? `: ${edge.weight}` : ''}`;
   
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
       if (e.key === 'Enter') {
@@ -138,7 +139,6 @@ const DataRoom: React.FC<DataRoomProps> = ({
             onKeyDown={handleKeyDown}
             onFocus={handleFocus}
             onClick={(e) => e.stopPropagation()}
-            autoFocus
           />
         ) : (
           <span>{displayEdgeName}</span>
@@ -148,44 +148,73 @@ const DataRoom: React.FC<DataRoomProps> = ({
   };
   
   return (
-    <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', gap: '20px', height: '100%' }}>
-      <Container className="dataRoomContainer" style={{ flex: 1 }}>
-        <Typography variant="h6" className="dataRoomTitle">Nodes</Typography>
-        <List sx={{ overflowY: 'auto', height: 'calc(100% - 20px)', '&::-webkit-scrollbar': { width: '0.5px'}, '&::-webkit-scrollbar-track': {backgroundColor: 'inherit'}, '&::-webkit-scrollbar-thumb': {backgroundColor: '#E3C46E'}}}>
-          {nodes.map((node, index) => (
-            <ListItem 
-              key={index} 
-              className={node.id === selectedNode ? 'dataRoomTextSelected' : 'dataRoomText'}
-            >
-              {renderNodeItem(node)}
-            </ListItem>
-          ))}
-        </List>
-      </Container>
+    <div style={{ width: '100%', height: '100%', backgroundColor: 'transparent', overflow: 'hidden' }}> 
+      <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', gap: '20px', height: 'calc(100vh - 40vh)', backgroundColor: 'transparent', overflow: 'hidden' }}>
+          <Container className="dataRoomContainer" style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', paddingTop: '2vh' }}>
+            <Typography variant="h6" className="dataRoomTitle">Nodes</Typography>
+            <List sx={{ overflowY: 'auto', 
+                        height: 'calc(100% - 10vh)', // prevents it from covering up the title
+                        '&::-webkit-scrollbar': { width: '0.5px' }, 
+                        '&::-webkit-scrollbar-track': { backgroundColor: '#E3C46E' }, 
+                        '&::-webkit-scrollbar-thumb': { backgroundColor: '#E3C46E' }, 
+                        backgroundColor: 'inhreit',
+                        paddingBottom: '10vh', // Add padding to the bottom, otherwise new nodes won't appear!
+                        }}>
+              {nodes.map((node, index) => (
+                <ListItem
+                  key={index}
+                  className={node.id === selectedNode ? 'dataRoomTextSelected' : 'dataRoomText'}
+                >
+                  {renderNodeItem(node)}
+                </ListItem>
+              ))}
+            </List>
+          </Container>
 
-      <Divider 
-        orientation="vertical" 
-        flexItem 
-        variant="middle"
-        style={{ backgroundColor: '#706f6f', marginLeft: '-20px' }} 
-      />
+          <Divider orientation="vertical" flexItem variant="middle" style={{ backgroundColor: '#706f6f', marginLeft: '-20px' }} />
 
-      <Container className="dataRoomContainer" style={{ flex: 1 }}>
-        <Typography variant="h6" className="dataRoomTitle">Edges</Typography>
-        <List sx={{ overflowY: 'auto', height: 'calc(100% - 20px)', '&::-webkit-scrollbar': { width: '0.5px'}, '&::-webkit-scrollbar-track': {backgroundColor: 'inherit'}, '&::-webkit-scrollbar-thumb': {backgroundColor: '#E3C46E'}}}>
-          {edges.map((edge, index) => (
-            <ListItem 
-              key={index} 
-              onClick={() => setSelectedEdge(`${edge.id1}-${edge.id2}`)}
-              className={selectedEdge === `${edge.id1}-${edge.id2}` ? 'dataRoomTextSelected' : 'dataRoomText'}
-            >
-              {renderEdgeItem(edge)}
-            </ListItem>
-          ))}
-      </List>
-      </Container>
+          <Container className="dataRoomContainer" style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', paddingTop: '2vh' }}>
+            <Typography variant="h6" className="dataRoomTitle">Edges</Typography>
+            <List sx={{ overflowY: 'auto', 
+                        height: 'calc(100% - 10vh)', // prevents it from covering up the title
+                        '&::-webkit-scrollbar': { width: '0.5px' }, 
+                        '&::-webkit-scrollbar-track': { backgroundColor: '#E3C46E' }, 
+                        '&::-webkit-scrollbar-thumb': { backgroundColor: '#E3C46E' }, 
+                        backgroundColor: 'inherit',
+                        paddingBottom: '10vh' // Add padding to the bottom, otherwise new nodes won't appear!
+                        }}>
+              {edges.map((edge, index) => (
+                <ListItem
+                  key={index}
+                  onClick={() => setSelectedEdge(`${edge.id1}-${edge.id2}`)}
+                  className={selectedEdge === `${edge.id1}-${edge.id2}` ? 'dataRoomTextSelected' : 'dataRoomText'}
+                >
+                  {renderEdgeItem(edge)}
+                </ListItem>
+              ))}
+          </List>
+          </Container>
+      </div>
+      
+      <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', backgroundColor: 'transparent' }}>
+      {/* Button or Additional Information */}
+      <Button 
+        onClick={() => setShowWeight(!showWeight)}
+        style={{ 
+          minWidth: '30px', // Adjust minWidth to reduce button size
+          minHeight: '30px', // Adjust minHeight to reduce button size
+          padding: '10px', // Reduce padding to shrink the button
+        }}
+      >
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', backgroundColor: 'inherit' }}>
+        {showWeight ? <ClosedEye  /> : <OpenEye /> }
+        </div>
+      </Button>
+    </div>
+  
     </div>
   );
+  
 };
 
 export default DataRoom;

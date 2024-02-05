@@ -21,6 +21,7 @@ function App() {
   const [selectedNode, setSelectedNode] = useState<string | null>(null);
   const [selectedEdge, setSelectedEdge] = useState<string | null>(null);
   const [isOriented, setIsOriented] = useState(true);
+  const [showWeight, setShowWeight] = useState(true);
 
   useEffect(() => {
     if (textFieldRef.current) {
@@ -137,6 +138,7 @@ function App() {
         selectedNode = {selectedNode} setSelectedNode = {setSelectedNode}
         selectedEdge = {selectedEdge} setSelectedEdge = {setSelectedEdge}
         isOriented = {isOriented} setIsOriented = {setIsOriented}
+        showWeight = {showWeight}
       /> 
       <ControlRoom 
         mode = {mode} 
@@ -147,6 +149,8 @@ function App() {
         isOriented = {isOriented}    
         onNodeIDChange={handleNodeIDChange} 
         setEdges={setEdges}
+        showWeight = {showWeight}
+        setShowWeight={setShowWeight}
       />
     </main>
   );

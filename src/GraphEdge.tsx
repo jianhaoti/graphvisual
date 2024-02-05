@@ -14,12 +14,13 @@ interface GraphEdgeProps{
   edge: Edge;
   isSelected: boolean;
   isOriented: boolean;
+  showWeight: boolean;
   onClick: (edgeId: string) => void;
   onDoubleClick: (edge: Edge) => void;
   onContextMenu: (e: React.MouseEvent, edgeId: string) => void;
 }
 
-const Edge: React.FC<GraphEdgeProps> = ({edge, isSelected, isOriented, onClick, onDoubleClick, onContextMenu}) => {
+const Edge: React.FC<GraphEdgeProps> = ({edge, isSelected, isOriented, showWeight, onClick, onDoubleClick, onContextMenu}) => {
   const nodeRadius = 10;
   const color = isSelected ? 'white' : '#E3C46E';
 
@@ -132,7 +133,7 @@ const Edge: React.FC<GraphEdgeProps> = ({edge, isSelected, isOriented, onClick, 
         style={{ cursor: 'pointer' }} // Set the cursor style for better UX
       />)} 
 
-      <text
+      {showWeight && (<text
         x={weightPosX}
         y={weightPosY}
         fill={color}
@@ -142,7 +143,7 @@ const Edge: React.FC<GraphEdgeProps> = ({edge, isSelected, isOriented, onClick, 
         style={{ userSelect: 'none', pointerEvents: 'none', fontSize: '12px' }} // Added fontSize for better visibility
       >
         {edge.weight}
-      </text>
+      </text>)}
 
     </g>
   );
