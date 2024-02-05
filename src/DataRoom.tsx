@@ -149,7 +149,7 @@ const DataRoom: React.FC<DataRoomProps> = ({
   
   return (
     <div style={{ width: '100%', height: '100%', overflow: 'hidden'}}>  {/* this takes up whole right-container when no .control-room*/}
-      <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', height: 'calc(90%)', backgroundColor: 'inherit', overflow: 'hidden' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', padding: '10px', height: 'calc(90%)', backgroundColor: 'inherit', overflow: 'hidden' }}>
           <Container className="dataRoomContainer" style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', paddingTop: '2vh' }}>
             <Typography variant="h6" 
                         className="dataRoomTitle" 
@@ -175,7 +175,7 @@ const DataRoom: React.FC<DataRoomProps> = ({
             </List>
           </Container>
 
-          <Divider orientation="vertical" flexItem variant="middle" style={{ backgroundColor: '#706f6f', marginLeft: '-5px' }} />
+          <Divider orientation="vertical" flexItem variant="middle" style={{ backgroundColor: '#706f6f', marginLeft: '-10px' }} />
 
           <Container className="dataRoomContainer" style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', paddingTop: '2vh' }}>
             <Typography variant="h6" 
@@ -204,7 +204,7 @@ const DataRoom: React.FC<DataRoomProps> = ({
           </Container>
       </div>
       
-      <div style={{ overflow:'hidden', position: 'absolute', bottom: '14px', right: '3px',display: 'flex', justifyContent: 'flex-end', alignItems: 'center', backgroundColor: 'transparent', height: 'calc(5%)'}}>
+      <div style={{ overflow:'hidden', position: 'absolute', bottom: '12px', right: '3px',display: 'flex', justifyContent: 'flex-end', alignItems: 'center', backgroundColor: 'transparent', height: 'calc(5%)'}}>
       {/* Button or Additional Information */}
         <Button 
           onClick={() => setShowWeight(!showWeight)}

@@ -53,7 +53,7 @@ const AlgoRoom: React.FC = () => {
         <Box sx={{
             maxHeight: '60vh', //controls padding
             backgroundColor: 'transparent',
-            padding: '40px', 
+            padding: '50px', 
             overflow: 'auto', 
             '&::-webkit-scrollbar': {
                 width: '1px',
