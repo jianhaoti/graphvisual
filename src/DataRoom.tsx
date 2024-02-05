@@ -204,7 +204,7 @@ const DataRoom: React.FC<DataRoomProps> = ({
           </Container>
       </div>
       
-      <div style={{ overflow:'hidden', position: 'absolute', bottom: '12px', right: '3px',display: 'flex', justifyContent: 'flex-end', alignItems: 'center', backgroundColor: 'transparent', height: 'calc(5%)'}}>
+      <div style={{ overflow:'hidden', position: 'absolute', bottom: '12px', right: '-1px',display: 'flex', justifyContent: 'flex-end', alignItems: 'center', backgroundColor: 'transparent', height: 'calc(5%)'}}>
       {/* Button or Additional Information */}
         <Button 
           onClick={() => setShowWeight(!showWeight)}
