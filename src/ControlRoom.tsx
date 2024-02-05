@@ -20,7 +20,7 @@ interface ControlRoomProps {
 const ControlRoom: React.FC<ControlRoomProps> = ({mode, nodes, edges, selectedNode, selectedEdge, isOriented, showWeight,
                                                   onNodeIDChange, setSelectedNode, setSelectedEdge, setEdges, setShowWeight}) => {
     return (
-        <div className="container container-right">
+        <div className="container container-right" style = {{backgroundColor: '#2F2D37'}}>
          {/*   <div className="control-room"> */}
                 {mode === "data" && 
                     <DataRoom 

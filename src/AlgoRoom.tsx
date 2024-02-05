@@ -33,21 +33,30 @@ const AlgoRoom: React.FC = () => {
         { title: 'BFS', grouping: 'Search', description: 'A Drop of Water' },
         { title: 'DFS', grouping: 'Search', description: 'Drill the Depths' },
         { title: 'Dijkstra', grouping: 'Shortest Path', description: 'Walk Radially' },
+
         { title: 'Prim', grouping: 'MST', description: 'Connect the Dots' },
         { title: 'Kruskal', grouping: 'MST', description: 'Thinnest Threads' },
         { title: 'A*', grouping: 'Search', description: 'A Guided Wanderer' },
+        
         { title: 'Tarjan', grouping: 'Search', description: 'Unraveling the Knots' },
         { title: 'Karger', grouping: 'Cuts', description: 'Connected Minima' },
+        { title: 'TBD', grouping: 'TBD', description: 'TBD' },
+
+        { title: 'TBD', grouping: 'TBD', description: 'TBD' },
+        { title: 'TBD', grouping: 'TBD', description: 'TBD' },
+        { title: 'TBD', grouping: 'TBD', description: 'TBD' },
+
+
     ];
     
     return (
         <Box sx={{
-            padding: '20px', 
-            maxHeight: '60vh',
+            maxHeight: '60vh', //controls padding
+            backgroundColor: 'transparent',
+            padding: '40px', 
             overflow: 'auto', 
-            height: 'calc(100% - 20px)', 
             '&::-webkit-scrollbar': {
-                width: '0.5px',
+                width: '1px',
             },
             '&::-webkit-scrollbar-track': {
                 backgroundColor: 'inherit',
