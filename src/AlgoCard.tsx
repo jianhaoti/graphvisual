@@ -1,5 +1,6 @@
 import React from 'react';
 import { Box, Card, CardContent, Typography, CardActionArea } from '@mui/material';
+import AlgoDetails from './AlgoDetails';
 
 interface AlgoCardProps {
     title: string;
@@ -9,9 +10,11 @@ interface AlgoCardProps {
     onClick: () => void;
 }
 const AlgoCard: React.FC<AlgoCardProps> = ({ title, grouping, description, backgroundColor, onClick }) => {
+    const handleOnClick = () =>{
 
+    }
     return (
-        <CardActionArea onClick={onClick}>
+        <CardActionArea onClick={handleOnClick}>
             <Box sx={{ minWidth: 275 }}>
                 <Card variant="outlined" sx={{backgroundColor}}>
                     <CardContent>

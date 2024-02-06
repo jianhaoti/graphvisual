@@ -1,13 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import { Box, ImageList, ImageListItem, Dialog, DialogTitle, DialogContent, DialogContentText, IconButton, DialogActions } from '@mui/material';
+import { Box, ImageList, ImageListItem } from '@mui/material';
 import AlgoCard from './AlgoCard'; 
+import AlgoDetails from './AlgoDetails';
 
 const AlgoRoom: React.FC = () => {
     const colors = ['#8693AB', '#BDD4E7', '#5d617c'];
-
     const [isFullTitle, setIsFullTitle] = useState(true);
     const [selectedAlgo, setSelectedAlgo] = useState<string|null>(null);
-    const [isOpen, setIsOpen] = useState(false);
 
     useEffect(() => {
         const handleResize = () => {
@@ -22,11 +21,10 @@ const AlgoRoom: React.FC = () => {
 
     const handleCardClick = (title: string) => {
         setSelectedAlgo(title);
-        setIsOpen(true);
     };
 
     const handleClose = () => {
-        setIsOpen(false);
+        setSelectedAlgo(null);
     };
 
     const cardData = [
@@ -57,7 +55,7 @@ const AlgoRoom: React.FC = () => {
         <Box 
             onContextMenu = {e => handleContextMenu(e)}
             sx={{
-                height:'80%',
+                height:'85%',
                 backgroundColor: 'transparent',
                 padding: '40px', 
                 overflow: 'auto', 
@@ -91,7 +89,12 @@ const AlgoRoom: React.FC = () => {
                     );
                 })}
             </ImageList>
-
+            {selectedAlgo && (
+                <AlgoDetails
+                    title={selectedAlgo}
+                    onClose={handleClose}
+                />
+            )}
         </Box>
     );
 };
