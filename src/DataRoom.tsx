@@ -166,10 +166,12 @@ const DataRoom: React.FC<DataRoomProps> = ({
             </Typography>
             <List sx={{ overflowY: 'auto', 
                         height: 'calc(100%)', // prevents it from covering up the title
+                        paddingTop: '1vh',
                         '&::-webkit-scrollbar': { width: '0.5px' }, 
                         '&::-webkit-scrollbar-track': { backgroundColor: '#E3C46E' }, 
                         '&::-webkit-scrollbar-thumb': { backgroundColor: '#E3C46E' }, 
-                        backgroundColor: 'inhreit',
+                        backgroundColor: 'inherit',
+                        width: '85%',
                         }}>
               {nodes.map((node, index) => (
                 <ListItem
@@ -182,7 +184,7 @@ const DataRoom: React.FC<DataRoomProps> = ({
             </List>
           </Container>
 
-          <Divider orientation="vertical" flexItem variant="middle" style={{ backgroundColor: '#706f6f', marginLeft: '-10px' }} />
+          <Divider orientation="vertical" flexItem variant="middle" style={{ backgroundColor: '#706f6f', marginLeft: '-30px' }} />
 
           <Container className="dataRoomContainer" style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', paddingTop: '2vh' }}>
             <Typography variant="h6" 
@@ -193,10 +195,12 @@ const DataRoom: React.FC<DataRoomProps> = ({
             </Typography>
             <List sx={{ overflowY: 'auto', 
                         height: 'calc(100%)', // prevents it from covering up the title
+                        paddingTop: '1vh',
                         '&::-webkit-scrollbar': { width: '0.5px' }, 
                         '&::-webkit-scrollbar-track': { backgroundColor: '#E3C46E' }, 
                         '&::-webkit-scrollbar-thumb': { backgroundColor: '#E3C46E' }, 
-                        backgroundColor: 'transparent',
+                        backgroundColor: 'inherit',
+                        width: '94%'
                         }}>
               {edges.map((edge, index) => (
                 <ListItem
@@ -211,7 +215,7 @@ const DataRoom: React.FC<DataRoomProps> = ({
           </Container>
       </div>
       
-      <div style={{ overflow:'hidden', position: 'absolute', bottom: '12px', right: '-1px',display: 'flex', justifyContent: 'flex-end', alignItems: 'center', backgroundColor: 'transparent', height: 'calc(5%)'}}>
+      <div style={{ overflow:'hidden', position: 'absolute', bottom: '6px', right: '-1px',display: 'flex', justifyContent: 'flex-end', alignItems: 'center', backgroundColor: 'transparent', height: 'calc(5%)'}}>
       {/* Button or Additional Information */}
         <Button 
           onClick={() => setShowWeight(!showWeight)}
