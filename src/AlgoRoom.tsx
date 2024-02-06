@@ -57,7 +57,7 @@ const AlgoRoom: React.FC = () => {
         <Box 
             onContextMenu = {e => handleContextMenu(e)}
             sx={{
-                maxHeight: '60vh', //controls padding
+                height:'80%',
                 backgroundColor: 'transparent',
                 padding: '40px', 
                 overflow: 'auto', 
