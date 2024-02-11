@@ -1,5 +1,6 @@
 import React from 'react';
-import { Card, CardMedia, Divider, CardContent, Typography, IconButton, CardActions, Button, Hidden } from '@mui/material';
+import { Card, CardMedia, Divider, CardContent, Typography, CardActions } from '@mui/material';
+import caveDrilling from '/Users/ptee/graphvisual/src/assets/caveDrilling.jpeg'
 
 interface AlgoDetailsProps {
   title: string;
@@ -9,10 +10,10 @@ interface AlgoDetailsProps {
 const AlgoDetails: React.FC<AlgoDetailsProps> = ({ title, onClose }) => {
   const titleToImageUrl = {
     'BFS': 'https://images.unsplash.com/photo-1606214554814-e8a9f97bdbb0?q=80&w=2370&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    'DFS': 'https://images.unsplash.com/photo-1585201731775-0597e1be4bfb?q=80&w=2515&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    'DFS': caveDrilling,
     'Dijkstra': 'https://images.unsplash.com/photo-1610457642191-05328cdf34ff?q=80&w=2370&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
   };
-  const imageUrl = titleToImageUrl[title as keyof typeof titleToImageUrl] || 'https://example.com/path-to-default-image.jpg';
+  const imageUrl = titleToImageUrl[title as keyof typeof titleToImageUrl] || 'https://images.unsplash.com/photo-1599508704512-2f19efd1e35f?q=80&w=2835&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D';
 
   return (
     <div style={{
@@ -30,17 +31,17 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({ title, onClose }) => {
         }}
         onClick = {onClose}
     >
-      <Card 
-          sx={{
-            maxWidth: '80%', // Adjust width as needed
-            maxHeight: '80%', // Adjust height as needed
-            minWidth: '50vh', // Minimum width
-            minHeight: '50vh', // Minimum height
-            position: 'relative',
-            '&:hover': {
-              boxShadow: 6, // Optional: Change shadow on hover
-            },
-          }}
+      <Card sx={{
+        maxWidth: '80%', // Adjust width as needed
+        maxHeight: '80%', // Adjust height as needed
+        minWidth: '40vh', // Minimum width
+        minHeight: '40vh', // Minimum height
+        position: 'relative',
+        '&:hover': {
+          boxShadow: 6, // Optional: Change shadow on hover
+        },
+        overflow: 'auto'
+      }}
           onClick={(e) => e.stopPropagation()} // Prevent background click inside the card
           
       >
@@ -48,8 +49,13 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({ title, onClose }) => {
         component="img"
         height="240"
         image={imageUrl}
+
       />
-      <CardContent>
+      <CardContent sx={{
+        overflow: 'auto', // Allows content to scroll if it overflows
+        flexGrow: 1, // Allows content area to grow and fill available space
+        }}
+      >
         <Typography gutterBottom variant="h5" component="div">
           {title}
         </Typography>
