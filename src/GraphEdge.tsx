@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 type Edge = {
   id1: string;
@@ -10,7 +10,7 @@ type Edge = {
   weight: number;
 };
 
-interface GraphEdgeProps{
+interface GraphEdgeProps {
   edge: Edge;
   isSelected: boolean;
   isOriented: boolean;
@@ -20,13 +20,21 @@ interface GraphEdgeProps{
   onContextMenu: (e: React.MouseEvent, edgeId: string) => void;
 }
 
-const Edge: React.FC<GraphEdgeProps> = ({edge, isSelected, isOriented, showWeight, onClick, onDoubleClick, onContextMenu}) => {
+const Edge: React.FC<GraphEdgeProps> = ({
+  edge,
+  isSelected,
+  isOriented,
+  showWeight,
+  onClick,
+  onDoubleClick,
+  onContextMenu,
+}) => {
   const nodeRadius = 10;
-  const color = isSelected ? 'white' : '#E3C46E';
+  const color = isSelected ? "white" : "#E3C46E";
 
   // Only return fully constructed edges
   if (edge.x2 === null || edge.y2 === null) {
-    return null; 
+    return null;
   }
 
   const edgeId = `${edge.id1}-${edge.id2}`;
@@ -63,7 +71,7 @@ const Edge: React.FC<GraphEdgeProps> = ({edge, isSelected, isOriented, showWeigh
 
   // Calculate angle for text rotation to align with edge direction
   const angleRad = Math.atan2(edge.y2! - edge.y1, edge.x2! - edge.x1);
-  let angleDeg = angleRad * 180 / Math.PI;
+  let angleDeg = (angleRad * 180) / Math.PI;
 
   // Check the direction of the edge to adjust text orientation
   // If the edge is oriented from right to left, add 180 degrees to flip the text
@@ -72,12 +80,11 @@ const Edge: React.FC<GraphEdgeProps> = ({edge, isSelected, isOriented, showWeigh
   }
 
   const handleEdgeClick = () => {
-    onClick(edgeId)
+    onClick(edgeId);
   };
 
   const handleEdgeDoubleClick = () => {
     onDoubleClick(edge);
-  
   };
 
   const handleEdgeContextMenu = (e: React.MouseEvent) => {
@@ -88,63 +95,65 @@ const Edge: React.FC<GraphEdgeProps> = ({edge, isSelected, isOriented, showWeigh
   return (
     <g>
       <defs>
-        <marker 
+        <marker
           id={arrowheadId}
-          markerWidth="10" 
-          markerHeight="7" 
-          refX="0" 
-          refY="3.5" 
+          markerWidth="10"
+          markerHeight="7"
+          refX="0"
+          refY="3.5"
           orient="auto"
         >
-        <polygon 
-          points="0 0, 10 3.5, 0 7" 
-          fill={color} 
-        />
+          <polygon points="0 0, 10 3.5, 0 7" fill={color} />
         </marker>
       </defs>
       <line
-        className="graph-edge" 
-        x1={adjustedStartX} 
-        y1={adjustedStartY} 
-        x2={adjustedEndX} 
-        y2={adjustedEndY} 
-        strokeWidth={2} 
+        className="graph-edge"
+        x1={adjustedStartX}
+        y1={adjustedStartY}
+        x2={adjustedEndX}
+        y2={adjustedEndY}
+        strokeWidth={2}
         onClick={handleEdgeClick}
         onDoubleClick={handleEdgeDoubleClick}
-        onContextMenu={handleEdgeContextMenu}  
+        onContextMenu={handleEdgeContextMenu}
         stroke={color}
-        style={{ cursor: 'pointer' }} // Set the cursor style for better UX
-
+        style={{ cursor: "pointer" }} // Set the cursor style for better UX
       />
 
-      {isOriented && 
-      (<line // Add an arrowhead if the edge is oriented
-        className="graph-edge"       
-        x1={arrowMidX - offsetX}
-        y1={arrowMidY - offsetY}
-        x2={arrowMidX + offsetX}
-        y2={arrowMidY + offsetY}
-        stroke="transparent" // Make this line invisible
-        strokeWidth={1}
-        markerEnd={`url(#${arrowheadId})`}
-        onClick={handleEdgeClick}
-        onDoubleClick={handleEdgeDoubleClick}
-        onContextMenu={handleEdgeContextMenu}  
-        style={{ cursor: 'pointer' }} // Set the cursor style for better UX
-      />)} 
+      {isOriented && (
+        <line // Add an arrowhead if the edge is oriented
+          className="graph-edge"
+          x1={arrowMidX - offsetX}
+          y1={arrowMidY - offsetY}
+          x2={arrowMidX + offsetX}
+          y2={arrowMidY + offsetY}
+          stroke="transparent" // Make this line invisible
+          strokeWidth={1}
+          markerEnd={`url(#${arrowheadId})`}
+          onClick={handleEdgeClick}
+          onDoubleClick={handleEdgeDoubleClick}
+          onContextMenu={handleEdgeContextMenu}
+          style={{ cursor: "pointer" }} // Set the cursor style for better UX
+        />
+      )}
 
-      {showWeight && (<text
-        x={weightPosX}
-        y={weightPosY}
-        fill={color}
-        dy="5"
-        textAnchor="middle"
-        transform={`rotate(${angleDeg}, ${weightPosX}, ${weightPosY})`}
-        style={{ userSelect: 'none', pointerEvents: 'none', fontSize: '12px' }} // Added fontSize for better visibility
-      >
-        {edge.weight}
-      </text>)}
-
+      {showWeight && (
+        <text
+          x={weightPosX}
+          y={weightPosY}
+          fill={color}
+          dy="5"
+          textAnchor="middle"
+          transform={`rotate(${angleDeg}, ${weightPosX}, ${weightPosY})`}
+          style={{
+            userSelect: "none",
+            pointerEvents: "none",
+            fontSize: "12px",
+          }} // Added fontSize for better visibility
+        >
+          {edge.weight}
+        </text>
+      )}
     </g>
   );
 };
