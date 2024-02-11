@@ -8,7 +8,7 @@ import {
   CardActions,
   Fade,
 } from "@mui/material";
-import caveDrilling from "/Users/ptee/graphvisual/src/assets/caveDrilling.jpeg";
+import caveDrilling from "../assets/caveDrilling.jpeg";
 
 interface AlgoDetailsProps {
   title: string;
