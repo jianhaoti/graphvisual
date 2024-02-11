@@ -35,6 +35,7 @@ const ControlRoom: React.FC<ControlRoomProps> = ({mode, nodes, edges, selectedNo
                     />}
                 {mode === "algo" && 
                     <AlgoRoom 
+                    
                     />}
         {/*    </div> */}
         </div>

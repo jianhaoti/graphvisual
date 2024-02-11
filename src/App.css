@@ -17,12 +17,6 @@ main {
   margin: 0; /* Remove default margin */
   background-color:#3C3C40;
 }
-.switch-container {
-  position: absolute;
-  bottom: -9px; /* Adjust as needed */
-  right: -9px; /* Adjust as needed */
-}
-
 .container:focus {
   outline: none;
 }

@@ -263,7 +263,7 @@ const Graph: React.FC<GraphProps>  = ({
                     
           // No self-loops allowed
           if (tempEdge?.id1 === endNode.id) {
-            setTempEdge(null);
+          setTempEdge(null);
             setSelectedNode(endNode.id);
             return;
           } 

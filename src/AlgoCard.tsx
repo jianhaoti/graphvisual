@@ -10,11 +10,8 @@ interface AlgoCardProps {
     onClick: () => void;
 }
 const AlgoCard: React.FC<AlgoCardProps> = ({ title, grouping, description, backgroundColor, onClick }) => {
-    const handleOnClick = () =>{
-
-    }
     return (
-        <CardActionArea onClick={handleOnClick}>
+        <CardActionArea onClick={onClick}>
             <Box sx={{ minWidth: 275 }}>
                 <Card variant="outlined" sx={{backgroundColor}}>
                     <CardContent>
