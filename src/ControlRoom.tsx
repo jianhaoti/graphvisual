@@ -56,7 +56,13 @@ const ControlRoom: React.FC<ControlRoomProps> = ({
           setShowWeight={setShowWeight}
         />
       )}
-      {mode === "algo" && <AlgoRoom selectedNode={selectedNode} />}
+      {mode === "algo" && (
+        <AlgoRoom
+          selectedNode={selectedNode}
+          nodes={nodes}
+          setSelectedNode={setSelectedNode}
+        />
+      )}
       {/*    </div> */}
     </div>
   );

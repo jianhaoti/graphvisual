@@ -13,19 +13,25 @@ import {
   TextField,
 } from "@mui/material";
 import caveDrilling from "./caveDrilling.jpeg";
+import Node from "./GraphNode";
 
 interface AlgoDetailsProps {
   title: string;
   onClose: () => void;
   selectedNode: string | null;
+  nodes: Node[];
+  setSelectedNode: (nodeId: string | null) => void;
 }
 
 const AlgoDetails: React.FC<AlgoDetailsProps> = ({
   title,
   onClose,
   selectedNode,
+  setSelectedNode,
+  nodes,
 }) => {
   const [visible, setVisible] = useState(true); // Control visibility with state
+  const nodeIds = nodes.map((node) => node.id);
 
   const titleToImageUrl = {
     BFS: "https://images.unsplash.com/photo-1606214554814-e8a9f97bdbb0?q=80&w=2370&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
@@ -36,9 +42,9 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
   const imageUrl = titleToImageUrl[title as keyof typeof titleToImageUrl]; //|| 'https://images.unsplash.com/photo-1599508704512-2f19efd1e35f?q=80&w=2835&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D';
 
   const algoParameters = {
-    BFS: ["Source"],
-    DFS: ["Source"],
-    Dijkstra: ["Source"],
+    BFS: ["Source Node"],
+    DFS: ["Source Node"],
+    Dijkstra: ["Source Node"],
   };
 
   const [parameterValues, setParameterValues] = useState<{

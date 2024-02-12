@@ -2,12 +2,19 @@ import React, { useEffect, useState } from "react";
 import { Box, ImageList, ImageListItem } from "@mui/material";
 import AlgoCard from "./AlgoCard";
 import AlgoDetails from "./AlgoDetails";
+import Node from "./GraphNode";
 
 interface AlgoRoomProps {
+  nodes: Node[];
   selectedNode: string | null;
+  setSelectedNode: (nodeId: string | null) => void; // Updated to a function type
 }
 
-const AlgoRoom: React.FC<AlgoRoomProps> = ({ selectedNode }) => {
+const AlgoRoom: React.FC<AlgoRoomProps> = ({
+  selectedNode,
+  nodes,
+  setSelectedNode,
+}) => {
   const colors = ["#8693AB", "#BDD4E7", "#5d617c"];
   const [isFullTitle, setIsFullTitle] = useState(true);
   const [selectedAlgo, setSelectedAlgo] = useState<string | null>(null);
@@ -112,6 +119,8 @@ const AlgoRoom: React.FC<AlgoRoomProps> = ({ selectedNode }) => {
           title={selectedAlgo}
           onClose={handleClose}
           selectedNode={selectedNode}
+          nodes={nodes}
+          setSelectedNode={setSelectedNode}
         />
       )}
     </Box>
