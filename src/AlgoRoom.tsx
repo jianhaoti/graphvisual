@@ -3,7 +3,11 @@ import { Box, ImageList, ImageListItem } from "@mui/material";
 import AlgoCard from "./AlgoCard";
 import AlgoDetails from "./AlgoDetails";
 
-const AlgoRoom: React.FC = () => {
+interface AlgoRoomProps {
+  selectedNode: string | null;
+}
+
+const AlgoRoom: React.FC<AlgoRoomProps> = ({ selectedNode }) => {
   const colors = ["#8693AB", "#BDD4E7", "#5d617c"];
   const [isFullTitle, setIsFullTitle] = useState(true);
   const [selectedAlgo, setSelectedAlgo] = useState<string | null>(null);
@@ -104,7 +108,11 @@ const AlgoRoom: React.FC = () => {
         })}
       </ImageList>
       {selectedAlgo && (
-        <AlgoDetails title={selectedAlgo} onClose={handleClose} />
+        <AlgoDetails
+          title={selectedAlgo}
+          onClose={handleClose}
+          selectedNode={selectedNode}
+        />
       )}
     </Box>
   );

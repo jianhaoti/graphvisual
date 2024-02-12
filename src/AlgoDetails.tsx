@@ -7,15 +7,24 @@ import {
   Typography,
   CardActions,
   Fade,
+  Button,
+  List,
+  ListItem,
+  TextField,
 } from "@mui/material";
 import caveDrilling from "./caveDrilling.jpeg";
 
 interface AlgoDetailsProps {
   title: string;
   onClose: () => void;
+  selectedNode: string | null;
 }
 
-const AlgoDetails: React.FC<AlgoDetailsProps> = ({ title, onClose }) => {
+const AlgoDetails: React.FC<AlgoDetailsProps> = ({
+  title,
+  onClose,
+  selectedNode,
+}) => {
   const [visible, setVisible] = useState(true); // Control visibility with state
 
   const titleToImageUrl = {
@@ -25,6 +34,21 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({ title, onClose }) => {
       "https://images.unsplash.com/photo-1610457642191-05328cdf34ff?q=80&w=2370&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   };
   const imageUrl = titleToImageUrl[title as keyof typeof titleToImageUrl]; //|| 'https://images.unsplash.com/photo-1599508704512-2f19efd1e35f?q=80&w=2835&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D';
+
+  const algoParameters = {
+    BFS: ["Source"],
+    DFS: ["Source"],
+    Dijkstra: ["Source"],
+  };
+
+  const [parameterValues, setParameterValues] = useState<{
+    [key: string]: string;
+  }>({});
+
+  const handleParameterChange =
+    (param: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
+      setParameterValues({ ...parameterValues, [param]: event.target.value });
+    };
 
   const handleBackgroundClick = () => {
     setVisible(false); // Trigger fade-out
@@ -88,12 +112,51 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({ title, onClose }) => {
               flexGrow: 1, // Allows content area to grow and fill available space
             }}
           >
-            <Typography gutterBottom variant="h5" component="div">
-              {title}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Parameters
-            </Typography>
+            <div>
+              <Typography gutterBottom variant="h5" component="div">
+                {title}
+              </Typography>
+            </div>
+            <div>
+              <Typography variant="body2" color="text.secondary">
+                Parameters
+              </Typography>
+              <Typography variant="caption">
+                <List>
+                  {(
+                    algoParameters[title as keyof typeof algoParameters] || []
+                  ).map((param, index) => (
+                    <ListItem key={index}>
+                      {param}:
+                      <TextField
+                        variant="standard"
+                        size="small"
+                        value={parameterValues[param] || ""}
+                        onChange={handleParameterChange(param)}
+                        InputProps={{
+                          disableUnderline: false, // Keep the underline
+                          sx: {
+                            fontSize: "0.875rem", // Match caption size
+                            "& input": {
+                              color: "text.secondary", // Use theme's secondary text color
+                            },
+                            "&::before": {
+                              // Underline styles
+                              borderBottomColor: "primary.main", // Use theme's primary color
+                            },
+                            "&:hover:not(.Mui-disabled):before": {
+                              // Hover styles
+                              borderBottom: "2px solid", // Make underline thicker on hover
+                            },
+                          },
+                        }}
+                        sx={{ marginLeft: 2, width: "auto" }} // Adjust spacing and width as needed
+                      />
+                    </ListItem>
+                  ))}
+                </List>
+              </Typography>
+            </div>
           </CardContent>
           <Divider />
           <CardActions
@@ -104,9 +167,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({ title, onClose }) => {
             }}
           >
             <Typography variant="body2" color="text.secondary"></Typography>
-            <Typography variant="body2" color="text.secondary">
-              Run
-            </Typography>
+            <Button>Run</Button>
           </CardActions>{" "}
         </Card>
       </div>
