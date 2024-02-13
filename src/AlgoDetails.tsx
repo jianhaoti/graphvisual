@@ -43,11 +43,8 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({ title, onClose, nodes }) => {
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
+    setIsInputValid(true); // This resets the state so we can jiggle in sucession.
   };
-
-  useEffect(() => {
-    console.log(isInputValid); // Output inputValue to console whenever it changes
-  }, [isInputValid]); // Dependency array, effect runs on inputValue changes
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     // This checks if entered value is an node!!!
@@ -57,7 +54,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({ title, onClose, nodes }) => {
 
       if (isInvalidName) {
         setIsInputValid(false); // Indicate that input is invalid
-        setInputValue("");
+        setTimeout(() => setInputValue(""), 500);
       } else {
         setIsInputValid(true);
         target.blur();
@@ -84,6 +81,40 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({ title, onClose, nodes }) => {
     }
   }, [visible, onClose]);
 
+  const handleBlur = (
+    e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const target = e.target as HTMLInputElement; // Ensure you have the correct target type
+    const isInvalidName = !nodeIDs.includes(target.value);
+
+    if (isInvalidName) {
+      setIsInputValid(false); // Indicate that input is invalid
+      setTimeout(() => setInputValue(""), 500);
+    } else {
+      setIsInputValid(true);
+      target.blur();
+    }
+  };
+
+  useEffect(() => {
+    console.log(isInputValid); // Output inputValue to console whenever it changes
+  }, [isInputValid]); // Dependency array, effect runs on inputValue changes
+
+  const [buttonColor, setButtonColor] = useState<string>("default");
+
+  const handleRunClick = () => {
+    if (!isInputValid) {
+      // Change button color to red to indicate error
+      setButtonColor("error");
+
+      // After 1 second, revert button color to default
+      setTimeout(() => {
+        setButtonColor("default");
+      }, 1000);
+    } else {
+      console.log("good");
+    }
+  };
   return (
     <Fade in={true} timeout={500}>
       <div
@@ -156,6 +187,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({ title, onClose, nodes }) => {
                         value={inputValue}
                         onKeyDown={handleKeyDown}
                         onChange={handleChange}
+                        onBlur={handleBlur}
                         InputProps={{
                           disableUnderline: false, // Keep the underline
                           sx: {
@@ -190,7 +222,16 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({ title, onClose, nodes }) => {
             }}
           >
             <Typography variant="body2" color="text.secondary"></Typography>
-            <Button>Run</Button>
+            <Button
+              onClick={handleRunClick}
+              style={{
+                color: buttonColor === "error" ? "red" : "inherit", // Change text color based on error state
+                borderColor: buttonColor === "error" ? "red" : "inherit", // Optional: change border color for outlined buttons
+                // Add more styling as needed
+              }}
+            >
+              Run
+            </Button>
           </CardActions>{" "}
         </Card>
       </div>
