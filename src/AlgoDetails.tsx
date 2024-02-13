@@ -18,20 +18,15 @@ import Node from "./GraphNode";
 interface AlgoDetailsProps {
   title: string;
   onClose: () => void;
-  selectedNode: string | null;
   nodes: Node[];
-  setSelectedNode: (nodeId: string | null) => void;
 }
 
-const AlgoDetails: React.FC<AlgoDetailsProps> = ({
-  title,
-  onClose,
-  selectedNode,
-  setSelectedNode,
-  nodes,
-}) => {
+const AlgoDetails: React.FC<AlgoDetailsProps> = ({ title, onClose, nodes }) => {
+  const nodeIDs = nodes.map((node) => node.id);
   const [visible, setVisible] = useState(true); // Control visibility with state
-  const nodeIds = nodes.map((node) => node.id);
+  const [parameterValues, setParameterValues] = useState<{
+    [key: string]: string;
+  }>({});
 
   const titleToImageUrl = {
     BFS: "https://images.unsplash.com/photo-1606214554814-e8a9f97bdbb0?q=80&w=2370&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
@@ -47,14 +42,21 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
     Dijkstra: ["Source Node"],
   };
 
-  const [parameterValues, setParameterValues] = useState<{
-    [key: string]: string;
-  }>({});
+  const validateName = (userInput: string) => {
+    if (nodeIDs.includes(userInput)) {
+    }
+  };
 
-  const handleParameterChange =
-    (param: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
-      setParameterValues({ ...parameterValues, [param]: event.target.value });
-    };
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      // Logic to save changes and exit edit mode
+      e.currentTarget.blur();
+    }
+    if (e.key === "Backspace") {
+      // Dont delete node elements
+      e.stopPropagation();
+    }
+  };
 
   const handleBackgroundClick = () => {
     setVisible(false); // Trigger fade-out
@@ -137,8 +139,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                       <TextField
                         variant="standard"
                         size="small"
-                        value={parameterValues[param] || ""}
-                        onChange={handleParameterChange(param)}
+                        onKeyDown={handleKeyDown}
                         InputProps={{
                           disableUnderline: false, // Keep the underline
                           sx: {

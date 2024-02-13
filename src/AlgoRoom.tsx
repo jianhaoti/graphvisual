@@ -115,13 +115,7 @@ const AlgoRoom: React.FC<AlgoRoomProps> = ({
         })}
       </ImageList>
       {selectedAlgo && (
-        <AlgoDetails
-          title={selectedAlgo}
-          onClose={handleClose}
-          selectedNode={selectedNode}
-          nodes={nodes}
-          setSelectedNode={setSelectedNode}
-        />
+        <AlgoDetails title={selectedAlgo} onClose={handleClose} nodes={nodes} />
       )}
     </Box>
   );
