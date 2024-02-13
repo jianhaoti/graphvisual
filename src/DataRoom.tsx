@@ -56,9 +56,11 @@ const DataRoom: React.FC<DataRoomProps> = ({
         e.stopPropagation();
       }
     };
+
     const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
       e.target.select();
     };
+
     const handleNodeNameUpdate = (e: React.FocusEvent<HTMLInputElement>) => {
       const newName = e.target.value;
       const isInvalidName =
@@ -123,7 +125,7 @@ const DataRoom: React.FC<DataRoomProps> = ({
 
     const handleEdgeWeightUpdate = (
       e: React.FocusEvent<HTMLInputElement>,
-      edgeId: string,
+      edgeId: string
     ) => {
       const newWeight = e.target.value;
       const weight = parseInt(newWeight, 10);
@@ -137,7 +139,7 @@ const DataRoom: React.FC<DataRoomProps> = ({
               return { ...edge, weight: weight };
             }
             return edge;
-          }),
+          })
         );
         setSelectedEdge(null); // Exit editing mode
       } else {
@@ -151,7 +153,7 @@ const DataRoom: React.FC<DataRoomProps> = ({
 
         // Keep the previous value (do not update to invalid input)
         const currentEdge = edges.find(
-          (edge) => `${edge.id1}-${edge.id2}` === edgeId,
+          (edge) => `${edge.id1}-${edge.id2}` === edgeId
         );
         e.target.value = currentEdge ? currentEdge.weight.toString() : "1"; // Fallback to '1' if edge not found
       }
@@ -330,4 +332,3 @@ const DataRoom: React.FC<DataRoomProps> = ({
 };
 
 export default DataRoom;
-

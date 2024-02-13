@@ -24,10 +24,6 @@ interface AlgoDetailsProps {
 const AlgoDetails: React.FC<AlgoDetailsProps> = ({ title, onClose, nodes }) => {
   const nodeIDs = nodes.map((node) => node.id);
   const [visible, setVisible] = useState(true); // Control visibility with state
-  const [parameterValues, setParameterValues] = useState<{
-    [key: string]: string;
-  }>({});
-
   const titleToImageUrl = {
     BFS: "https://images.unsplash.com/photo-1606214554814-e8a9f97bdbb0?q=80&w=2370&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     DFS: caveDrilling,
@@ -42,22 +38,39 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({ title, onClose, nodes }) => {
     Dijkstra: ["Source Node"],
   };
 
-  const validateName = (userInput: string) => {
-    if (nodeIDs.includes(userInput)) {
-    }
+  const [inputValue, setInputValue] = useState<string>("");
+  const [isInputValid, setIsInputValid] = useState<boolean>(false);
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(event.target.value);
   };
 
+  useEffect(() => {
+    console.log(isInputValid); // Output inputValue to console whenever it changes
+  }, [isInputValid]); // Dependency array, effect runs on inputValue changes
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    // This checks if entered value is an node!!!
     if (e.key === "Enter") {
-      // Logic to save changes and exit edit mode
-      e.currentTarget.blur();
+      const target = e.target as HTMLInputElement; // Ensure you have the correct target type
+      const isInvalidName = !nodeIDs.includes(target.value);
+
+      if (isInvalidName) {
+        setIsInputValid(false); // Indicate that input is invalid
+        setInputValue("");
+      } else {
+        setIsInputValid(true);
+        target.blur();
+      }
     }
+
     if (e.key === "Backspace") {
-      // Dont delete node elements
+      // Prevent deletion of selected nodes when backspace is pressed in the input
       e.stopPropagation();
     }
   };
 
+  // Transition fade-in
   const handleBackgroundClick = () => {
     setVisible(false); // Trigger fade-out
     setTimeout(onClose, 500); // Delay the onClose callback until after the fade-out animation completes
@@ -137,9 +150,12 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({ title, onClose, nodes }) => {
                     <ListItem key={index}>
                       {param}:
                       <TextField
+                        className={isInputValid ? "" : "jiggle"}
                         variant="standard"
                         size="small"
+                        value={inputValue}
                         onKeyDown={handleKeyDown}
+                        onChange={handleChange}
                         InputProps={{
                           disableUnderline: false, // Keep the underline
                           sx: {
