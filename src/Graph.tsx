@@ -66,8 +66,13 @@ const Graph: React.FC<GraphProps> = ({
   const handleOrientationChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    setIsSwitchOn({ ...isSwitchOn, [event.target.name]: event.target.checked });
-    setIsOriented(!isOriented);
+    if (isGraphEditable) {
+      setIsSwitchOn({
+        ...isSwitchOn,
+        [event.target.name]: event.target.checked,
+      });
+      setIsOriented(!isOriented);
+    }
   };
 
   const deleteSelected = useCallback(() => {
