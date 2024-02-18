@@ -15,6 +15,9 @@ function App() {
   const [value, setValue] = useState("Untitled");
   const textFieldRef = useRef<HTMLInputElement>(null);
 
+  // Controls functionality of +/- nodes and edges
+  const [isGraphEditable, setIsGraphEditable] = useState(true);
+
   // Graph Data
   const [nodes, setNodes] = useState<Node[]>([]);
   const [edges, setEdges] = useState<Edge[]>([]);
@@ -148,6 +151,7 @@ function App() {
         isOriented={isOriented}
         setIsOriented={setIsOriented}
         showWeight={showWeight}
+        isGraphEditable={isGraphEditable}
       />
       <ControlRoom
         mode={mode}
@@ -162,6 +166,7 @@ function App() {
         setEdges={setEdges}
         showWeight={showWeight}
         setShowWeight={setShowWeight}
+        setIsGraphEditable={setIsGraphEditable}
       />
     </main>
   );

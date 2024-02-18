@@ -32,6 +32,7 @@ interface GraphProps {
   isOriented: boolean;
   setIsOriented: React.Dispatch<React.SetStateAction<boolean>>;
   showWeight: boolean;
+  isGraphEditable: boolean;
 }
 
 const Graph: React.FC<GraphProps> = ({
@@ -46,6 +47,7 @@ const Graph: React.FC<GraphProps> = ({
   isOriented,
   setIsOriented,
   showWeight,
+  isGraphEditable,
 }) => {
   // Mine
   const currentNodeRef = useRef<SVGCircleElement | null>(null);
@@ -62,7 +64,7 @@ const Graph: React.FC<GraphProps> = ({
   });
 
   const handleOrientationChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
+    event: React.ChangeEvent<HTMLInputElement>
   ) => {
     setIsSwitchOn({ ...isSwitchOn, [event.target.name]: event.target.checked });
     setIsOriented(!isOriented);
@@ -71,12 +73,12 @@ const Graph: React.FC<GraphProps> = ({
   const deleteSelected = useCallback(() => {
     if (selectedNode) {
       setNodes((prevNodes) =>
-        prevNodes.filter((node) => node.id !== selectedNode),
+        prevNodes.filter((node) => node.id !== selectedNode)
       );
       setEdges((edges) =>
         edges.filter(
-          (edge) => edge.id1 !== selectedNode && edge.id2 !== selectedNode,
-        ),
+          (edge) => edge.id1 !== selectedNode && edge.id2 !== selectedNode
+        )
       );
       setSelectedNode(null);
 
@@ -89,7 +91,7 @@ const Graph: React.FC<GraphProps> = ({
       }
     } else if (selectedEdge) {
       setEdges((edges) =>
-        edges.filter((edge) => `${edge.id1}-${edge.id2}` !== selectedEdge),
+        edges.filter((edge) => `${edge.id1}-${edge.id2}` !== selectedEdge)
       );
       setSelectedEdge(null);
     }
@@ -100,7 +102,7 @@ const Graph: React.FC<GraphProps> = ({
       if (e.code === "Space") {
         setIsSpaceDown(true);
       }
-      if (e.code === "Backspace") {
+      if (e.code === "Backspace" && isGraphEditable) {
         deleteSelected();
       }
     };
@@ -121,20 +123,15 @@ const Graph: React.FC<GraphProps> = ({
     };
   }, [deleteSelected]);
 
-  // This one is for console logging sychonously.
-  /* useEffect( () =>{
-    console.log(nodes )
-  }, [nodes]); */
-
   const handleNodeDrag = (
     nodeId: string,
-    newPosition: { x: number; y: number },
+    newPosition: { x: number; y: number }
   ) => {
     // Update the position of the dragged node
     const updatedNodes = nodes.map((node) =>
       node.id === nodeId
         ? { ...node, x: newPosition.x, y: newPosition.y }
-        : node,
+        : node
     );
 
     // Update edges if needed
@@ -170,7 +167,9 @@ const Graph: React.FC<GraphProps> = ({
     if (!isSpaceDown) {
       if (e.code === "Space" && isMouseDown && currentNodeRef.current) {
         setIsSpaceDown(true);
-        handleEdgeCreation(currentNodeRef.current);
+        if (isGraphEditable) {
+          handleEdgeCreation(currentNodeRef.current);
+        }
       }
     }
   };
@@ -228,7 +227,7 @@ const Graph: React.FC<GraphProps> = ({
         /* if(!isSpaceDown){
           setSelectedNode(element.id);
         } */
-        if (isSpaceDown) {
+        if (isSpaceDown && isGraphEditable) {
           handleEdgeCreation(element);
         }
       }
@@ -269,7 +268,7 @@ const Graph: React.FC<GraphProps> = ({
         }
 
         // Node creation
-        if (clickDuration < 200) {
+        if (clickDuration < 200 && isGraphEditable) {
           // Reset the clock
           clickStartTime.current = null;
           handleNodeCreation(e);
@@ -293,7 +292,7 @@ const Graph: React.FC<GraphProps> = ({
           const edgeExists = edges.some(
             (edge) =>
               (edge.id1 === tempEdge?.id1 && edge.id2 === endNode.id) ||
-              (edge.id1 === endNode.id && edge.id2 === tempEdge?.id1),
+              (edge.id1 === endNode.id && edge.id2 === tempEdge?.id1)
           );
 
           // No self-loops allowed
@@ -303,7 +302,7 @@ const Graph: React.FC<GraphProps> = ({
             return;
           } else {
             // All clear to make the edge
-            if (!edgeExists) {
+            if (!edgeExists && isGraphEditable) {
               handleEdgeCompletion(endNode);
               return;
             }
@@ -337,37 +336,47 @@ const Graph: React.FC<GraphProps> = ({
 
   const handleNodeContextMenu = (e: React.MouseEvent, nodeId: string) => {
     e.preventDefault();
-    setNodes((nodes) => nodes.filter((node) => node.id !== nodeId));
-    setEdges((edges) =>
-      edges.filter((edge) => edge.id1 !== nodeId && edge.id2 !== nodeId),
-    );
+    if (isGraphEditable) {
+      setNodes((nodes) => nodes.filter((node) => node.id !== nodeId));
+      setEdges((edges) =>
+        edges.filter((edge) => edge.id1 !== nodeId && edge.id2 !== nodeId)
+      );
+      setSelectedNode(null);
+    }
   };
 
   const handleEdgeContextMenu = (e: React.MouseEvent, edgeId: string) => {
     e.preventDefault();
-    setEdges((edges) =>
-      edges.filter((edge) => `${edge.id1}-${edge.id2}` !== edgeId),
-    );
-    setSelectedEdge(null);
+    if (isGraphEditable) {
+      setEdges((edges) =>
+        edges.filter((edge) => `${edge.id1}-${edge.id2}` !== edgeId)
+      );
+      setSelectedEdge(null);
+    }
   };
 
   const handleEdgeDoubleClick = (reverseThisEdge: Edge) => {
+    // exit on trying to reverse temp edge
     if (!reverseThisEdge.id2) return;
-    const newEdges = edges.filter(
-      (e) => e.id1 !== reverseThisEdge.id1 || e.id2 !== reverseThisEdge.id2,
-    );
-    const reversedEdge = {
-      id1: reverseThisEdge.id2 as string,
-      x1: reverseThisEdge.x2 as number,
-      y1: reverseThisEdge.y2 as number,
-      id2: reverseThisEdge.id1 as string,
-      x2: reverseThisEdge.x1 as number,
-      y2: reverseThisEdge.y1 as number,
-      weight: 1,
-    };
-    setEdges([...newEdges, reversedEdge]);
-    const reversedId = `${reversedEdge.id1}-${reversedEdge.id2}`;
-    handleEdgeClick(reversedId);
+
+    // otherwise, check if editable then reverse
+    if (isGraphEditable) {
+      const newEdges = edges.filter(
+        (e) => e.id1 !== reverseThisEdge.id1 || e.id2 !== reverseThisEdge.id2
+      );
+      const reversedEdge = {
+        id1: reverseThisEdge.id2 as string,
+        x1: reverseThisEdge.x2 as number,
+        y1: reverseThisEdge.y2 as number,
+        id2: reverseThisEdge.id1 as string,
+        x2: reverseThisEdge.x1 as number,
+        y2: reverseThisEdge.y1 as number,
+        weight: 1,
+      };
+      setEdges([...newEdges, reversedEdge]);
+      const reversedId = `${reversedEdge.id1}-${reversedEdge.id2}`;
+      handleEdgeClick(reversedId);
+    }
   };
 
   return (

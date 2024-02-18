@@ -9,6 +9,7 @@ interface AlgoRoomProps {
   selectedNode: string | null;
   setSelectedNode: (nodeId: string | null) => void; // Updated to a function type
   setSelectedEdge: (edgeId: string | null) => void; // Updated to a function type
+  setIsGraphEditable: (editable: boolean) => void;
 }
 
 const AlgoRoom: React.FC<AlgoRoomProps> = ({
@@ -16,6 +17,7 @@ const AlgoRoom: React.FC<AlgoRoomProps> = ({
   nodes,
   setSelectedNode,
   setSelectedEdge,
+  setIsGraphEditable,
 }) => {
   const colors = ["#8693AB", "#BDD4E7", "#5d617c"];
   const [isFullTitle, setIsFullTitle] = useState(true);
@@ -123,6 +125,7 @@ const AlgoRoom: React.FC<AlgoRoomProps> = ({
           nodes={nodes}
           setSelectedNode={setSelectedNode}
           setSelectedEdge={setSelectedEdge}
+          setIsGraphEditable={setIsGraphEditable}
         />
       )}
     </Box>

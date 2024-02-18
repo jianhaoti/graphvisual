@@ -19,6 +19,7 @@ interface ControlRoomProps {
 
   showWeight: boolean;
   setShowWeight: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsGraphEditable: (editable: boolean) => void;
 }
 
 const ControlRoom: React.FC<ControlRoomProps> = ({
@@ -34,6 +35,7 @@ const ControlRoom: React.FC<ControlRoomProps> = ({
   setSelectedEdge,
   setEdges,
   setShowWeight,
+  setIsGraphEditable,
 }) => {
   return (
     <div
@@ -61,6 +63,7 @@ const ControlRoom: React.FC<ControlRoomProps> = ({
           nodes={nodes}
           setSelectedNode={setSelectedNode}
           setSelectedEdge={setSelectedEdge}
+          setIsGraphEditable={setIsGraphEditable}
         />
       )}
     </div>

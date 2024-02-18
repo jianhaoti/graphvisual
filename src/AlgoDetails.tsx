@@ -21,6 +21,7 @@ interface AlgoDetailsProps {
   nodes: Node[];
   setSelectedNode: (nodeId: string | null) => void;
   setSelectedEdge: (edgeId: string | null) => void; // Updated to a function type
+  setIsGraphEditable: (editable: boolean) => void;
 }
 
 const AlgoDetails: React.FC<AlgoDetailsProps> = ({
@@ -29,6 +30,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
   nodes,
   setSelectedNode,
   setSelectedEdge,
+  setIsGraphEditable,
 }) => {
   const nodeIDs = nodes.map((node) => node.id);
   const [visible, setVisible] = useState(true); // Control visibility with state
@@ -78,6 +80,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
   // Transition fade-in
   const handleBackgroundClick = () => {
     setVisible(false); // Trigger fade-out
+    setIsGraphEditable(true);
     setTimeout(onClose, 500); // Delay the onClose callback until after the fade-out animation completes
   };
 
@@ -104,10 +107,6 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
     }
   };
 
-  useEffect(() => {
-    console.log(isInputValid); // Output inputValue to console whenever it changes
-  }, [isInputValid]); // Dependency array, effect runs on inputValue changes
-
   const [buttonColor, setButtonColor] = useState<string>("default");
 
   const handleRunClick = () => {
@@ -121,6 +120,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
       }, 1000);
     } else {
       setSelectedNode(null);
+      setIsGraphEditable(false);
     }
   };
   return (
