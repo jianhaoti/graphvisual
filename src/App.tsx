@@ -5,6 +5,7 @@ import ControlRoom from "./ControlRoom";
 import { Button, ButtonGroup } from "@mui/material";
 import { ReactComponent as AlgoIcon } from "./assets/algoIcon.svg";
 import { ReactComponent as DataIcon } from "./assets/dataIcon.svg";
+import { ReactComponent as MovieIcon } from "./assets/movieIcon.svg";
 import TextField from "@mui/material/TextField";
 import Node from "./GraphNode";
 import Edge from "./GraphEdge";
@@ -37,7 +38,7 @@ function App() {
   };
   const handleNodeIDChange = (oldId: string, newId: string) => {
     setNodes(
-      nodes.map((node) => (node.id === oldId ? { ...node, id: newId } : node)),
+      nodes.map((node) => (node.id === oldId ? { ...node, id: newId } : node))
     );
     setEdges(
       edges.map((edge) => {
@@ -47,7 +48,7 @@ function App() {
           return { ...edge, id2: newId };
         }
         return edge;
-      }),
+      })
     );
   };
 
@@ -68,6 +69,7 @@ function App() {
   const handleAlgoClick = () => {
     setMode("algo");
   };
+
   const handleNodeSelection = (nodeId: string | null) => {
     setSelectedNode(nodeId);
     setSelectedEdge(null); // Clear selected edge when a node is selected

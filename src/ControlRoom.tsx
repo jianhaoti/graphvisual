@@ -40,7 +40,6 @@ const ControlRoom: React.FC<ControlRoomProps> = ({
       className="container container-right"
       style={{ backgroundColor: "#2F2D37" }}
     >
-      {/*   <div className="control-room"> */}
       {mode === "data" && (
         <DataRoom
           nodes={nodes}
@@ -61,9 +60,9 @@ const ControlRoom: React.FC<ControlRoomProps> = ({
           selectedNode={selectedNode}
           nodes={nodes}
           setSelectedNode={setSelectedNode}
+          setSelectedEdge={setSelectedEdge}
         />
       )}
-      {/*    </div> */}
     </div>
   );
 };

@@ -8,12 +8,14 @@ interface AlgoRoomProps {
   nodes: Node[];
   selectedNode: string | null;
   setSelectedNode: (nodeId: string | null) => void; // Updated to a function type
+  setSelectedEdge: (edgeId: string | null) => void; // Updated to a function type
 }
 
 const AlgoRoom: React.FC<AlgoRoomProps> = ({
   selectedNode,
   nodes,
   setSelectedNode,
+  setSelectedEdge,
 }) => {
   const colors = ["#8693AB", "#BDD4E7", "#5d617c"];
   const [isFullTitle, setIsFullTitle] = useState(true);
@@ -115,7 +117,13 @@ const AlgoRoom: React.FC<AlgoRoomProps> = ({
         })}
       </ImageList>
       {selectedAlgo && (
-        <AlgoDetails title={selectedAlgo} onClose={handleClose} nodes={nodes} />
+        <AlgoDetails
+          title={selectedAlgo}
+          onClose={handleClose}
+          nodes={nodes}
+          setSelectedNode={setSelectedNode}
+          setSelectedEdge={setSelectedEdge}
+        />
       )}
     </Box>
   );

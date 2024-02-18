@@ -19,9 +19,17 @@ interface AlgoDetailsProps {
   title: string;
   onClose: () => void;
   nodes: Node[];
+  setSelectedNode: (nodeId: string | null) => void;
+  setSelectedEdge: (edgeId: string | null) => void; // Updated to a function type
 }
 
-const AlgoDetails: React.FC<AlgoDetailsProps> = ({ title, onClose, nodes }) => {
+const AlgoDetails: React.FC<AlgoDetailsProps> = ({
+  title,
+  onClose,
+  nodes,
+  setSelectedNode,
+  setSelectedEdge,
+}) => {
   const nodeIDs = nodes.map((node) => node.id);
   const [visible, setVisible] = useState(true); // Control visibility with state
   const titleToImageUrl = {
@@ -112,7 +120,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({ title, onClose, nodes }) => {
         setButtonColor("default");
       }, 1000);
     } else {
-      console.log("good");
+      setSelectedNode(null);
     }
   };
   return (
