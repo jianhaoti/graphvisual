@@ -50,6 +50,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
 
   const [inputValue, setInputValue] = useState<string>("");
   const [isInputValid, setIsInputValid] = useState<boolean>(false);
+  const [movieTime, setMovieTime] = useState<boolean>(false);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
@@ -81,6 +82,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
   const handleBackgroundClick = () => {
     setVisible(false); // Trigger fade-out
     setIsGraphEditable(true);
+    setMovieTime(false);
     setTimeout(onClose, 500); // Delay the onClose callback until after the fade-out animation completes
   };
 
@@ -121,6 +123,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
     } else {
       setSelectedNode(null);
       setIsGraphEditable(false);
+      setMovieTime(true);
     }
   };
   return (
@@ -157,90 +160,105 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
           }}
           onClick={(e) => e.stopPropagation()} // Prevent background click inside the card
         >
-          <CardMedia
-            component="img"
-            height="240"
-            image={imageUrl}
-            sx={{
-              height: 240, // Fixed height for the image
-              objectFit: "cover", // Cover the box, might crop the image
-            }}
-          />
-          <CardContent
-            sx={{
-              overflow: "auto", // Allows content to scroll if it overflows
-              flexGrow: 1, // Allows content area to grow and fill available space
-            }}
-          >
+          {movieTime ? (
+            <CardContent>
+              <Typography
+                variant="body1"
+                component="pre"
+                sx={{ whiteSpace: "pre-wrap" }}
+              >
+                test
+              </Typography>
+            </CardContent>
+          ) : (
             <div>
-              <Typography gutterBottom variant="h5" component="div">
-                {title}
-              </Typography>
+              <CardMedia
+                component="img"
+                height="240"
+                image={imageUrl}
+                sx={{
+                  height: 240, // Fixed height for the image
+                  objectFit: "cover", // Cover the box, might crop the image
+                }}
+              />
+              <CardContent
+                sx={{
+                  overflow: "auto", // Allows content to scroll if it overflows
+                  flexGrow: 1, // Allows content area to grow and fill available space
+                }}
+              >
+                <div>
+                  <Typography gutterBottom variant="h5" component="div">
+                    {title}
+                  </Typography>
+                </div>
+                <div>
+                  <Typography variant="body2" color="text.secondary">
+                    Parameters
+                  </Typography>
+                  <Typography variant="caption">
+                    <List>
+                      {(
+                        algoParameters[title as keyof typeof algoParameters] ||
+                        []
+                      ).map((param, index) => (
+                        <ListItem key={index}>
+                          {param}:
+                          <TextField
+                            className={isInputValid ? "" : "jiggle"}
+                            variant="standard"
+                            size="small"
+                            value={inputValue}
+                            onKeyDown={handleKeyDown}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            InputProps={{
+                              disableUnderline: false, // Keep the underline
+                              sx: {
+                                fontSize: "0.875rem", // Match caption size
+                                "& input": {
+                                  color: "text.secondary", // Use theme's secondary text color
+                                },
+                                "&::before": {
+                                  // Underline styles
+                                  borderBottomColor: "primary.main", // Use theme's primary color
+                                },
+                                "&:hover:not(.Mui-disabled):before": {
+                                  // Hover styles
+                                  borderBottom: "2px solid", // Make underline thicker on hover
+                                },
+                              },
+                            }}
+                            sx={{ marginLeft: 2, width: "auto" }} // Adjust spacing and width as needed
+                          />
+                        </ListItem>
+                      ))}
+                    </List>
+                  </Typography>
+                </div>
+              </CardContent>
+              <Divider />
+              <CardActions
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  padding: "0.5rem 1rem",
+                }}
+              >
+                <Typography variant="body2" color="text.secondary"></Typography>
+                <Button
+                  onClick={handleRunClick}
+                  style={{
+                    color: buttonColor === "error" ? "red" : "inherit", // Change text color based on error state
+                    borderColor: buttonColor === "error" ? "red" : "inherit", // Optional: change border color for outlined buttons
+                    // Add more styling as needed
+                  }}
+                >
+                  Run
+                </Button>
+              </CardActions>{" "}
             </div>
-            <div>
-              <Typography variant="body2" color="text.secondary">
-                Parameters
-              </Typography>
-              <Typography variant="caption">
-                <List>
-                  {(
-                    algoParameters[title as keyof typeof algoParameters] || []
-                  ).map((param, index) => (
-                    <ListItem key={index}>
-                      {param}:
-                      <TextField
-                        className={isInputValid ? "" : "jiggle"}
-                        variant="standard"
-                        size="small"
-                        value={inputValue}
-                        onKeyDown={handleKeyDown}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        InputProps={{
-                          disableUnderline: false, // Keep the underline
-                          sx: {
-                            fontSize: "0.875rem", // Match caption size
-                            "& input": {
-                              color: "text.secondary", // Use theme's secondary text color
-                            },
-                            "&::before": {
-                              // Underline styles
-                              borderBottomColor: "primary.main", // Use theme's primary color
-                            },
-                            "&:hover:not(.Mui-disabled):before": {
-                              // Hover styles
-                              borderBottom: "2px solid", // Make underline thicker on hover
-                            },
-                          },
-                        }}
-                        sx={{ marginLeft: 2, width: "auto" }} // Adjust spacing and width as needed
-                      />
-                    </ListItem>
-                  ))}
-                </List>
-              </Typography>
-            </div>
-          </CardContent>
-          <Divider />
-          <CardActions
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              padding: "0.5rem 1rem",
-            }}
-          >
-            <Typography variant="body2" color="text.secondary"></Typography>
-            <Button
-              onClick={handleRunClick}
-              style={{
-                color: buttonColor === "error" ? "red" : "inherit", // Change text color based on error state
-                borderColor: buttonColor === "error" ? "red" : "inherit", // Optional: change border color for outlined buttons
-                // Add more styling as needed
-              }}
-            >
-              Run
-            </Button>
-          </CardActions>{" "}
+          )}
         </Card>
       </div>
     </Fade>

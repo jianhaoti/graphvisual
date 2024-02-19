@@ -15,9 +15,6 @@ const CustomSwitch = styled(Switch)(({ theme }) => ({
       backgroundColor: "#96AACD", // track color when checked
     },
   },
-  "& .MuiSwitch-track": {
-    backgroundColor: "#yourUnCheckedTrackColor", // track color when not checked
-  },
 }));
 
 interface GraphProps {
@@ -217,6 +214,7 @@ const Graph: React.FC<GraphProps> = ({
   const handleMouseDown = (e: React.MouseEvent) => {
     if (e.button === 0) {
       setIsMouseDown(true);
+      setHoveredNode(null);
       // Check if the click is inside the switch container
       if (
         e.target instanceof Element &&
@@ -384,6 +382,24 @@ const Graph: React.FC<GraphProps> = ({
     }
   };
 
+  // State to track hovered node details
+  const [hoveredNode, setHoveredNode] = useState<Node | null>(null);
+
+  // Handle mouse enter on node
+  const handleMouseEnter = useCallback(
+    (node: Node) => {
+      if (!isMouseDown) {
+        setTimeout(() => setHoveredNode(node), 800);
+      }
+    },
+    [isMouseDown]
+  );
+
+  // Handle mouse leave from node
+  const handleMouseLeave = useCallback(() => {
+    setHoveredNode(null); // Clear hovered node info
+  }, []);
+
   return (
     <div
       className="container container-left"
@@ -405,6 +421,8 @@ const Graph: React.FC<GraphProps> = ({
               onClick={() => handleNodeClick(node.id)}
               onDrag={handleNodeDrag}
               onContextMenu={(e) => handleNodeContextMenu(e, node.id)}
+              onMouseEnter={() => handleMouseEnter(node)}
+              onMouseLeave={handleMouseLeave}
             />
           ))}
           {edges
@@ -421,6 +439,21 @@ const Graph: React.FC<GraphProps> = ({
                 showWeight={showWeight}
               />
             ))}
+          {hoveredNode && (
+            <text
+              x={hoveredNode.x}
+              y={hoveredNode.y - 20} // Adjust position as needed
+              fill={
+                hoveredNode && hoveredNode.id === selectedNode
+                  ? "white"
+                  : "#E3C46E"
+              }
+              fontSize="14"
+              textAnchor="middle"
+            >
+              {hoveredNode.id}
+            </text>
+          )}
         </svg>
       </div>
 

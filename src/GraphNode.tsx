@@ -19,6 +19,8 @@ interface NodeProps {
   onClick: (nodeId: string) => void;
   onContextMenu: (e: React.MouseEvent, nodeId: string) => void;
   onDrag: (id: string, newPosition: { x: number; y: number }) => void;
+  onMouseEnter: () => void; // Add this line
+  onMouseLeave: () => void; // And this line
 }
 
 const Node: React.FC<NodeProps> = ({
@@ -28,6 +30,8 @@ const Node: React.FC<NodeProps> = ({
   onClick,
   onContextMenu,
   onDrag,
+  onMouseEnter,
+  onMouseLeave,
 }) => {
   const nodeRef = useRef<SVGCircleElement | null>(null);
   const radius = 10;
@@ -37,7 +41,7 @@ const Node: React.FC<NodeProps> = ({
     (id: string, newPosition: { x: number; y: number }) => {
       onDrag(id, newPosition);
     },
-    [onDrag], // Dependency array, add any other dependencies if needed
+    [onDrag] // Dependency array, add any other dependencies if needed
   );
   const color = isSelected ? "white" : "#E3C46E";
 
@@ -56,6 +60,8 @@ const Node: React.FC<NodeProps> = ({
       onClick={() => onClick(node.id)}
       onContextMenu={(e) => onContextMenu(e, node.id)}
       style={{ cursor: "grab" }} // Set the cursor style for better UX
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
     />
   );
 };
