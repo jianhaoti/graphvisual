@@ -214,6 +214,9 @@ const Graph: React.FC<GraphProps> = ({
   const handleMouseDown = (e: React.MouseEvent) => {
     if (e.button === 0) {
       setIsMouseDown(true);
+      if (hoverTimerRef.current) {
+        clearTimeout(hoverTimerRef.current);
+      }
       setHoveredNode(null);
       // Check if the click is inside the switch container
       if (
@@ -384,20 +387,38 @@ const Graph: React.FC<GraphProps> = ({
 
   // State to track hovered node details
   const [hoveredNode, setHoveredNode] = useState<Node | null>(null);
+  const hoverTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Handle mouse enter on node
   const handleMouseEnter = useCallback(
     (node: Node) => {
-      if (!isMouseDown) {
-        setTimeout(() => setHoveredNode(node), 800);
+      // Clear any existing timer to prevent duplicate name displays
+      if (hoverTimerRef.current) {
+        clearTimeout(hoverTimerRef.current);
       }
+      hoverTimerRef.current = setTimeout(() => {
+        // Only set the hovered node if not currently dragging
+        if (!isMouseDown) {
+          setHoveredNode(node);
+        }
+      }, 1000); // Wait for 1 second before showing the name
     },
     [isMouseDown]
-  );
+  ); // Include isMouseDown in the dependency array if it's part of your state
 
-  // Handle mouse leave from node
   const handleMouseLeave = useCallback(() => {
-    setHoveredNode(null); // Clear hovered node info
+    // Clear the timer if the mouse leaves before the timeout
+    if (hoverTimerRef.current) {
+      clearTimeout(hoverTimerRef.current);
+    }
+    setHoveredNode(null);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (hoverTimerRef.current) {
+        clearTimeout(hoverTimerRef.current);
+      }
+    };
   }, []);
 
   return (
