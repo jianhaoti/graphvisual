@@ -24,7 +24,7 @@ function App() {
   const [selectedNode, setSelectedNode] = useState<string | null>(null);
   const [selectedEdge, setSelectedEdge] = useState<string | null>(null);
   const [isOriented, setIsOriented] = useState(true);
-  const [showWeight, setShowWeight] = useState(true);
+  const [showWeight, setShowWeight] = useState(false);
 
   useEffect(() => {
     if (textFieldRef.current) {
