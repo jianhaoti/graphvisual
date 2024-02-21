@@ -349,6 +349,7 @@ const Graph: React.FC<GraphProps> = ({
       );
       setSelectedNode(null);
     }
+    setHoveredNode(null);
   };
 
   const handleEdgeContextMenu = (e: React.MouseEvent, edgeId: string) => {

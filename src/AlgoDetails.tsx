@@ -48,6 +48,28 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
     Dijkstra: ["Source Node"],
   };
 
+  const pseudocode = `
+  BFS(G, s)
+      for each vertex u in G.V - {s}
+          color[u] = WHITE
+          d[u] = ∞
+          π[u] = NIL
+      color[s] = GRAY
+      d[s] = 0
+      π[s] = NIL
+      Q = Ø
+      ENQUEUE(Q, s)
+      while Q ≠ Ø
+          u = DEQUEUE(Q)
+          for each v in G.Adj[u]
+              if color[v] = WHITE
+                  color[v] = GRAY
+                  d[v] = d[u] + 1
+                  π[v] = u
+                  ENQUEUE(Q, v)
+          color[u] = BLACK
+  `;
+
   const [inputValue, setInputValue] = useState<string>("");
   const [isInputValid, setIsInputValid] = useState<boolean>(false);
   const [movieTime, setMovieTime] = useState<boolean>(false);
@@ -161,13 +183,18 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
           onClick={(e) => e.stopPropagation()} // Prevent background click inside the card
         >
           {movieTime ? (
-            <CardContent>
+            <CardContent
+              sx={{
+                overflow: "auto", // Allows content to scroll if it overflows
+                flexGrow: 1, // Allows content area to grow and fill available space
+              }}
+            >
               <Typography
                 variant="body1"
                 component="pre"
-                sx={{ whiteSpace: "pre-wrap" }}
+                sx={{ whiteSpace: "pre-wrap", overflow: "auto" }}
               >
-                test
+                {pseudocode}
               </Typography>
             </CardContent>
           ) : (
