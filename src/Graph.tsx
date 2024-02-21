@@ -397,28 +397,33 @@ const Graph: React.FC<GraphProps> = ({
   const [hoveredNode, setHoveredNode] = useState<Node | null>(null);
   const hoverTimerRef = useRef<NodeJS.Timeout | null>(null);
 
+  // Keep a reference of the current nodes.
+  const nodesRef = useRef(nodes);
+  useEffect(() => {
+    nodesRef.current = nodes;
+  }, [nodes]);
+
   const handleMouseEnter = useCallback(
     (nodeId: string) => {
       // Clear any existing timer to prevent duplicate name displays
       if (hoverTimerRef.current) {
         clearTimeout(hoverTimerRef.current);
       }
+
       hoverTimerRef.current = setTimeout(() => {
-        // Access the latest state inside the timeout function
-        setNodes((currentNodes) => {
-          // Check if the node still exists in the latest state
-          const nodeExists = currentNodes.some((n) => n.id === nodeId);
-          if (!isMouseDown && nodeExists) {
-            // Find the node to set as hoveredNode
-            const node = currentNodes.find((n) => n.id === nodeId);
-            setHoveredNode(node || null);
-          }
-          return currentNodes; // Return the current state unchanged
-        });
+        // Access the latest nodes state directly from the ref
+        const currentNodes = nodesRef.current;
+        const nodeExists = currentNodes.some((n) => n.id === nodeId);
+        if (!isMouseDown && nodeExists) {
+          // Find the node to set as hoveredNode
+          const node = currentNodes.find((n) => n.id === nodeId);
+          setHoveredNode(node || null);
+        }
       }, 1000); // Wait for 1 second before showing the name
     },
-    [isMouseDown, setNodes]
+    [isMouseDown]
   );
+
   const handleMouseLeave = useCallback(() => {
     // Clear the timer if the mouse leaves before the timeout
     if (hoverTimerRef.current) {
