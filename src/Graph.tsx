@@ -97,7 +97,14 @@ const Graph: React.FC<GraphProps> = ({
       );
       setSelectedEdge(null);
     }
-  }, [selectedNode, selectedEdge, setNodes, setEdges, isGraphEditable]);
+  }, [
+    selectedNode,
+    selectedEdge,
+    setNodes,
+    setEdges,
+    setSelectedEdge,
+    setSelectedNode,
+  ]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -123,7 +130,7 @@ const Graph: React.FC<GraphProps> = ({
       window.removeEventListener("keyup", handleKeyUp);
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [deleteSelected]);
+  }, [deleteSelected, isGraphEditable]);
 
   const handleNodeDrag = (
     nodeId: string,
@@ -410,7 +417,7 @@ const Graph: React.FC<GraphProps> = ({
         });
       }, 1000); // Wait for 1 second before showing the name
     },
-    [isMouseDown]
+    [isMouseDown, setNodes]
   );
   const handleMouseLeave = useCallback(() => {
     // Clear the timer if the mouse leaves before the timeout
