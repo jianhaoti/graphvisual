@@ -97,7 +97,7 @@ const Graph: React.FC<GraphProps> = ({
       );
       setSelectedEdge(null);
     }
-  }, [selectedNode, selectedEdge, setNodes, setEdges]);
+  }, [selectedNode, selectedEdge, setNodes, setEdges, isGraphEditable]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
