@@ -14,13 +14,18 @@ import {
 } from "@mui/material";
 import caveDrilling from "./caveDrilling.jpeg";
 import Node from "./GraphNode";
+import { useBfsSteps } from "./useBfsSteps";
+import { convertToAdjacencyList } from "./graphToAdjList";
+import Edge from "./GraphEdge";
 
 interface AlgoDetailsProps {
   title: string;
   onClose: () => void;
   nodes: Node[];
+  edges: Edge[];
+  isOriented: boolean;
   setSelectedNode: (nodeId: string | null) => void;
-  setSelectedEdge: (edgeId: string | null) => void; // Updated to a function type
+  setSelectedEdge: (edgeId: string | null) => void;
   setIsGraphEditable: (editable: boolean) => void;
 }
 
@@ -28,6 +33,8 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
   title,
   onClose,
   nodes,
+  edges,
+  isOriented,
   setSelectedNode,
   setSelectedEdge,
   setIsGraphEditable,
@@ -48,27 +55,8 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
     Dijkstra: ["Source Node"],
   };
 
-  const pseudocode = `
-  BFS(G, s)
-      for each vertex u in G.V - {s}
-          color[u] = WHITE
-          d[u] = ∞
-          π[u] = NIL
-      color[s] = GRAY
-      d[s] = 0
-      π[s] = NIL
-      Q = Ø
-      ENQUEUE(Q, s)
-      while Q ≠ Ø
-          u = DEQUEUE(Q)
-          for each v in G.Adj[u]
-              if color[v] = WHITE
-                  color[v] = GRAY
-                  d[v] = d[u] + 1
-                  π[v] = u
-                  ENQUEUE(Q, v)
-          color[u] = BLACK
-  `;
+  // Graph Data avaliable here
+  const adjacencyList = convertToAdjacencyList(nodes, edges, isOriented);
 
   const [inputValue, setInputValue] = useState<string>("");
   const [isInputValid, setIsInputValid] = useState<boolean>(false);
@@ -108,6 +96,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
     setTimeout(onClose, 500); // Delay the onClose callback until after the fade-out animation completes
   };
 
+  // timer for delayed clearing
   useEffect(() => {
     if (!visible) {
       // After setting visibility to false, wait for animation to complete before closing
@@ -116,6 +105,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
     }
   }, [visible, onClose]);
 
+  // handles jiggle and blue
   const handleBlur = (
     e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -146,6 +136,9 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
       setSelectedNode(null);
       setIsGraphEditable(false);
       setMovieTime(true);
+
+      // Run the algo
+      console.log(adjacencyList);
     }
   };
   return (
@@ -189,13 +182,18 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                 flexGrow: 1, // Allows content area to grow and fill available space
               }}
             >
-              <Typography
-                variant="body1"
-                component="pre"
-                sx={{ whiteSpace: "pre-wrap", overflow: "auto" }}
-              >
-                {pseudocode}
+              <Typography variant="body1">
+                {/* Current Step: {JSON.stringify(currentStep)} */}
               </Typography>
+
+              {/* <div>
+                <button onClick={goToPreviousStep} disabled={currentStep === 0}>
+                  Previous
+                </button>
+                <button onClick={goToNextStep} disabled={isCompleted}>
+                  Next
+                </button>
+              </div> */}
             </CardContent>
           ) : (
             <div>

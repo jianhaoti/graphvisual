@@ -3,18 +3,23 @@ import { Box, ImageList, ImageListItem } from "@mui/material";
 import AlgoCard from "./AlgoCard";
 import AlgoDetails from "./AlgoDetails";
 import Node from "./GraphNode";
+import Edge from "./GraphEdge";
 
 interface AlgoRoomProps {
   nodes: Node[];
+  edges: Edge[];
   selectedNode: string | null;
   setSelectedNode: (nodeId: string | null) => void; // Updated to a function type
   setSelectedEdge: (edgeId: string | null) => void; // Updated to a function type
   setIsGraphEditable: (editable: boolean) => void;
+  isOriented: boolean;
 }
 
 const AlgoRoom: React.FC<AlgoRoomProps> = ({
   selectedNode,
   nodes,
+  edges,
+  isOriented,
   setSelectedNode,
   setSelectedEdge,
   setIsGraphEditable,
@@ -126,6 +131,8 @@ const AlgoRoom: React.FC<AlgoRoomProps> = ({
           setSelectedNode={setSelectedNode}
           setSelectedEdge={setSelectedEdge}
           setIsGraphEditable={setIsGraphEditable}
+          edges={edges}
+          isOriented={isOriented}
         />
       )}
     </Box>

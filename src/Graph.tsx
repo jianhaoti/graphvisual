@@ -172,7 +172,6 @@ const Graph: React.FC<GraphProps> = ({
   };
 
   const handleSpaceDown = (e: React.KeyboardEvent) => {
-    console.log("test");
     if (!isSpaceDown) {
       if (e.code === "Space" && isMouseDown && currentNodeRef.current) {
         setIsSpaceDown(true);
@@ -397,7 +396,7 @@ const Graph: React.FC<GraphProps> = ({
   const [hoveredNode, setHoveredNode] = useState<Node | null>(null);
   const hoverTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Keep a reference of the current nodes.
+  // Keep a reference of the current nodes. This will be useful
   const nodesRef = useRef(nodes);
   useEffect(() => {
     nodesRef.current = nodes;

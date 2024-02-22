@@ -61,6 +61,8 @@ const ControlRoom: React.FC<ControlRoomProps> = ({
         <AlgoRoom
           selectedNode={selectedNode}
           nodes={nodes}
+          edges={edges}
+          isOriented={isOriented}
           setSelectedNode={setSelectedNode}
           setSelectedEdge={setSelectedEdge}
           setIsGraphEditable={setIsGraphEditable}
