@@ -41,7 +41,6 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
   setIsGraphEditable,
 }) => {
   const nodeIDs = nodes.map((node) => node.id);
-
   const [visible, setVisible] = useState(true); // Control visibility with state
   const titleToImageUrl = {
     BFS: "https://images.unsplash.com/photo-1606214554814-e8a9f97bdbb0?q=80&w=2370&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
@@ -121,11 +120,11 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
   };
 
   const [buttonColor, setButtonColor] = useState<string>("default");
-
+  // Graph Data avaliable here
   const adjacencyList = convertToAdjacencyList(nodes, edges, isOriented);
-  const bfsSteps = bfs(adjacencyList, inputValue);
-  const { goToNextStep, goToPreviousStep, currentStepIndex, isCompleted } =
-    useStepManager(bfsSteps);
+  // const bfsSteps = bfs(adjacencyList, inputValue);
+  // const { currentStepIndex, goToNextStep, goToPreviousStep, isCompleted } =
+  //   useStepManager(bfsSteps);
 
   const handleRunClick = () => {
     if (!isInputValid) {
@@ -140,6 +139,8 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
       setSelectedNode(null);
       setIsGraphEditable(false);
       setMovieTime(true);
+
+      // Run the algo
       console.log(adjacencyList);
     }
   };
@@ -184,16 +185,18 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                 flexGrow: 1, // Allows content area to grow and fill available space
               }}
             >
-              <Typography variant="body1">
-                Current Step: {JSON.stringify(bfsSteps[currentStepIndex])}
-              </Typography>
+              {/* <Typography variant="body1">
+                Current Step: {JSON.stringify(currentStepIndex)}
+              </Typography> */}
+
               <div>
                 {" "}
                 {Array.from(adjacencyList.entries()).map(([key, value]) => (
                   <div key={key}>{`${key}: ${value.join(", ")}`}</div>
                 ))}
               </div>
-              <div>
+
+              {/* <div>
                 <button
                   onClick={goToPreviousStep}
                   disabled={currentStepIndex === 0}
@@ -203,7 +206,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                 <button onClick={goToNextStep} disabled={isCompleted}>
                   Next
                 </button>
-              </div>
+              </div> */}
             </CardContent>
           ) : (
             <div>
