@@ -1,7 +1,4 @@
-import { useState, useEffect } from "react";
-
-// Assuming you have a BFS function that returns an array of steps
-import { bfs } from "./bfs";
+import { useState } from "react";
 
 // Type for a single step in BFS for demonstration. Adapt as needed.
 type StepType = {
@@ -10,18 +7,9 @@ type StepType = {
 };
 
 // Hook to manage steps
-export const stepManager = (graph: any, source: string) => {
-  const [steps, setSteps] = useState<StepType[]>([]);
+export const useStepManager = (steps: StepType[]) => {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [isCompleted, setIsCompleted] = useState(false);
-
-  // Initialize BFS steps on graph or source change
-  useEffect(() => {
-    const bfsSteps = bfs(graph, source); // Run BFS to get all steps
-    setSteps(bfsSteps);
-    setCurrentStepIndex(0);
-    setIsCompleted(false);
-  }, [graph, source]);
 
   // Function to move to the next step
   const goToNextStep = () => {
@@ -42,7 +30,7 @@ export const stepManager = (graph: any, source: string) => {
 
   // Expose the current step and navigation functions
   return {
-    currentStep: steps[currentStepIndex],
+    currentStepIndex,
     goToNextStep,
     goToPreviousStep,
     isCompleted,

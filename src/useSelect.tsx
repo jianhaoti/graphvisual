@@ -15,7 +15,7 @@ function useSelect(id: string, color: string) {
       }
     };
 
-    const onClick = (e: MouseEvent) => {
+    const onClick = () => {
       changeColor();
       isClicked.current = !isClicked.current;
     };

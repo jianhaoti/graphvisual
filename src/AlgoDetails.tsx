@@ -14,9 +14,10 @@ import {
 } from "@mui/material";
 import caveDrilling from "./caveDrilling.jpeg";
 import Node from "./GraphNode";
-import { stepManager } from "./useStepManager";
-import { convertToAdjacencyList } from "./graphToAdjList";
+import { useStepManager } from "./useStepManager";
+import { convertToAdjacencyList } from "./GraphToAdjList";
 import Edge from "./GraphEdge";
+import { bfs } from "./bfs";
 
 interface AlgoDetailsProps {
   title: string;
@@ -54,9 +55,6 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
     DFS: ["Source Node"],
     Dijkstra: ["Source Node"],
   };
-
-  // Graph Data avaliable here
-  const adjacencyList = convertToAdjacencyList(nodes, edges, isOriented);
 
   const [inputValue, setInputValue] = useState<string>("");
   const [isInputValid, setIsInputValid] = useState<boolean>(false);
@@ -123,6 +121,11 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
 
   const [buttonColor, setButtonColor] = useState<string>("default");
 
+  const adjacencyList = convertToAdjacencyList(nodes, edges, isOriented);
+  const bfsSteps = bfs(adjacencyList, inputValue);
+  const { goToNextStep, goToPreviousStep, currentStepIndex, isCompleted } =
+    useStepManager(bfsSteps);
+
   const handleRunClick = () => {
     if (!isInputValid) {
       // Change button color to red to indicate error
@@ -136,9 +139,6 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
       setSelectedNode(null);
       setIsGraphEditable(false);
       setMovieTime(true);
-
-      // Run the algo
-      console.log(adjacencyList);
     }
   };
   return (
@@ -183,17 +183,20 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
               }}
             >
               <Typography variant="body1">
-                {/* Current Step: {JSON.stringify(currentStep)} */}
+                Current Step: {JSON.stringify(bfsSteps[currentStepIndex])}
               </Typography>
 
-              {/* <div>
-                <button onClick={goToPreviousStep} disabled={currentStep === 0}>
+              <div>
+                <button
+                  onClick={goToPreviousStep}
+                  disabled={currentStepIndex === 0}
+                >
                   Previous
                 </button>
                 <button onClick={goToNextStep} disabled={isCompleted}>
                   Next
                 </button>
-              </div> */}
+              </div>
             </CardContent>
           ) : (
             <div>
