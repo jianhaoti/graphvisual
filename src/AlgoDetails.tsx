@@ -15,7 +15,7 @@ import {
 import caveDrilling from "./caveDrilling.jpeg";
 import Node from "./GraphNode";
 import { useStepManager } from "./useStepManager";
-import { convertToAdjacencyList } from "./GraphToAdjList";
+import { convertToAdjacencyList } from "./graphToAdjList";
 import Edge from "./GraphEdge";
 import { bfs } from "./bfs";
 
@@ -41,6 +41,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
   setIsGraphEditable,
 }) => {
   const nodeIDs = nodes.map((node) => node.id);
+
   const [visible, setVisible] = useState(true); // Control visibility with state
   const titleToImageUrl = {
     BFS: "https://images.unsplash.com/photo-1606214554814-e8a9f97bdbb0?q=80&w=2370&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
@@ -139,6 +140,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
       setSelectedNode(null);
       setIsGraphEditable(false);
       setMovieTime(true);
+      console.log(adjacencyList);
     }
   };
   return (
@@ -185,7 +187,12 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
               <Typography variant="body1">
                 Current Step: {JSON.stringify(bfsSteps[currentStepIndex])}
               </Typography>
-
+              <div>
+                {" "}
+                {Array.from(adjacencyList.entries()).map(([key, value]) => (
+                  <div key={key}>{`${key}: ${value.join(", ")}`}</div>
+                ))}
+              </div>
               <div>
                 <button
                   onClick={goToPreviousStep}
