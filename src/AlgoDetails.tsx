@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 import caveDrilling from "./caveDrilling.jpeg";
 import Node from "./GraphNode";
-import { useStepManager } from "./useStepManager";
+import { useArrayIterator } from "./useIterator";
 import { convertToAdjacencyList } from "./graphToAdjList";
 import Edge from "./GraphEdge";
 import { bfs } from "./bfs";
@@ -122,9 +122,13 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
   const [buttonColor, setButtonColor] = useState<string>("default");
   // Graph Data avaliable here
   const adjacencyList = convertToAdjacencyList(nodes, edges, isOriented);
-  // const bfsSteps = bfs(adjacencyList, inputValue);
-  // const { currentStepIndex, goToNextStep, goToPreviousStep, isCompleted } =
-  //   useStepManager(bfsSteps);
+  const { steps: bfsSteps, layers: bfsLayers } = bfs(adjacencyList, inputValue);
+  const {
+    currentIndex: currentIndex, // Provide direct access to the current item
+    goToNextItem: goToNextItem,
+    goToPreviousItem: goToPreviousItem,
+    isCompleted: isCompleted,
+  } = useArrayIterator(bfsLayers);
 
   const handleRunClick = () => {
     if (!isInputValid) {
@@ -185,28 +189,21 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                 flexGrow: 1, // Allows content area to grow and fill available space
               }}
             >
-              {/* <Typography variant="body1">
-                Current Step: {JSON.stringify(currentStepIndex)}
-              </Typography> */}
+              <Typography variant="body1">
+                Current Layer: {JSON.stringify(bfsLayers[currentIndex])}
+              </Typography>
 
               <div>
-                {" "}
-                {Array.from(adjacencyList.entries()).map(([key, value]) => (
-                  <div key={key}>{`${key}: ${value.join(", ")}`}</div>
-                ))}
-              </div>
-
-              {/* <div>
                 <button
-                  onClick={goToPreviousStep}
-                  disabled={currentStepIndex === 0}
+                  onClick={goToPreviousItem}
+                  disabled={currentIndex === 0}
                 >
                   Previous
                 </button>
-                <button onClick={goToNextStep} disabled={isCompleted}>
+                <button onClick={goToNextItem} disabled={isCompleted}>
                   Next
                 </button>
-              </div> */}
+              </div>
             </CardContent>
           ) : (
             <div>
