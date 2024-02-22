@@ -9,16 +9,16 @@ type StepType = {
   queue: string[];
 };
 
-// Hook to manage BFS steps
-export const useBfsSteps = (graph: any, source: string) => {
+// Hook to manage steps
+export const stepManager = (graph: any, source: string) => {
   const [steps, setSteps] = useState<StepType[]>([]);
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [isCompleted, setIsCompleted] = useState(false);
 
   // Initialize BFS steps on graph or source change
   useEffect(() => {
-    const allSteps = bfs(graph, source); // Run BFS to get all steps
-    setSteps(allSteps);
+    const bfsSteps = bfs(graph, source); // Run BFS to get all steps
+    setSteps(bfsSteps);
     setCurrentStepIndex(0);
     setIsCompleted(false);
   }, [graph, source]);

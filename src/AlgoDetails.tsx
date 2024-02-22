@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 import caveDrilling from "./caveDrilling.jpeg";
 import Node from "./GraphNode";
-import { useBfsSteps } from "./useBfsSteps";
+import { stepManager } from "./useStepManager";
 import { convertToAdjacencyList } from "./graphToAdjList";
 import Edge from "./GraphEdge";
 

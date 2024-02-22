@@ -370,7 +370,7 @@ const Graph: React.FC<GraphProps> = ({
 
   const handleEdgeDoubleClick = (reverseThisEdge: Edge) => {
     // exit on trying to reverse temp edge
-    if (!reverseThisEdge.id2) return;
+    if (!reverseThisEdge.id2 || !isOriented) return;
 
     // otherwise, check if editable then reverse
     if (isGraphEditable) {
