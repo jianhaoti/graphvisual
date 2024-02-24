@@ -64,8 +64,9 @@ function App() {
     }
   };
 
-  const handleLabelClick = () => {
+  const handleDataClick = () => {
     setMode("data");
+    setIsGraphEditable(true);
   };
 
   const handleAlgoClick = () => {
@@ -110,7 +111,7 @@ function App() {
           aria-label="outlined primary button group"
         >
           <Button
-            onClick={handleLabelClick}
+            onClick={handleDataClick}
             className={mode === "data" ? "activeButton" : ""}
             variant={mode === "data" ? "outlined" : "outlined"}
             disableElevation={true}

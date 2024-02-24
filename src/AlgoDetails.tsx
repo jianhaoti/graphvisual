@@ -129,7 +129,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
     goToNextItem: goToNextItem,
     goToPreviousItem: goToPreviousItem,
     isCompleted: isCompleted,
-  } = useArrayIterator(bfsLayers);
+  } = useArrayIterator(bfsSteps);
 
   const handleRunClick = () => {
     if (!isInputValid) {
@@ -146,7 +146,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
       setMovieTime(true);
 
       // Run the algo
-      console.log(bfsLayers);
+      console.log(bfsSteps);
     }
   };
   return (
@@ -191,7 +191,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
               }}
             >
               <Typography variant="body1">
-                Current Layer: {JSON.stringify(bfsLayers[currentIndex])}
+                Current Step: {JSON.stringify(bfsSteps[currentIndex])}
               </Typography>
 
               <div>
