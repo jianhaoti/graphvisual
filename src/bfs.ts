@@ -7,7 +7,7 @@ export const bfs = (
   graph: Map<string, string[]>,
   source: string
 ): { steps: StepType[]; layers: string[][] } => {
-  let layers: string[][] = [];
+  let layers: string[][] = [[source]];
   let steps: StepType[] = [];
   let visited: Set<string> = new Set();
   let queue: string[] = [source];
@@ -16,7 +16,7 @@ export const bfs = (
   let temp: string[] = [];
 
   while (queue.length > 0) {
-    // empty out queue to get unique neighbors for the next layer
+    // get the current layers' neighbors, then push them into visited
     while (queue.length > 0) {
       const node = queue.shift()!; // Assume non-null assertion is safe here
       if (!visited.has(node)) {
@@ -31,15 +31,17 @@ export const bfs = (
       }
     }
     // repopulate, if possible, the empty queue with the next layer from temp
-    const currentLayer = [];
+    const currentLayer: string[] = [];
     while (temp.length > 0) {
       const qItem = temp.pop();
-
-      if (qItem) {
+      if (qItem && !currentLayer.includes(qItem)) {
+        queue.push(qItem);
         currentLayer.push(qItem);
       }
     }
-    layers.push(currentLayer);
+    if (currentLayer.length > 0) {
+      layers.push(currentLayer);
+    }
   }
 
   return { steps, layers };

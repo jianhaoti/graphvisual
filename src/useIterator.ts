@@ -7,9 +7,10 @@ export const useArrayIterator = <T>(items: T[]) => {
 
   // Function to move to the next item
   const goToNextItem = () => {
-    if (currentIndex < items.length - 1) {
+    if (currentIndex < items.length - 2) {
       setCurrentIndex(currentIndex + 1);
     } else {
+      setCurrentIndex(currentIndex + 1);
       setIsCompleted(true); // Mark as completed when reaching the end
     }
   };

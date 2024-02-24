@@ -18,6 +18,7 @@ import { useArrayIterator } from "./useIterator";
 import { convertToAdjacencyList } from "./graphToAdjList";
 import Edge from "./GraphEdge";
 import { bfs } from "./bfs";
+import { Layers } from "@mui/icons-material";
 
 interface AlgoDetailsProps {
   title: string;
@@ -145,7 +146,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
       setMovieTime(true);
 
       // Run the algo
-      console.log(adjacencyList);
+      console.log(bfsLayers);
     }
   };
   return (
