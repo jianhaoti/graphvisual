@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import DataRoom from "./DataRoom";
 import Node from "./GraphNode";
 import Edge from "./GraphEdge";
 import AlgoRoom from "./AlgoRoom";
+import { useBFS } from "./bfsContext";
 
 interface ControlRoomProps {
   mode: string;
@@ -37,6 +38,18 @@ const ControlRoom: React.FC<ControlRoomProps> = ({
   setShowWeight,
   setIsGraphEditable,
 }) => {
+  const { setBfsState } = useBFS();
+
+  // stop visualization when not in "algo" mode. can't do this at top level
+  useEffect(() => {
+    if (mode !== "algo") {
+      setBfsState((prevState: any) => ({
+        ...prevState,
+        isVisualizationActive: false,
+      }));
+    }
+  }, [mode, setBfsState]);
+
   return (
     <div
       className="container container-right"

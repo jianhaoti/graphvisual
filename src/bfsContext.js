@@ -10,7 +10,15 @@ export const BFSProvider = ({ children }) => {
     isVisualizationActive: false,
   });
 
-  const value = { bfsState, setBfsState };
+  // Method to toggle visualization status
+  const toggleVisualizationActive = () => {
+    setBfsState((prevState) => ({
+      ...prevState,
+      isVisualizationActive: !isVisualizationActive,
+    }));
+  };
+
+  const value = { bfsState, setBfsState, toggleVisualizationActive };
 
   return <BFSContext.Provider value={value}>{children}</BFSContext.Provider>;
 };

@@ -26,12 +26,10 @@ function App() {
   const [isOriented, setIsOriented] = useState(true);
   const [showWeight, setShowWeight] = useState(false);
 
-  useEffect(() => {
-    if (textFieldRef.current) {
-      textFieldRef.current.focus(); // Focus the input
-      textFieldRef.current.select(); // Select the text
-    }
-  }, []);
+  // name of graph
+  const handleTyping = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setValue(event.target.value);
+  };
 
   const handleKeyDown = (event: React.KeyboardEvent) => {
     if (event.key === "Enter") {
@@ -39,25 +37,13 @@ function App() {
       textFieldRef.current?.blur();
     }
   };
-  const handleNodeIDChange = (oldId: string, newId: string) => {
-    setNodes(
-      nodes.map((node) => (node.id === oldId ? { ...node, id: newId } : node))
-    );
-    setEdges(
-      edges.map((edge) => {
-        if (edge.id1 === oldId) {
-          return { ...edge, id1: newId };
-        } else if (edge.id2 === oldId) {
-          return { ...edge, id2: newId };
-        }
-        return edge;
-      })
-    );
-  };
 
-  const handleTyping = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(event.target.value);
-  };
+  useEffect(() => {
+    if (textFieldRef.current) {
+      textFieldRef.current.focus(); // Focus the input
+      textFieldRef.current.select(); // Select the text
+    }
+  }, []);
 
   const handleFocus = () => {
     if (textFieldRef.current) {
@@ -72,6 +58,22 @@ function App() {
 
   const handleAlgoClick = () => {
     setMode("algo");
+  };
+
+  const handleNodeIDChange = (oldId: string, newId: string) => {
+    setNodes(
+      nodes.map((node) => (node.id === oldId ? { ...node, id: newId } : node))
+    );
+    setEdges(
+      edges.map((edge) => {
+        if (edge.id1 === oldId) {
+          return { ...edge, id1: newId };
+        } else if (edge.id2 === oldId) {
+          return { ...edge, id2: newId };
+        }
+        return edge;
+      })
+    );
   };
 
   const handleNodeSelection = (nodeId: string | null) => {
