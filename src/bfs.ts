@@ -24,7 +24,7 @@ export const bfs = (
 
       const neighbors = graph.get(node) || [];
       for (const neighbor of neighbors) {
-        if (!visited.has(neighbor)) {
+        if (!visited.has(neighbor) && !queue.includes(neighbor)) {
           newQueue.push(neighbor);
           currentLayer.push(neighbor);
         }
