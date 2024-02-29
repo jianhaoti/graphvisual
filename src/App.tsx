@@ -8,6 +8,7 @@ import { ReactComponent as DataIcon } from "./assets/dataIcon.svg";
 import TextField from "@mui/material/TextField";
 import Node from "./GraphNode";
 import Edge from "./GraphEdge";
+import { BFSProvider } from "./bfsContext";
 
 function App() {
   const [mode, setMode] = useState("data");
@@ -84,91 +85,93 @@ function App() {
   };
 
   return (
-    <main>
-      <div className="title-container">
-        <TextField
-          className="whiteUnderline"
-          id="standard-multiline-flexible"
-          value={value}
-          onChange={handleTyping}
-          onKeyDown={handleKeyDown}
-          onFocus={handleFocus}
-          inputRef={textFieldRef}
-          inputProps={{ maxLength: 25 }}
-          InputLabelProps={{
-            style: { color: "white" }, // Change label color
-          }}
-          InputProps={{
-            style: { color: "white" }, // Change input text color
-          }}
-          variant="standard"
+    <BFSProvider>
+      <main>
+        <div className="title-container">
+          <TextField
+            className="whiteUnderline"
+            id="standard-multiline-flexible"
+            value={value}
+            onChange={handleTyping}
+            onKeyDown={handleKeyDown}
+            onFocus={handleFocus}
+            inputRef={textFieldRef}
+            inputProps={{ maxLength: 25 }}
+            InputLabelProps={{
+              style: { color: "white" }, // Change label color
+            }}
+            InputProps={{
+              style: { color: "white" }, // Change input text color
+            }}
+            variant="standard"
+          />
+        </div>
+        <div className="button-group-container">
+          <ButtonGroup
+            className="control-buttons"
+            variant="outlined"
+            aria-label="outlined primary button group"
+          >
+            <Button
+              onClick={handleDataClick}
+              className={mode === "data" ? "activeButton" : ""}
+              variant={mode === "data" ? "outlined" : "outlined"}
+              disableElevation={true}
+              style={{
+                backgroundColor: "#9f9f9f",
+                border: ".75px none",
+                outline: ".75px none",
+              }}
+            >
+              <DataIcon />
+            </Button>
+            <Button
+              onClick={handleAlgoClick}
+              className={mode === "algo" ? "activeButton" : ""}
+              variant={mode === "algo" ? "outlined" : "outlined"}
+              disableElevation={true}
+              style={{
+                backgroundColor: "#9f9f9f",
+                border: ".75px none",
+                outline: ".75px none",
+                boxShadow: "0 0 0 0px gray",
+              }}
+            >
+              <AlgoIcon />
+            </Button>
+          </ButtonGroup>
+        </div>
+        <Graph
+          nodes={nodes}
+          setNodes={setNodes}
+          edges={edges}
+          setEdges={setEdges}
+          selectedNode={selectedNode}
+          setSelectedNode={setSelectedNode}
+          selectedEdge={selectedEdge}
+          setSelectedEdge={setSelectedEdge}
+          isOriented={isOriented}
+          setIsOriented={setIsOriented}
+          showWeight={showWeight}
+          isGraphEditable={isGraphEditable}
         />
-      </div>
-      <div className="button-group-container">
-        <ButtonGroup
-          className="control-buttons"
-          variant="outlined"
-          aria-label="outlined primary button group"
-        >
-          <Button
-            onClick={handleDataClick}
-            className={mode === "data" ? "activeButton" : ""}
-            variant={mode === "data" ? "outlined" : "outlined"}
-            disableElevation={true}
-            style={{
-              backgroundColor: "#9f9f9f",
-              border: ".75px none",
-              outline: ".75px none",
-            }}
-          >
-            <DataIcon />
-          </Button>
-          <Button
-            onClick={handleAlgoClick}
-            className={mode === "algo" ? "activeButton" : ""}
-            variant={mode === "algo" ? "outlined" : "outlined"}
-            disableElevation={true}
-            style={{
-              backgroundColor: "#9f9f9f",
-              border: ".75px none",
-              outline: ".75px none",
-              boxShadow: "0 0 0 0px gray",
-            }}
-          >
-            <AlgoIcon />
-          </Button>
-        </ButtonGroup>
-      </div>
-      <Graph
-        nodes={nodes}
-        setNodes={setNodes}
-        edges={edges}
-        setEdges={setEdges}
-        selectedNode={selectedNode}
-        setSelectedNode={setSelectedNode}
-        selectedEdge={selectedEdge}
-        setSelectedEdge={setSelectedEdge}
-        isOriented={isOriented}
-        setIsOriented={setIsOriented}
-        showWeight={showWeight}
-        isGraphEditable={isGraphEditable}
-      />
-      <ControlRoom
-        mode={mode}
-        nodes={nodes}
-        edges={edges}
-        selectedNode={selectedNode}
-        setSelectedNode={handleNodeSelection}
-        selectedEdge={selectedEdge}
-        setSelectedEdge={handleEdgeSelection}
-        isOriented={isOriented}
-        onNodeIDChange={handleNodeIDChange}
-        setEdges={setEdges}
-        showWeight={showWeight}
-        setShowWeight={setShowWeight}
-        setIsGraphEditable={setIsGraphEditable}
-      />
-    </main>
+        <ControlRoom
+          mode={mode}
+          nodes={nodes}
+          edges={edges}
+          selectedNode={selectedNode}
+          setSelectedNode={handleNodeSelection}
+          selectedEdge={selectedEdge}
+          setSelectedEdge={handleEdgeSelection}
+          isOriented={isOriented}
+          onNodeIDChange={handleNodeIDChange}
+          setEdges={setEdges}
+          showWeight={showWeight}
+          setShowWeight={setShowWeight}
+          setIsGraphEditable={setIsGraphEditable}
+        />
+      </main>
+    </BFSProvider>
   );
 }
 

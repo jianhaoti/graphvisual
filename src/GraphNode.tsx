@@ -21,7 +21,8 @@ interface NodeProps {
   onDrag: (id: string, newPosition: { x: number; y: number }) => void;
   onMouseEnter: () => void;
   onMouseLeave: () => void;
-  onDoubleClick: () => void;
+  // onDoubleClick: () => void;
+  isVisualizationActive: boolean;
 }
 
 const Node: React.FC<NodeProps> = ({
@@ -33,10 +34,18 @@ const Node: React.FC<NodeProps> = ({
   onDrag,
   onMouseEnter,
   onMouseLeave,
-  onDoubleClick,
+  // onDoubleClick,
+  isVisualizationActive,
 }) => {
   const nodeRef = useRef<SVGCircleElement | null>(null);
   const radius = 10;
+  const defaultColor = isSelected ? "white" : "#E3C46E";
+
+  const style = {
+    cursor: "grab",
+    // Directly use `isVisualizationActive` to conditionally set the fill color
+    fill: isVisualizationActive ? "red" : defaultColor,
+  };
 
   // Memoize the onDrag callback
   const memoizedOnDrag = useCallback(
@@ -45,7 +54,6 @@ const Node: React.FC<NodeProps> = ({
     },
     [onDrag] // Dependency array, add any other dependencies if needed
   );
-  const color = isSelected ? "white" : "#E3C46E";
 
   // Node is draggable if node is selected and space is not held.
   useDraggerSVG(node.id, nodeRef, isDraggable, memoizedOnDrag);
@@ -58,13 +66,12 @@ const Node: React.FC<NodeProps> = ({
       cx={node.x}
       cy={node.y}
       r={radius}
-      fill={color}
       onClick={() => onClick(node.id)}
       onContextMenu={(e) => onContextMenu(e, node.id)}
-      style={{ cursor: "grab" }} // Set the cursor style for better UX
+      style={{ ...style }} // Set the cursor style for better UX
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
-      onDoubleClick={onDoubleClick}
+      // onDoubleClick={onDoubleClick}
     />
   );
 };

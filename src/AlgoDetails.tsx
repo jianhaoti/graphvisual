@@ -18,7 +18,7 @@ import { useArrayIterator } from "./useIterator";
 import { convertToAdjacencyList } from "./graphToAdjList";
 import Edge from "./GraphEdge";
 import { bfs } from "./bfs";
-import { Layers } from "@mui/icons-material";
+import { useBFS } from "./bfsContext.js";
 
 interface AlgoDetailsProps {
   title: string;
@@ -92,6 +92,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
     setVisible(false); // Trigger fade-out
     setIsGraphEditable(true);
     setMovieTime(false);
+    toggleVisualization();
     setTimeout(onClose, 500); // Delay the onClose callback until after the fade-out animation completes
   };
 
@@ -104,7 +105,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
     }
   }, [visible, onClose]);
 
-  // handles jiggle and blue
+  // handles jiggle and blur
   const handleBlur = (
     e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -131,6 +132,16 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
     isCompleted: isCompleted,
   } = useArrayIterator(bfsSteps);
 
+  const { bfsState, setBfsState } = useBFS();
+
+  // Toggle function to start/stop the visualization
+  const toggleVisualization = () => {
+    setBfsState((prevState: any) => ({
+      ...prevState,
+      isVisualizationActive: !prevState.isVisualizationActive,
+    }));
+  };
+
   const handleRunClick = () => {
     if (!isInputValid) {
       // Change button color to red to indicate error
@@ -146,7 +157,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
       setMovieTime(true);
 
       // Run the algo
-      console.log(bfsSteps);
+      toggleVisualization();
     }
   };
   return (

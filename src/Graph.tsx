@@ -3,6 +3,7 @@ import Node from "./GraphNode";
 import Edge from "./GraphEdge";
 import Switch from "@mui/material/Switch";
 import { styled } from "@mui/material/styles";
+import { useBFS } from "./bfsContext.js";
 
 const CustomSwitch = styled(Switch)(({ theme }) => ({
   "& .MuiSwitch-switchBase": {
@@ -59,6 +60,9 @@ const Graph: React.FC<GraphProps> = ({
     checkedA: true,
     checkedB: true,
   });
+
+  const { bfsState } = useBFS();
+  const currentStep = bfsState.steps[bfsState.currentStepIndex];
 
   const handleOrientationChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -367,43 +371,43 @@ const Graph: React.FC<GraphProps> = ({
       setSelectedEdge(null);
     }
   };
-  const handleNodeDoubleClick = (nodeId: string) => {
-    // Check if the graph is editable and oriented
-    if (isGraphEditable && isOriented) {
-      // Temporary storage for edges to be reversed
-      let edgesToBeReversed: Edge[] = [];
+  // const handleNodeDoubleClick = (nodeId: string) => {
+  //   // Check if the graph is editable and oriented
+  //   if (isGraphEditable && isOriented) {
+  //     // Temporary storage for edges to be reversed
+  //     let edgesToBeReversed: Edge[] = [];
 
-      // Filter out edges that are not connected to the node
-      const remainingEdges = edges.filter((edge) => {
-        const isConnectedToNode = edge.id1 === nodeId || edge.id2 === nodeId;
-        if (
-          isConnectedToNode &&
-          edge.id2 &&
-          edge.x2 !== null &&
-          edge.y2 !== null
-        ) {
-          // If an edge is connected to the node, prepare to reverse it
-          edgesToBeReversed.push({
-            ...edge,
-            id1: edge.id2, // Swap id1 with id2
-            id2: edge.id1, // Swap id2 with id1
-            x1: edge.x2, // Swap x1 with x2
-            y1: edge.y2, // Swap y1 with y2
-            x2: edge.x1, // Swap x2 with x1
-            y2: edge.y1, // Swap y2 with y1
-          });
-          return false; // Exclude this edge from remainingEdges
-        }
-        return true; // Keep the edge that's not connected to the node
-      });
+  //     // Filter out edges that are not connected to the node
+  //     const remainingEdges = edges.filter((edge) => {
+  //       const isConnectedToNode = edge.id1 === nodeId || edge.id2 === nodeId;
+  //       if (
+  //         isConnectedToNode &&
+  //         edge.id2 &&
+  //         edge.x2 !== null &&
+  //         edge.y2 !== null
+  //       ) {
+  //         // If an edge is connected to the node, prepare to reverse it
+  //         edgesToBeReversed.push({
+  //           ...edge,
+  //           id1: edge.id2, // Swap id1 with id2
+  //           id2: edge.id1, // Swap id2 with id1
+  //           x1: edge.x2, // Swap x1 with x2
+  //           y1: edge.y2, // Swap y1 with y2
+  //           x2: edge.x1, // Swap x2 with x1
+  //           y2: edge.y1, // Swap y2 with y1
+  //         });
+  //         return false; // Exclude this edge from remainingEdges
+  //       }
+  //       return true; // Keep the edge that's not connected to the node
+  //     });
 
-      // Combine the remaining edges with the reversed ones
-      const newEdges = [...remainingEdges, ...edgesToBeReversed];
+  //     // Combine the remaining edges with the reversed ones
+  //     const newEdges = [...remainingEdges, ...edgesToBeReversed];
 
-      // Update the edges state
-      setEdges(newEdges);
-    }
-  };
+  //     // Update the edges state
+  //     setEdges(newEdges);
+  //   }
+  // };
 
   const handleEdgeDoubleClick = (reverseThisEdge: Edge) => {
     // exit on trying to reverse temp edge
@@ -496,10 +500,11 @@ const Graph: React.FC<GraphProps> = ({
               isDraggable={node.id === selectedNode && !isSpaceDown}
               onClick={() => handleNodeClick(node.id)}
               onDrag={handleNodeDrag}
-              onDoubleClick={() => handleNodeDoubleClick(node.id)}
+              // onDoubleClick={() => handleNodeDoubleClick(node.id)}
               onContextMenu={(e) => handleNodeContextMenu(e, node.id)}
               onMouseEnter={() => handleMouseEnter(node.id)}
               onMouseLeave={handleMouseLeave}
+              isVisualizationActive={bfsState.isVisualizationActive}
             />
           ))}
           {edges
