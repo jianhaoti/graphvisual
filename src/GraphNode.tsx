@@ -23,6 +23,7 @@ interface NodeProps {
   onMouseLeave: () => void;
   // onDoubleClick: () => void;
   isVisualizationActive: boolean;
+  nodeStatus?: "visited" | "queue" | "processing" | "default";
 }
 
 const Node: React.FC<NodeProps> = ({
@@ -36,15 +37,30 @@ const Node: React.FC<NodeProps> = ({
   onMouseLeave,
   // onDoubleClick,
   isVisualizationActive,
+  nodeStatus = "default",
 }) => {
   const nodeRef = useRef<SVGCircleElement | null>(null);
   const radius = 10;
-  const defaultColor = isSelected ? "white" : "#E3C46E";
+
+  const getColor = (status: string) => {
+    switch (status) {
+      case "visited":
+        return "black";
+      case "queue":
+        return "red";
+      case "processing":
+        return "gray";
+      default:
+        return isSelected ? "white" : "#E3C46E"; // Default color
+    }
+  };
+
+  const color = getColor(nodeStatus);
 
   const style = {
     cursor: "grab",
     // Directly use `isVisualizationActive` to conditionally set the fill color
-    fill: isVisualizationActive ? "red" : defaultColor,
+    fill: color,
   };
 
   // Memoize the onDrag callback

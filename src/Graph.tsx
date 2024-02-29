@@ -492,21 +492,38 @@ const Graph: React.FC<GraphProps> = ({
     >
       <div style={{ flex: 1, height: "100%", overflow: "hidden" }}>
         <svg width="200" height="200">
-          {nodes.map((node) => (
-            <Node
-              key={node.id}
-              node={node}
-              isSelected={node.id === selectedNode}
-              isDraggable={node.id === selectedNode && !isSpaceDown}
-              onClick={() => handleNodeClick(node.id)}
-              onDrag={handleNodeDrag}
-              // onDoubleClick={() => handleNodeDoubleClick(node.id)}
-              onContextMenu={(e) => handleNodeContextMenu(e, node.id)}
-              onMouseEnter={() => handleMouseEnter(node.id)}
-              onMouseLeave={handleMouseLeave}
-              isVisualizationActive={bfsState.isVisualizationActive}
-            />
-          ))}
+          {nodes.map((node) => {
+            let nodeStatus: "visited" | "queue" | "processing" | "default" =
+              "default"; // default status
+
+            if (bfsState.isVisualizationActive) {
+              // if (bfsState.nodeStates.get(node.id) === "visited") {
+              //   nodeStatus = "visited";
+              // } else if (bfsState.nodeStates.get(node.id) === "queue") {
+              //   nodeStatus = "queue";
+              // } else if (bfsState.nodeStates.get(node.id) === "processing") {
+              //   nodeStatus = "processing";
+              // }
+            }
+
+            return (
+              <Node
+                key={node.id}
+                node={node}
+                isSelected={node.id === selectedNode}
+                isDraggable={node.id === selectedNode && !isSpaceDown}
+                onClick={() => handleNodeClick(node.id)}
+                onDrag={handleNodeDrag}
+                // onDoubleClick={() => handleNodeDoubleClick(node.id)}
+                onContextMenu={(e) => handleNodeContextMenu(e, node.id)}
+                onMouseEnter={() => handleMouseEnter(node.id)}
+                onMouseLeave={handleMouseLeave}
+                isVisualizationActive={bfsState.isVisualizationActive}
+                nodeStatus={nodeStatus} // Pass the node status here
+              />
+            );
+          })}
+
           {edges
             .filter((edge) => edge.x2 !== null && edge.y2 !== null)
             .map((edge) => (
