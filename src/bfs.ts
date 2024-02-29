@@ -22,6 +22,12 @@ export const bfs = (
       const node = queue.shift()!;
       processing = node;
 
+      steps.push({
+        visited: Array.from(visited),
+        queue: queue.concat(newQueue), // Reflects the current state of the queue
+        processing: processing,
+      });
+
       const neighbors = graph.get(node) || [];
       for (const neighbor of neighbors) {
         if (!visited.has(neighbor) && !queue.includes(neighbor)) {
@@ -29,12 +35,14 @@ export const bfs = (
           currentLayer.push(neighbor);
         }
       }
-      // added in all the neighbors
-      steps.push({
-        visited: Array.from(visited),
-        queue: queue.concat(newQueue), // Reflects the current state of the queue
-        processing: processing,
-      });
+      // added in all the neighbors, if there are any
+      if (newQueue.length > 0) {
+        steps.push({
+          visited: Array.from(visited),
+          queue: queue.concat(newQueue), // Reflects the current state of the queue
+          processing: processing,
+        });
+      }
 
       visited.add(node);
       processing = "";
