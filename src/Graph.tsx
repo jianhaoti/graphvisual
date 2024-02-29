@@ -62,7 +62,6 @@ const Graph: React.FC<GraphProps> = ({
   });
 
   const { bfsState } = useBFS();
-  const currentStep = bfsState.steps[bfsState.currentStepIndex];
 
   const handleOrientationChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -518,7 +517,6 @@ const Graph: React.FC<GraphProps> = ({
                 onContextMenu={(e) => handleNodeContextMenu(e, node.id)}
                 onMouseEnter={() => handleMouseEnter(node.id)}
                 onMouseLeave={handleMouseLeave}
-                isVisualizationActive={bfsState.isVisualizationActive}
                 nodeStatus={nodeStatus} // Pass the node status here
               />
             );

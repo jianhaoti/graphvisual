@@ -22,7 +22,6 @@ interface NodeProps {
   onMouseEnter: () => void;
   onMouseLeave: () => void;
   // onDoubleClick: () => void;
-  isVisualizationActive: boolean;
   nodeStatus?: "visited" | "queue" | "processing" | "default";
 }
 
@@ -36,7 +35,6 @@ const Node: React.FC<NodeProps> = ({
   onMouseEnter,
   onMouseLeave,
   // onDoubleClick,
-  isVisualizationActive,
   nodeStatus = "default",
 }) => {
   const nodeRef = useRef<SVGCircleElement | null>(null);
