@@ -117,6 +117,18 @@ const Graph: React.FC<GraphProps> = ({
       if (e.code === "Backspace" && isGraphEditable) {
         deleteSelected();
       }
+      // Check if Ctrl+C or Cmd+C is pressed and there is a selected node
+      if ((e.ctrlKey || e.metaKey) && e.code === "KeyC" && selectedNode) {
+        // Copy selectedNode ID to clipboard
+        navigator.clipboard
+          .writeText(selectedNode)
+          .then(() => {
+            console.log(`Node ID ${selectedNode} copied to clipboard.`);
+          })
+          .catch((error) => {
+            console.error("Error copying text: ", error);
+          });
+      }
     };
     const handleKeyUp = (e: KeyboardEvent) => {
       if (e.code === "Space") {
@@ -126,12 +138,10 @@ const Graph: React.FC<GraphProps> = ({
 
     window.addEventListener("keydown", handleKeyDown);
     window.addEventListener("keyup", handleKeyUp);
-    window.addEventListener("keydown", handleKeyDown);
 
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("keyup", handleKeyUp);
-      window.removeEventListener("keydown", handleKeyDown);
     };
   }, [deleteSelected, isGraphEditable]);
 
@@ -535,7 +545,9 @@ const Graph: React.FC<GraphProps> = ({
                 isDraggable={node.id === selectedNode && !isSpaceDown}
                 onClick={() => handleNodeClick(node.id)}
                 onDrag={handleNodeDrag}
-                // onDoubleClick={() => handleNodeDoubleClick(node.id)}
+                onDoubleClick={(nodeId) =>
+                  navigator.clipboard.writeText(nodeId)
+                }
                 onContextMenu={(e) => handleNodeContextMenu(e, node.id)}
                 onMouseEnter={() => handleMouseEnter(node.id)}
                 onMouseLeave={handleMouseLeave}

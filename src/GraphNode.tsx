@@ -21,7 +21,7 @@ interface NodeProps {
   onDrag: (id: string, newPosition: { x: number; y: number }) => void;
   onMouseEnter: () => void;
   onMouseLeave: () => void;
-  // onDoubleClick: () => void;
+  onDoubleClick?: (nodeId: string) => void;
   nodeStatus?: "visited" | "queue" | "processing" | "default";
 }
 
@@ -34,7 +34,7 @@ const Node: React.FC<NodeProps> = ({
   onDrag,
   onMouseEnter,
   onMouseLeave,
-  // onDoubleClick,
+  onDoubleClick,
   nodeStatus = "default",
 }) => {
   const nodeRef = useRef<SVGCircleElement | null>(null);
@@ -72,6 +72,12 @@ const Node: React.FC<NodeProps> = ({
   // Node is draggable if node is selected and space is not held.
   useDraggerSVG(node.id, nodeRef, isDraggable, memoizedOnDrag);
 
+  const handleDoubleClick = () => {
+    if (onDoubleClick) {
+      onDoubleClick(node.id);
+    }
+  };
+
   return (
     <circle
       className="graph-node"
@@ -85,7 +91,7 @@ const Node: React.FC<NodeProps> = ({
       style={{ ...style }} // Set the cursor style for better UX
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
-      // onDoubleClick={onDoubleClick}
+      onDoubleClick={handleDoubleClick}
     />
   );
 };

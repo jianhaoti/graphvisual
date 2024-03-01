@@ -33,29 +33,15 @@ export const bfs = (
       });
 
       const neighbors = graph.get(node) || [];
-      console.log("This is the current queue:", queue);
 
       for (const neighbor of neighbors) {
         if (
           !visited.has(neighbor) &&
           !queue.includes(neighbor) &&
-          !newQueue.includes(neighbor) // logic doesn't work if you don't include this. counter example is square with diagonal
+          !newQueue.includes(neighbor) // bfs logic doesn't work if you don't include this. the duplicates may not yet be pushed onto queue
         ) {
-          console.log(
-            "Neighbor",
-            neighbor,
-            "of",
-            processing,
-            "is not included in visisted nor queue"
-          );
-
           newQueue.push(neighbor);
           currentLayer.push(neighbor);
-
-          console.log(
-            "This is the newQueue after pushing neighbors:",
-            newQueue
-          );
         }
       }
 
