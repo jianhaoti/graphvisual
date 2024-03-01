@@ -92,7 +92,13 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
     setVisible(false); // Trigger fade-out
     setIsGraphEditable(true);
     setMovieTime(false);
-    toggleVisualization();
+    setBfsState({
+      steps: [],
+      currentStepIndex: 0,
+      nodeStates: new Map(), // Optionally initialize nodeStates based on the first step if needed
+      isVisualizationActive: false, // Ensure visualization is active to show new steps
+    });
+
     setTimeout(onClose, 500); // Delay the onClose callback until after the fade-out animation completes
   };
 
@@ -134,14 +140,15 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
 
   const { bfsState, setBfsState } = useBFS();
 
-  // Toggle function to start/stop the visualization
-  const toggleVisualization = () => {
-    setBfsState((prevState: any) => ({
-      ...prevState,
-      isVisualizationActive: !prevState.isVisualizationActive,
-    }));
-  };
+  // // Toggle function to start/stop the visualization
+  // const toggleVisualization = () => {
+  //   setBfsState((prevState: any) => ({
+  //     ...prevState,
+  //     isVisualizationActive: !prevState.isVisualizationActive,
+  //   }));
+  // };
 
+  // what happens when you click "run"
   const handleRunClick = () => {
     if (!isInputValid) {
       // Change button color to red to indicate error
@@ -157,9 +164,19 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
       setMovieTime(true);
 
       // Run the algo
-      toggleVisualization();
+      setBfsState({
+        steps: bfsSteps,
+        currentStepIndex: 0,
+        nodeStates: new Map(), // Optionally initialize nodeStates based on the first step if needed
+        isVisualizationActive: true, // Ensure visualization is active to show new steps
+      });
     }
   };
+
+  useEffect(() => {
+    console.log(bfsState);
+  }, [bfsState]);
+
   return (
     <Fade in={true} timeout={500}>
       <div

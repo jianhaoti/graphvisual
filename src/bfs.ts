@@ -10,7 +10,7 @@ export const bfs = (
 ): { steps: StepType[]; layers: string[][] } => {
   let layers: string[][] = [[source]];
   let steps: StepType[] = [];
-  let visited: Set<string> = new Set();
+  let visited: Set<string> = new Set(source);
   let queue: string[] = [source];
   let processing: string = source;
 

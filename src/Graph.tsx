@@ -479,6 +479,27 @@ const Graph: React.FC<GraphProps> = ({
     };
   }, []);
 
+  useEffect(() => {
+    // Log the status of each node
+    nodes.forEach((node) => {
+      let nodeStatus = "default"; // Default status
+      const currentStep = bfsState.steps[bfsState.currentStepIndex];
+
+      // Assuming you have a logic to determine the nodeStatus based on currentStep
+      if (bfsState.isVisualizationActive && currentStep) {
+        if (currentStep.visited?.includes(node.id)) {
+          nodeStatus = "visited";
+        } else if (currentStep.queue?.includes(node.id)) {
+          nodeStatus = "queue";
+        } else if (currentStep.processing === node.id) {
+          nodeStatus = "processing";
+        }
+      }
+
+      //console.log(`Node ${node.id} status: ${nodeStatus}`);
+    });
+  }, [bfsState, nodes]); // Depend on bfsState and nodes to re-run this effect
+
   return (
     <div
       className="container container-left"
@@ -492,17 +513,18 @@ const Graph: React.FC<GraphProps> = ({
       <div style={{ flex: 1, height: "100%", overflow: "hidden" }}>
         <svg width="200" height="200">
           {nodes.map((node) => {
+            const currentStep = bfsState.steps[bfsState.currentStepIndex];
             let nodeStatus: "visited" | "queue" | "processing" | "default" =
               "default"; // default status
 
             if (bfsState.isVisualizationActive) {
-              // if (bfsState.nodeStates.get(node.id) === "visited") {
-              //   nodeStatus = "visited";
-              // } else if (bfsState.nodeStates.get(node.id) === "queue") {
-              //   nodeStatus = "queue";
-              // } else if (bfsState.nodeStates.get(node.id) === "processing") {
-              //   nodeStatus = "processing";
-              // }
+              if (currentStep?.visited.includes(node.id)) {
+                nodeStatus = "visited";
+              } else if (currentStep?.queue.includes(node.id)) {
+                nodeStatus = "queue";
+              } else if (currentStep?.processing === node.id) {
+                nodeStatus = "processing";
+              }
             }
 
             return (
