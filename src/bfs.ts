@@ -4,6 +4,10 @@ export type StepType = {
   processing: string;
 };
 
+// visited is a set
+// queue is an array
+// processing is a string
+
 export const bfs = (
   graph: Map<string, string[]>,
   source: string

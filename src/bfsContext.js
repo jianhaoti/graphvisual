@@ -6,31 +6,61 @@ export const BFSProvider = ({ children }) => {
   const [bfsState, setBfsState] = useState({
     steps: [],
     currentStepIndex: 0,
-    nodeStates: new Map(), // Map node IDs to states ('visited', 'queue', 'processing')
+    nodeStatus: new Map(), // Map node IDs to states ('visited', 'queue', 'processing', default)
     isVisualizationActive: false,
+    isCompleted: false,
   });
 
-  // Function to update the current step index and node states
-  const setCurrentStepIndex = (index) => {
-    const step = bfsState.steps[index];
-    if (!step) return;
+  const updateStatus = (currentStepIndex) => {
+    const newStatus = new Map();
+    const step = bfsState.steps[currentStepIndex];
 
-    const nodeStates = new Map();
-    step.visited.forEach((id) => nodeStates.set(id, "visited"));
-    step.queue.forEach((id) => nodeStates.set(id, "queue"));
-    if (step.processing) nodeStates.set(step.processing, "processing");
+    step.visited.forEach((nodeID) => newStatus.set(nodeID, "visited"));
+    step.queue.forEach((nodeID) => newStatus.set(nodeID, "queue"));
+    if (step.processing != "") {
+      newStatus.set(step.processing, "processing");
+    }
+    return newStatus;
+  };
 
-    setBfsState((prev) => ({
-      ...prev,
-      currentStepIndex: index,
-      nodeStates,
-    }));
+  const goToNextStep = () => {
+    setBfsState((prevState) => {
+      if (prevState.currentStepIndex < prevState.steps.length - 1) {
+        const nextIndex = prevState.currentStepIndex + 1;
+        const nodeStatus = updateStatus(nextIndex);
+        return {
+          ...prevState,
+          currentStepIndex: nextIndex,
+          nodeStatus,
+          isCompleted: nextIndex === prevState.steps.length - 1,
+        };
+      }
+      return prevState;
+    });
+  };
+
+  const goToPreviousStep = () => {
+    setBfsState((prevState) => {
+      if (prevState.currentStepIndex > 0) {
+        const prevIndex = prevState.currentStepIndex - 1;
+        const nodeStatus = updateStatus(prevIndex);
+        return {
+          ...prevState,
+          currentStepIndex: prevIndex,
+          nodeStatus,
+          isCompleted: false,
+        };
+      }
+      return prevState;
+    });
   };
 
   const value = {
     bfsState,
     setBfsState,
-    setCurrentStepIndex,
+    goToNextStep,
+    goToPreviousStep,
+    updateStatus,
   };
 
   return <BFSContext.Provider value={value}>{children}</BFSContext.Provider>;

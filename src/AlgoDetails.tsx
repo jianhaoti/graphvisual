@@ -92,10 +92,11 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
     setVisible(false); // Trigger fade-out
     setIsGraphEditable(true);
     setMovieTime(false);
+
     setBfsState({
       steps: [],
       currentStepIndex: 0,
-      nodeStates: new Map(), // Optionally initialize nodeStates based on the first step if needed
+      nodeStatus: new Map(), // Optionally initialize nodeStates based on the first step if needed
       isVisualizationActive: false, // Ensure visualization is active to show new steps
     });
 
@@ -131,14 +132,14 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
   // Graph Data avaliable here
   const adjacencyList = convertToAdjacencyList(nodes, edges, isOriented);
   const { steps: bfsSteps, layers: bfsLayers } = bfs(adjacencyList, inputValue);
-  const {
-    currentIndex: currentIndex, // Provide direct access to the current item
-    goToNextItem: goToNextItem,
-    goToPreviousItem: goToPreviousItem,
-    isCompleted: isCompleted,
-  } = useArrayIterator(bfsSteps);
+  // const {
+  //   currentIndex: currentIndex, // Provide direct access to the current item
+  //   goToNextItem: goToNextItem,
+  //   goToPreviousItem: goToPreviousItem,
+  //   isCompleted: isCompleted,
+  // } = useArrayIterator(bfsSteps);
 
-  const { bfsState, setBfsState } = useBFS();
+  const { bfsState, setBfsState, goToNextStep, goToPreviousStep } = useBFS();
 
   // // Toggle function to start/stop the visualization
   // const toggleVisualization = () => {
@@ -163,14 +164,30 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
       setIsGraphEditable(false);
       setMovieTime(true);
 
+      // initalize the status
+      const initializeNodeStatus = new Map();
+      nodeIDs.forEach((nodeID) => {
+        initializeNodeStatus.set(nodeID, "default");
+      });
+      // Set the source node as "visited"
+      initializeNodeStatus.set(inputValue, "visited");
+
       // Run the algo
       setBfsState({
         steps: bfsSteps,
         currentStepIndex: 0,
-        nodeStates: new Map(), // Optionally initialize nodeStates based on the first step if needed
+        nodeStatus: initializeNodeStatus, // Optionally initialize nodeStates based on the first step if needed
         isVisualizationActive: true, // Ensure visualization is active to show new steps
       });
     }
+  };
+
+  const handleNextButtonClick = () => {
+    goToNextStep();
+  };
+
+  const handlePreviousButtonClick = () => {
+    goToPreviousStep();
   };
 
   useEffect(() => {
@@ -219,17 +236,21 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
               }}
             >
               <Typography variant="body1">
-                Current Step: {JSON.stringify(bfsSteps[currentIndex])}
+                Current Step:{" "}
+                {JSON.stringify(bfsSteps[bfsState.currentStepIndex])}
               </Typography>
 
               <div>
                 <button
-                  onClick={goToPreviousItem}
-                  disabled={currentIndex === 0}
+                  onClick={handlePreviousButtonClick}
+                  disabled={bfsState.currentStepIndex === 0}
                 >
                   Previous
                 </button>
-                <button onClick={goToNextItem} disabled={isCompleted}>
+                <button
+                  onClick={handleNextButtonClick}
+                  disabled={bfsState.isCompleted}
+                >
                   Next
                 </button>
               </div>
