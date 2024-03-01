@@ -17,7 +17,7 @@ export const BFSProvider = ({ children }) => {
 
     step.visited.forEach((nodeID) => newStatus.set(nodeID, "visited"));
     step.queue.forEach((nodeID) => newStatus.set(nodeID, "queue"));
-    if (step.processing != "") {
+    if (step.processing !== "") {
       newStatus.set(step.processing, "processing");
     }
     return newStatus;

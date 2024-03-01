@@ -14,9 +14,9 @@ export const bfs = (
 ): { steps: StepType[]; layers: string[][] } => {
   let layers: string[][] = [[source]];
   let steps: StepType[] = [];
-  let visited: Set<string> = new Set(source);
+  let visited: Set<string> = new Set();
   let queue: string[] = [source];
-  let processing: string = source;
+  let processing: string = "";
 
   while (queue.length > 0) {
     let currentLayer: string[] = [];
@@ -28,17 +28,37 @@ export const bfs = (
 
       steps.push({
         visited: Array.from(visited),
-        queue: queue.concat(newQueue), // Reflects the current state of the queue
+        queue: queue.concat(newQueue),
         processing: processing,
       });
 
       const neighbors = graph.get(node) || [];
+      console.log("This is the current queue:", queue);
+
       for (const neighbor of neighbors) {
-        if (!visited.has(neighbor) && !queue.includes(neighbor)) {
+        if (
+          !visited.has(neighbor) &&
+          !queue.includes(neighbor) &&
+          !newQueue.includes(neighbor) // logic doesn't work if you don't include this. counter example is square with diagonal
+        ) {
+          console.log(
+            "Neighbor",
+            neighbor,
+            "of",
+            processing,
+            "is not included in visisted nor queue"
+          );
+
           newQueue.push(neighbor);
           currentLayer.push(neighbor);
+
+          console.log(
+            "This is the newQueue after pushing neighbors:",
+            newQueue
+          );
         }
       }
+
       // added in all the neighbors, if there are any
       if (newQueue.length > 0) {
         steps.push({
