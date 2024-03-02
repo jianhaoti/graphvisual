@@ -1,86 +1,124 @@
 import React from "react";
-import { useHighlightInstructions } from "./usePseudoHighlight";
+import { HighlightInstructions } from "./highlightInstructions"; // Ensure this path matches your project structure
 import { useBFS } from "./bfsContext";
 
 const BfsPseudocode = ({ inputValue }) => {
-  const instructionsOpacity = useHighlightInstructions();
   const { bfsState } = useBFS();
+  const { currentStepIndex } = bfsState;
+  const highlightInstructions = HighlightInstructions();
 
-  // Define Monokai Pro colors
-  const initializeColor = "#FF6188"; // For "init"
-  const typeColor = "#A9DC76"; // For types like "queue", "set", "string", "array"
-  const objectColor = "#FFD866"; // For "Q", "Visited", "processing", "Neighbors(q)"
-  const textColor = "#ABB2BF"; // Default text color
-  const backgroundColor = "#1E1E1E"; // VSCode Dark theme background color
+  // Define colors and styles
+  const initializeColor = "#FF6188";
+  const typeColor = "#A9DC76";
+  const objectColor = "#FFD866";
+  const textColor = "#ABB2BF";
+  const backgroundColor = "#1E1E1E";
 
-  const pseudocode = `
-BFS (G, ${inputValue}):                   
-  init queue Q = [${inputValue}].
-  init set Visited = ()
-  init string processing = ""
-
-  while (Q is nonempty)
-    processing = Q.dequeue()
-    init array Neighbors of q
-    for n in Neighbors:
-      if (n is not registered in Visited nor in Q):
-        Q.enqueue(n)  
-    Visited.add(processing)
-  `;
-
-  const highlightText = (text) => {
+  const renderLineWithSyntaxHighlighting = (line) => {
+    // Update the regular expression to exclude 'enqueue' and 'dequeue'
     const regex =
-      /\b(init|queue|set|string|array|Q|Visited|processing|Neighbors\(q\)|\b[G]\b|\b[()]\b)\b/g;
-    const parts = text.split(regex);
+      /\b(init|queue|set|string|array|Q|Visited|processing|Neighbors)\b/g;
 
-    return parts.map((part, index) => {
-      if (["init"].includes(part)) {
-        return (
-          <span key={index} style={{ color: initializeColor }}>
-            {part}
-          </span>
-        );
-      } else if (["queue", "set", "string", "array"].includes(part)) {
-        return (
-          <span key={index} style={{ color: typeColor }}>
-            {part}
-          </span>
-        );
-      } else if (
-        ["Q", "Visited", "processing", "Neighbors(q)"].includes(part)
-      ) {
-        return (
-          <span key={index} style={{ color: objectColor }}>
-            {part}
-          </span>
-        );
+    // Function to replace matched keywords with colored spans, excluding 'enqueue' and 'dequeue'
+    const replaceFunc = (match) => {
+      let color = textColor; // Default text color
+      switch (match) {
+        case "init":
+          color = initializeColor;
+          break;
+        case "queue":
+        case "set":
+        case "string":
+        case "array":
+          color = typeColor;
+          break;
+        case "Q":
+        case "Visited":
+        case "processing":
+        case "Neighbors":
+          color = objectColor;
+          break;
+        default:
+          color = textColor; // This keeps 'enqueue' and 'dequeue' in default text color
       }
-      return part;
-    });
+      return `<span style="color:${color}">${match}</span>`;
+    };
+
+    // Apply the replacement to the line
+    const highlightedLine = line.replace(regex, replaceFunc);
+
+    // Use dangerouslySetInnerHTML to render the line with HTML formatting
+    return <div dangerouslySetInnerHTML={{ __html: highlightedLine }} />;
   };
 
+  // Pseudocode lines
+  const pseudocodeLines = [
+    `BFS (G, ${inputValue}):`,
+    `  init queue Q = []`,
+    `  init set Visited = ()`,
+    `  init string processing = ${inputValue}`,
+    ``,
+    `  while (Q is nonempty)`,
+    `    processing = Q.dequeue()`,
+    `    init array Neighbors of q`,
+    `    for n in Neighbors:`,
+    `      if (n is not registered in Visited nor in Q):`,
+    `        Q.enqueue(n)`,
+    `    Visited.add(processing)`,
+  ];
+
   return (
-    <pre
+    <div
       style={{
         color: textColor,
         backgroundColor: backgroundColor,
-        fontFamily: '"SF Mono", "Consolas", Menlo, monospace', // Use a monospace font to preserve alignment
-        whiteSpace: "pre-wrap", // Preserve whitespace
-        wordWrap: "break-word", // Ensure long lines are wrapped
-        textAlign: "left", // Align text to the left
+        fontFamily: '"SF Mono", "Consolas", Menlo, monospace',
+        whiteSpace: "pre-wrap",
+        wordWrap: "break-word",
+        textAlign: "left",
+        paddingTop: "20px", // Adds padding at the top
       }}
     >
-      {pseudocode.split("\n").map((line, index) => (
-        <div
-          key={index}
-          style={{ paddingLeft: `${line.search(/\S|$/) * 8}px` }}
-        >
-          {" "}
-          {/* Indent based on the first non-whitespace character */}
-          {highlightText(line)}
-        </div>
-      ))}
-    </pre>
+      {pseudocodeLines.map((line, index) => {
+        // Determine the opacity based on the highlightInstructions for this line
+        const shouldHighlight =
+          highlightInstructions[currentStepIndex].includes(index);
+        let opacity = shouldHighlight ? 1 : 0.2;
+        // Adjust opacity for lines 1-5
+        if (index >= 0 && index <= 5) {
+          opacity = 0.8;
+        }
+        // Handling for the line break before the while loop
+        const isLineBreak =
+          line.trim() === "" &&
+          pseudocodeLines[index + 1]?.trim().startsWith("while");
+
+        return (
+          <div
+            key={index}
+            style={{
+              display: "flex",
+              alignItems: isLineBreak ? "flex-end" : "baseline",
+              opacity,
+            }}
+          >
+            <span
+              style={{
+                width: "30px",
+                textAlign: "right",
+                paddingRight: "10px",
+                textColor: "white",
+                fontSize: ".75em", // Reduce font size by half
+                color: "white",
+              }}
+            >
+              {index + 1}
+            </span>
+            <span>{renderLineWithSyntaxHighlighting(line)}</span>
+          </div>
+        );
+      })}
+    </div>
   );
 };
 

@@ -19,6 +19,7 @@ import Edge from "./GraphEdge";
 import { bfs } from "./bfs";
 import { useBFS } from "./bfsContext.js";
 import BfsPseudocode from "./BfsPseudocode";
+import { StepType } from "./bfs";
 
 interface AlgoDetailsProps {
   title: string;
@@ -111,6 +112,13 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
     }
   };
 
+  interface BFSStateType {
+    steps: StepType[];
+    currentStepIndex: number;
+    nodeStatus: Map<string, string>; // Adjust according to your actual type
+    isVisualizationActive: boolean;
+  }
+
   // Transition fade-in
   const handleBackgroundClick = () => {
     setVisible(false); // Trigger fade-out
@@ -118,12 +126,10 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
     setSelectedEdge(null);
     setSelectedNode(null);
 
-    setBfsState({
-      steps: [],
-      currentStepIndex: 0,
-      nodeStatus: new Map(), // Optionally initialize nodeStates based on the first step if needed
-      isVisualizationActive: false, // Ensure visualization is active to show new steps
-    });
+    setBfsState((prevState: BFSStateType) => ({
+      ...prevState,
+      isVisualizationActive: false,
+    }));
 
     setTimeout(onClose, 500); // Delay the onClose callback until after the fade-out animation completes
   };
@@ -284,7 +290,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                 backgroundColor: "#1E1E1E",
               }}
             >
-              <Typography variant="body2">
+              <Typography component="div" variant="body2">
                 <BfsPseudocode inputValue={inputValue} />
               </Typography>
 

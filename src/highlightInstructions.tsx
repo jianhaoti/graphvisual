@@ -1,26 +1,30 @@
 import { useBFS } from "./bfsContext";
 
-export const useHighlightInstructions = () => {
+export const HighlightInstructions = () => {
   const { bfsState } = useBFS();
   const bfsSteps = bfsState.steps;
-  const highlightInstructions = new Array(bfsSteps.length).fill(0);
+  const highlightInstructions = new Array(bfsSteps.length).fill([]);
 
   let stepIndex = 0;
   while (stepIndex < bfsSteps.length) {
     const currentStepBFS = bfsSteps[stepIndex];
 
     if (currentStepBFS.processing === "") {
-      highlightInstructions[stepIndex] = 3;
+      highlightInstructions[stepIndex] = [11]; //black
     } else if (
       stepIndex + 1 < bfsSteps.length &&
       bfsSteps[stepIndex + 1].processing !== ""
     ) {
-      highlightInstructions[stepIndex] = 2;
-      highlightInstructions[stepIndex + 1] = 1;
+      highlightInstructions[stepIndex + 1] = [7, 8, 9, 10];
+      highlightInstructions[stepIndex] = [6];
       stepIndex += 1;
     }
     stepIndex += 1;
   }
 
+  // need to manually take care of the end
+  if (highlightInstructions.length > 1) {
+    highlightInstructions[highlightInstructions.length - 2] = [6];
+  }
   return highlightInstructions;
 };
