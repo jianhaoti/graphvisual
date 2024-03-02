@@ -19,6 +19,7 @@ import { convertToAdjacencyList } from "./graphToAdjList";
 import Edge from "./GraphEdge";
 import { bfs } from "./bfs";
 import { useBFS } from "./bfsContext.js";
+import { escape } from "querystring";
 
 interface AlgoDetailsProps {
   title: string;
@@ -64,6 +65,30 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
     setIsInputValid(true); // This resets the state so we can jiggle in sucession.
+  };
+
+  // right click is now ctrl + v
+  const handleRightClick = async (
+    event: React.MouseEvent<HTMLInputElement>
+  ) => {
+    event.preventDefault(); // Prevent the default context menu from opening
+
+    if (navigator.clipboard) {
+      // Check if Clipboard API is available
+      navigator.clipboard
+        .readText()
+        .then((text) => {
+          // Attempt to read text from the clipboard
+          setInputValue(text); // Set the input value to the text from the clipboard
+          setIsInputValid(true); // Assuming the pasted input is valid
+        })
+        .catch((err) => {
+          console.error("Failed to read clipboard contents: ", err);
+        });
+    } else {
+      // Clipboard API not available
+      console.log("Clipboard API not available.");
+    }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -195,16 +220,41 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
   // Keyboard navigation handler
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      switch (e.key) {
-        case "ArrowLeft":
-          handlePreviousButtonClick();
-          break;
-        case "ArrowRight":
-          handleNextButtonClick();
-          break;
-        default:
-          break;
+      if (movieTime) {
+        switch (e.key) {
+          case "ArrowLeft":
+            handlePreviousButtonClick();
+            break;
+          case "ArrowRight":
+            handleNextButtonClick();
+            break;
+          case "Backspace":
+            setMovieTime(false);
+            break;
+          case "Escape":
+            handleBackgroundClick();
+            break;
+        }
+      } else {
+        switch (e.key) {
+          case "Escape":
+            handleBackgroundClick();
+            break;
+        }
       }
+      // switch (e.key) {
+      //   case "ArrowLeft":
+      //     handlePreviousButtonClick();
+      //     break;
+      //   case "ArrowRight":
+      //     handleNextButtonClick();
+      //     break;
+      //   case "Escape":
+      //     handleBackgroundClick();
+      //     break;
+      //   default:
+      //     break;
+      // }
     };
 
     window.addEventListener("keydown", handleKeyDown);
@@ -318,6 +368,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                             value={inputValue}
                             onKeyDown={handleKeyDown}
                             onChange={handleChange}
+                            onContextMenu={handleRightClick}
                             onBlur={handleBlur}
                             InputProps={{
                               disableUnderline: false, // Keep the underline
