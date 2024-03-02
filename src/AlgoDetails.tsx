@@ -19,7 +19,7 @@ import { convertToAdjacencyList } from "./graphToAdjList";
 import Edge from "./GraphEdge";
 import { bfs } from "./bfs";
 import { useBFS } from "./bfsContext.js";
-import { escape } from "querystring";
+import BfsPseudocode from "./BfsPseudocode";
 
 interface AlgoDetailsProps {
   title: string;
@@ -310,11 +310,12 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
               sx={{
                 overflow: "auto", // Allows content to scroll if it overflows
                 flexGrow: 1, // Allows content area to grow and fill available space
+                height: "100vh",
+                backgroundColor: "#1E1E1E",
               }}
             >
-              <Typography variant="body1">
-                Current Step:{" "}
-                {JSON.stringify(bfsSteps[bfsState.currentStepIndex])}
+              <Typography variant="body2">
+                <BfsPseudocode inputValue={inputValue} />
               </Typography>
 
               <div>
