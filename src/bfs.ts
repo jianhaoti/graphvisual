@@ -4,17 +4,14 @@ export type StepType = {
   processing: string;
 };
 
-// visited is a set
-// queue is an array
-// processing is a string
-
 export const bfs = (
-  graph: Map<string, string[]>,
+  graph: Map<string, string[]>, // {source node, [target nodes]}
   source: string
 ): { steps: StepType[]; layers: string[][] } => {
   let layers: string[][] = [[source]];
   let steps: StepType[] = [];
-  let visited: Set<string> = new Set();
+
+  let visited: Set<string> = new Set(); // we'll force an array structure in the return
   let queue: string[] = [source];
   let processing: string = "";
 
@@ -39,11 +36,12 @@ export const bfs = (
         if (
           !visited.has(neighbor) &&
           !queue.includes(neighbor) &&
-          !newQueue.includes(neighbor) // bfs logic doesn't work if you don't include this. the duplicates may not yet be pushed onto queue
+          !newQueue.includes(neighbor) // duplicates may not yet be pushed onto (the main) queue
         ) {
+          //newQueue contains unique neighbors
           newQueue.push(neighbor);
           currentLayer.push(neighbor);
-          skipNext = false; // this means we've added in some new neighbors
+          skipNext = false; // flag for added in new neighbors
         }
       }
 

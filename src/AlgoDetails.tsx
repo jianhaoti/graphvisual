@@ -284,8 +284,22 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                 backgroundColor: "#1E1E1E",
               }}
             >
-              <Typography variant="body2">
+              {/* <Typography variant="body2">
                 <BfsPseudocode inputValue={inputValue} />
+              </Typography> */}
+
+              <Typography
+                variant="body1"
+                style={{
+                  whiteSpace: "pre-wrap", // Allows line breaks and white space formatting
+                  color: "white", // Sets the text color to white
+                }}
+              >
+                {
+                  JSON.stringify(bfsSteps[bfsState.currentStepIndex], null, 2)
+                    .replace(/,/g, "") // Removes commas for clean JSON
+                    .replace(/{|}/g, "") // Removes curly braces
+                }
               </Typography>
 
               <div>

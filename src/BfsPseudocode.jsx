@@ -12,7 +12,7 @@ const BfsPseudocode = ({ inputValue }) => {
 BFS (G, ${inputValue}):                   
   init queue Q = [${inputValue}].
   init set Visited = ()
-  init string processing = ${inputValue}
+  init string processing = ""
 
   while (Q is nonempty)
     processing = Q.dequeue()
