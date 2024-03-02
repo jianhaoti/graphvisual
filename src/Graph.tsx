@@ -143,7 +143,7 @@ const Graph: React.FC<GraphProps> = ({
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("keyup", handleKeyUp);
     };
-  }, [deleteSelected, isGraphEditable]);
+  }, [deleteSelected, isGraphEditable, selectedNode]);
 
   const handleNodeDrag = (
     nodeId: string,
@@ -489,27 +489,6 @@ const Graph: React.FC<GraphProps> = ({
     };
   }, []);
 
-  useEffect(() => {
-    // Log the status of each node
-    nodes.forEach((node) => {
-      let nodeStatus = "default"; // Default status
-      const currentStep = bfsState.steps[bfsState.currentStepIndex];
-
-      // Assuming you have a logic to determine the nodeStatus based on currentStep
-      if (bfsState.isVisualizationActive && currentStep) {
-        if (currentStep.visited?.includes(node.id)) {
-          nodeStatus = "visited";
-        } else if (currentStep.queue?.includes(node.id)) {
-          nodeStatus = "queue";
-        } else if (currentStep.processing === node.id) {
-          nodeStatus = "processing";
-        }
-      }
-
-      //console.log(`Node ${node.id} status: ${nodeStatus}`);
-    });
-  }, [bfsState, nodes]); // Depend on bfsState and nodes to re-run this effect
-
   return (
     <div
       className="container container-left"
@@ -524,16 +503,20 @@ const Graph: React.FC<GraphProps> = ({
         <svg width="200" height="200">
           {nodes.map((node) => {
             const currentStep = bfsState.steps[bfsState.currentStepIndex];
+            // let textColor = "#E3C46E"; // Default color, for nodes not in the current step
             let nodeStatus: "visited" | "queue" | "processing" | "default" =
               "default"; // default status
 
             if (bfsState.isVisualizationActive) {
               if (currentStep?.visited.includes(node.id)) {
                 nodeStatus = "visited";
+                // textColor = "black";
               } else if (currentStep?.queue.includes(node.id)) {
                 nodeStatus = "queue";
+                // textColor = "gray"; // Color for nodes in queue
               } else if (currentStep?.processing === node.id) {
                 nodeStatus = "processing";
+                // textColor = "red"; // Color for the node currently being processed
               }
             }
 
@@ -556,6 +539,53 @@ const Graph: React.FC<GraphProps> = ({
             );
           })}
 
+          {/* Overlays text for BFS */}
+          {bfsState.isVisualizationActive &&
+            nodes.map((node) => {
+              const currentStep = bfsState.steps[bfsState.currentStepIndex];
+              let textColor = "#E3C46E"; // Default color
+
+              if (bfsState.isVisualizationActive) {
+                if (currentStep?.visited.includes(node.id)) {
+                  textColor = "black"; // Color for visited nodes
+                } else if (currentStep?.queue.includes(node.id)) {
+                  textColor = "red"; // Color for nodes in queue
+                } else if (currentStep?.processing === node.id) {
+                  textColor = "gray"; // Color for the node currently being processed
+                } else {
+                  return null; // Skip rendering text for nodes not in the current step
+                }
+              }
+              return (
+                <text
+                  key={`text-${node.id}`}
+                  x={node.x + 5} // Adjust position relative to the node
+                  y={node.y - 15}
+                  fill={textColor}
+                  fontSize="12"
+                  textAnchor="start"
+                >
+                  {node.id}
+                </text>
+              );
+            })}
+
+          {hoveredNode && (
+            <text
+              x={hoveredNode.x + 5}
+              y={hoveredNode.y - 15} // Adjust position as needed
+              fill={
+                hoveredNode && hoveredNode.id === selectedNode
+                  ? "white"
+                  : "#E3C46E"
+              }
+              fontSize="12"
+              textAnchor="middle"
+            >
+              {hoveredNode.id}
+            </text>
+          )}
+
           {edges
             .filter((edge) => edge.x2 !== null && edge.y2 !== null)
             .map((edge) => (
@@ -570,21 +600,6 @@ const Graph: React.FC<GraphProps> = ({
                 showWeight={showWeight}
               />
             ))}
-          {hoveredNode && (
-            <text
-              x={hoveredNode.x}
-              y={hoveredNode.y - 20} // Adjust position as needed
-              fill={
-                hoveredNode && hoveredNode.id === selectedNode
-                  ? "white"
-                  : "#E3C46E"
-              }
-              fontSize="14"
-              textAnchor="middle"
-            >
-              {hoveredNode.id}
-            </text>
-          )}
         </svg>
       </div>
 

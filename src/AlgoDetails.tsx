@@ -190,9 +190,9 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
     goToPreviousStep();
   };
 
-  useEffect(() => {
-    console.log(bfsState);
-  }, [bfsState]);
+  // useEffect(() => {
+  //   console.log(bfsState);
+  // }, [bfsState]);
 
   return (
     <Fade in={true} timeout={500}>

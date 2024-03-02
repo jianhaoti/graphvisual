@@ -33,6 +33,7 @@ export const bfs = (
       });
 
       const neighbors = graph.get(node) || [];
+      let skipNext = true;
 
       for (const neighbor of neighbors) {
         if (
@@ -42,16 +43,22 @@ export const bfs = (
         ) {
           newQueue.push(neighbor);
           currentLayer.push(neighbor);
+          skipNext = false; // this means we've added in some new neighbors
         }
       }
 
+      console.log("PROCESSING node:", processing);
+      console.log("current queue is:", queue);
+      console.log("current newQueue is", newQueue);
+
       // added in all the neighbors, if there are any
-      if (newQueue.length > 0) {
+      if (!skipNext) {
         steps.push({
           visited: Array.from(visited),
           queue: queue.concat(newQueue), // Reflects the current state of the queue
           processing: processing,
         });
+        skipNext = true;
       }
 
       visited.add(node);
