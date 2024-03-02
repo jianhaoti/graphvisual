@@ -47,10 +47,6 @@ export const bfs = (
         }
       }
 
-      console.log("PROCESSING node:", processing);
-      console.log("current queue is:", queue);
-      console.log("current newQueue is", newQueue);
-
       // added in all the neighbors, if there are any
       if (!skipNext) {
         steps.push({

@@ -5,7 +5,7 @@ function useDraggerSVG(
   id: string,
   ref: React.RefObject<SVGElement>,
   draggable: boolean,
-  onDrag: (id: string, newPosition: { x: number; y: number }) => void,
+  onDrag: (id: string, newPosition: { x: number; y: number }) => void
 ) {
   const isClicked = useRef(false);
   const coords = useRef({

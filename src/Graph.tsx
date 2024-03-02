@@ -547,7 +547,7 @@ const Graph: React.FC<GraphProps> = ({
 
               if (bfsState.isVisualizationActive) {
                 if (currentStep?.visited.includes(node.id)) {
-                  textColor = "black"; // Color for visited nodes
+                  return null;
                 } else if (currentStep?.queue.includes(node.id)) {
                   textColor = "red"; // Color for nodes in queue
                 } else if (currentStep?.processing === node.id) {
@@ -562,15 +562,21 @@ const Graph: React.FC<GraphProps> = ({
                   x={node.x + 5} // Adjust position relative to the node
                   y={node.y - 15}
                   fill={textColor}
-                  fontSize="12"
+                  fontSize="14"
                   textAnchor="start"
+                  style={{
+                    userSelect: "none", // Standard
+                    WebkitUserSelect: "none", // Safari, Chrome and Opera
+                    MozUserSelect: "none", // Firefox
+                    pointerEvents: "none", // This also prevents interactions like mouse events
+                  }}
                 >
                   {node.id}
                 </text>
               );
             })}
 
-          {hoveredNode && (
+          {hoveredNode && !bfsState.isVisualizationActive && (
             <text
               x={hoveredNode.x + 5}
               y={hoveredNode.y - 15} // Adjust position as needed
@@ -579,7 +585,7 @@ const Graph: React.FC<GraphProps> = ({
                   ? "white"
                   : "#E3C46E"
               }
-              fontSize="12"
+              fontSize="14"
               textAnchor="middle"
             >
               {hoveredNode.id}
