@@ -12,7 +12,7 @@ import { BFSProvider } from "./bfsContext";
 
 function App() {
   const [mode, setMode] = useState("data");
-  const [value, setValue] = useState("Untitled");
+  const [name, setName] = useState("Untitled");
   const textFieldRef = useRef<HTMLInputElement>(null);
 
   // Controls functionality of +/- nodes and edges
@@ -28,7 +28,7 @@ function App() {
 
   // name of graph
   const handleTyping = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(event.target.value);
+    setName(event.target.value);
   };
 
   const handleKeyDown = (event: React.KeyboardEvent) => {
@@ -93,7 +93,7 @@ function App() {
           <TextField
             className="whiteUnderline"
             id="standard-multiline-flexible"
-            value={value}
+            value={name}
             onChange={handleTyping}
             onKeyDown={handleKeyDown}
             onFocus={handleFocus}
