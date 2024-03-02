@@ -230,6 +230,13 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
             break;
           case "Backspace":
             setMovieTime(false);
+            setBfsState({
+              steps: bfsSteps,
+              currentStepIndex: 0,
+              nodeStatus: new Map(), // Optionally initialize nodeStates based on the first step if needed
+              isVisualizationActive: false, // Ensure visualization is active to show new steps
+            });
+
             break;
           case "Escape":
             handleBackgroundClick();
