@@ -284,11 +284,11 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                 backgroundColor: "#1E1E1E",
               }}
             >
-              {/* <Typography variant="body2">
+              <Typography variant="body2">
                 <BfsPseudocode inputValue={inputValue} />
-              </Typography> */}
+              </Typography>
 
-              <Typography
+              {/* <Typography
                 variant="body1"
                 style={{
                   whiteSpace: "pre-wrap", // Allows line breaks and white space formatting
@@ -300,7 +300,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                     .replace(/,/g, "") // Removes commas for clean JSON
                     .replace(/{|}/g, "") // Removes curly braces
                 }
-              </Typography>
+              </Typography> */}
 
               <div>
                 <button

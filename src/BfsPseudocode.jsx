@@ -1,6 +1,11 @@
 import React from "react";
+import { useHighlightInstructions } from "./usePseudoHighlight";
+import { useBFS } from "./bfsContext";
 
 const BfsPseudocode = ({ inputValue }) => {
+  const instructionsOpacity = useHighlightInstructions();
+  const { bfsState } = useBFS();
+
   // Define Monokai Pro colors
   const initializeColor = "#FF6188"; // For "init"
   const typeColor = "#A9DC76"; // For types like "queue", "set", "string", "array"
