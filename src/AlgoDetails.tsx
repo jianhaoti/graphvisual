@@ -92,6 +92,8 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
     setVisible(false); // Trigger fade-out
     setIsGraphEditable(true);
     setMovieTime(false);
+    setSelectedEdge(null);
+    setSelectedNode(null);
 
     setBfsState({
       steps: [],
@@ -190,9 +192,27 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
     goToPreviousStep();
   };
 
-  // useEffect(() => {
-  //   console.log(bfsState);
-  // }, [bfsState]);
+  // Keyboard navigation handler
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      switch (e.key) {
+        case "ArrowLeft":
+          handlePreviousButtonClick();
+          break;
+        case "ArrowRight":
+          handleNextButtonClick();
+          break;
+        default:
+          break;
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [handlePreviousButtonClick, handleNextButtonClick]);
 
   return (
     <Fade in={true} timeout={500}>
@@ -244,12 +264,14 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                 <button
                   onClick={handlePreviousButtonClick}
                   disabled={bfsState.currentStepIndex === 0}
+                  style={{ userSelect: "none", cursor: "pointer" }}
                 >
                   Previous
                 </button>
                 <button
                   onClick={handleNextButtonClick}
                   disabled={bfsState.isCompleted}
+                  style={{ userSelect: "none", cursor: "pointer" }}
                 >
                   Next
                 </button>
