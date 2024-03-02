@@ -14,7 +14,6 @@ import {
 } from "@mui/material";
 import caveDrilling from "./caveDrilling.jpeg";
 import Node from "./GraphNode";
-import { useArrayIterator } from "./useIterator";
 import { convertToAdjacencyList } from "./graphToAdjList";
 import Edge from "./GraphEdge";
 import { bfs } from "./bfs";
@@ -116,7 +115,6 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
   const handleBackgroundClick = () => {
     setVisible(false); // Trigger fade-out
     setIsGraphEditable(true);
-    setMovieTime(false);
     setSelectedEdge(null);
     setSelectedNode(null);
 
@@ -159,22 +157,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
   // Graph Data avaliable here
   const adjacencyList = convertToAdjacencyList(nodes, edges, isOriented);
   const { steps: bfsSteps, layers: bfsLayers } = bfs(adjacencyList, inputValue);
-  // const {
-  //   currentIndex: currentIndex, // Provide direct access to the current item
-  //   goToNextItem: goToNextItem,
-  //   goToPreviousItem: goToPreviousItem,
-  //   isCompleted: isCompleted,
-  // } = useArrayIterator(bfsSteps);
-
   const { bfsState, setBfsState, goToNextStep, goToPreviousStep } = useBFS();
-
-  // // Toggle function to start/stop the visualization
-  // const toggleVisualization = () => {
-  //   setBfsState((prevState: any) => ({
-  //     ...prevState,
-  //     isVisualizationActive: !prevState.isVisualizationActive,
-  //   }));
-  // };
 
   // what happens when you click "run"
   const handleRunClick = () => {
@@ -249,19 +232,6 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
             break;
         }
       }
-      // switch (e.key) {
-      //   case "ArrowLeft":
-      //     handlePreviousButtonClick();
-      //     break;
-      //   case "ArrowRight":
-      //     handleNextButtonClick();
-      //     break;
-      //   case "Escape":
-      //     handleBackgroundClick();
-      //     break;
-      //   default:
-      //     break;
-      // }
     };
 
     window.addEventListener("keydown", handleKeyDown);
