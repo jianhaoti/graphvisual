@@ -26,7 +26,7 @@ import impressionSunrise from "./monet-impressionSunrise.jpeg";
 import gauguin from "./gauguin-farm.jpeg";
 import sunflowers from "./vanGogh-sunflowers.jpeg";
 import Julanite1 from "./Julanite1.jpeg";
-import Julanite2 from "./Julanite2.jpeg";
+import Julanite5 from "./Julanite5.jpeg";
 
 interface AlgoDetailsProps {
   title: string;
@@ -53,7 +53,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
   const [visible, setVisible] = useState(true); // Control visibility with state
   const titleToImageUrl = {
     BFS: Julanite1,
-    DFS: Julanite2,
+    DFS: Julanite5,
     Dijkstra: sunflowers,
   };
   const imageUrl = titleToImageUrl[title as keyof typeof titleToImageUrl]; //|| 'https://images.unsplash.com/photo-1599508704512-2f19efd1e35f?q=80&w=2835&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D';
