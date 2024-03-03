@@ -331,13 +331,14 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                 >
                   <LeftArrow
                     style={{
-                      filter: isLeftClicked
-                        ? "bringness(200%)"
-                        : LeftIsHovered
-                          ? "brightness(130%)"
-                          : bfsState.currentStepIndex === 0
-                            ? "brightness(75%)"
-                            : "none", // Increase brightness on hover and click
+                      filter:
+                        bfsState.currentStepIndex === 0
+                          ? "brightness(75%)"
+                          : isLeftClicked
+                            ? "bringness(200%)"
+                            : LeftIsHovered
+                              ? "brightness(130%)"
+                              : "none", // Increase brightness on hover and click
                     }}
                   />
                 </button>
@@ -359,13 +360,14 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                 >
                   <RightArrow
                     style={{
-                      filter: isRightClicked
-                        ? "brightness(200%)"
-                        : RightIsHovered
-                          ? "brightness(130%)"
-                          : bfsState.isCompleted === true
-                            ? "brightness(75%)"
-                            : "none", // Increase brightness on hover and click
+                      filter:
+                        bfsState.isCompleted === true
+                          ? "brightness(75%)"
+                          : isRightClicked
+                            ? "brightness(200%)"
+                            : RightIsHovered
+                              ? "brightness(130%)"
+                              : "none", // Increase brightness on hover and click
                     }}
                   />
                 </button>
