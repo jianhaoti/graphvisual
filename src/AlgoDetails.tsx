@@ -20,6 +20,8 @@ import { bfs } from "./bfs";
 import { useBFS } from "./bfsContext.js";
 import BfsPseudocode from "./BfsPseudocode";
 import { StepType } from "./bfs";
+import { ReactComponent as RightArrow } from "./assets/rightArrow.svg";
+import { ReactComponent as LeftArrow } from "./assets/leftArrow.svg";
 
 interface AlgoDetailsProps {
   title: string;
@@ -247,6 +249,9 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
     };
   }, [handlePreviousButtonClick, handleNextButtonClick]);
 
+  const [LeftIsHovered, setLeftIsHovered] = useState(false);
+  const [RightIsHovered, setRightIsHovered] = useState(false);
+
   return (
     <Fade in={true} timeout={500}>
       <div
@@ -266,15 +271,19 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
       >
         <Card
           sx={{
-            maxWidth: "80%", // Adjust width as needed
-            maxHeight: "80%", // Adjust height as needed
-            minWidth: "60vh", // Minimum width
-            minHeight: "40vh", // Minimum height
+            // width: "55vh",
+            // maxHeight: "60vh",
+            // minHeight: "40vh",
+
+            height: "55vh",
+            width: "60vh",
+            backgroundColor: "white",
+
             position: "relative",
             "&:hover": {
               boxShadow: 6,
             },
-            overflow: "auto",
+            overflow: "hidden",
             opacity: visible ? 1 : 0, // Control opacity for fade effect
             transform: visible ? "translateY(0)" : "translateY(-20px)", // Slight move up on exit
             transition: "opacity 500ms, transform 500ms", // Smooth transition for both opacity and transform
@@ -284,44 +293,61 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
           {movieTime ? (
             <CardContent
               sx={{
-                overflow: "auto", // Allows content to scroll if it overflows
+                display: "flex", // Use flex layout
+                flexDirection: "column", // Stack children vertically
+                height: "50vh", // Fixed height for the container
                 flexGrow: 1, // Allows content area to grow and fill available space
-                height: "100vh",
                 backgroundColor: "#1E1E1E",
+                justifyContent: "space-between", // Push content to start and buttons to end
+                overflow: "auto",
               }}
             >
-              <Typography component="div" variant="body2">
-                <BfsPseudocode inputValue={inputValue} />
-              </Typography>
-
-              {/* <Typography
-                variant="body1"
-                style={{
-                  whiteSpace: "pre-wrap", // Allows line breaks and white space formatting
-                  color: "white", // Sets the text color to white
-                }}
-              >
-                {
-                  JSON.stringify(bfsSteps[bfsState.currentStepIndex], null, 2)
-                    .replace(/,/g, "") // Removes commas for clean JSON
-                    .replace(/{|}/g, "") // Removes curly braces
-                }
-              </Typography> */}
-
               <div>
+                {/* Pseudocode */}
+                <Typography component="div" variant="body2">
+                  <BfsPseudocode inputValue={inputValue} />
+                </Typography>
+              </div>
+              <div style={{ display: "flex", justifyContent: "flex-end" }}>
                 <button
+                  onMouseEnter={() => setLeftIsHovered(true)}
+                  onMouseLeave={() => setLeftIsHovered(false)}
                   onClick={handlePreviousButtonClick}
                   disabled={bfsState.currentStepIndex === 0}
-                  style={{ userSelect: "none", cursor: "pointer" }}
+                  style={{
+                    userSelect: "none",
+                    cursor: "pointer",
+                    backgroundColor: "inherit",
+                    border: "none",
+                    outline: "none",
+                    overflow: "hidden",
+                  }}
                 >
-                  Previous
+                  <LeftArrow
+                    style={{
+                      filter: LeftIsHovered ? "brightness(140%)" : "none", // Increase brightness on hover
+                    }}
+                  />
                 </button>
                 <button
+                  onMouseEnter={() => setRightIsHovered(true)}
+                  onMouseLeave={() => setRightIsHovered(false)}
                   onClick={handleNextButtonClick}
                   disabled={bfsState.isCompleted}
-                  style={{ userSelect: "none", cursor: "pointer" }}
+                  style={{
+                    userSelect: "none",
+                    cursor: "pointer",
+                    backgroundColor: "#1E1E1E",
+                    border: "none",
+                    outline: "none",
+                    overflow: "hidden",
+                  }}
                 >
-                  Next
+                  <RightArrow
+                    style={{
+                      filter: RightIsHovered ? "brightness(140%)" : "none", // Increase brightness on hover
+                    }}
+                  />
                 </button>
               </div>
             </CardContent>
@@ -332,7 +358,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                 height="240"
                 image={imageUrl}
                 sx={{
-                  height: 240, // Fixed height for the image
+                  height: 230, // Fixed height for the image
                   objectFit: "cover", // Cover the box, might crop the image
                 }}
               />
