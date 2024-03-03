@@ -225,6 +225,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
             break;
           case "Backspace":
             setMovieTime(false);
+            setIsGraphEditable(true);
             setBfsState({
               steps: bfsSteps,
               currentStepIndex: 0,
