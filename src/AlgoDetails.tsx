@@ -65,7 +65,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
   };
 
   const [inputValue, setInputValue] = useState<string>("");
-  const [isInputValid, setIsInputValid] = useState<boolean>(false);
+  const [isInputValid, setIsInputValid] = useState<boolean>(true);
   const [movieTime, setMovieTime] = useState<boolean>(false);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
