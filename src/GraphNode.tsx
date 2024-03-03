@@ -45,9 +45,9 @@ const Node: React.FC<NodeProps> = ({
       case "visited":
         return "black";
       case "queue":
-        return "red";
+        return " #DB380F";
       case "processing":
-        return "gray";
+        return "#EFFAF5";
       default:
         return isSelected ? "white" : "#E3C46E"; // Default color
     }

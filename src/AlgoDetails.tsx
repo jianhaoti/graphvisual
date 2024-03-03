@@ -405,8 +405,9 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                 <Button
                   onClick={handleRunClick}
                   style={{
-                    color: buttonColor === "error" ? "red" : "inherit", // Change text color based on error state
-                    borderColor: buttonColor === "error" ? "red" : "inherit", // Optional: change border color for outlined buttons
+                    color: buttonColor === "error" ? "#BA2D0B" : "inherit", // Change text color based on error state
+                    borderColor:
+                      buttonColor === "error" ? "#BA2D0B" : "inherit", // Optional: change border color for outlined buttons
                     // Add more styling as needed
                   }}
                 >

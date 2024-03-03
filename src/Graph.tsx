@@ -549,9 +549,9 @@ const Graph: React.FC<GraphProps> = ({
                 if (currentStep?.visited.includes(node.id)) {
                   return null;
                 } else if (currentStep?.queue.includes(node.id)) {
-                  textColor = "red"; // Color for nodes in queue
+                  textColor = "#DB380F"; // Color for nodes in queue
                 } else if (currentStep?.processing === node.id) {
-                  textColor = "gray"; // Color for the node currently being processed
+                  textColor = "#D5F2E3"; // Color for the node currently being processed
                 } else {
                   return null; // Skip rendering text for nodes not in the current step
                 }
