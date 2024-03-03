@@ -29,6 +29,8 @@ import Julanite3 from "./Julanite3.jpeg";
 import Julanite4 from "./Julanite4.jpeg";
 import Julanite5 from "./Julanite5.jpeg";
 
+import styles from "./AlgoDetails.module.css";
+
 interface AlgoDetailsProps {
   algoTitle: string;
   onClose: () => void;
@@ -83,7 +85,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
   };
 
   const [inputValue, setInputValue] = useState<string>("");
-  const [isInputValid, setIsInputValid] = useState<boolean>(false);
+  const [isInputValid, setIsInputValid] = useState<boolean>(true);
   const [movieTime, setMovieTime] = useState<boolean>(false);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -191,8 +193,8 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
 
   // what happens when you click "run"
   const handleRunClick = () => {
-    if (!isInputValid) {
-      // Change button color to red to indicate error
+    // we need this second conditional or else get jiggle/free run bug
+    if (!isInputValid || inputValue === "") {
       setButtonColor("error");
 
       // After 1 second, revert button color to default
@@ -279,6 +281,21 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
   const [RightIsHovered, setRightIsHovered] = useState(false);
   const [isRightClicked, setIsRightClicked] = useState(false);
 
+  //animation details
+  const [animationClass, setAnimationClass] = useState("");
+
+  useEffect(() => {
+    // Set the animation class based on the movieTime state
+    setAnimationClass(movieTime ? "cardFlipIn" : "cardFlipOut");
+  }, [movieTime]);
+
+  const toggleMovieTime = () => {
+    setAnimationClass("cardFlipOut");
+    setTimeout(() => {
+      setMovieTime(!movieTime);
+    }, 250); // Half the animation duration to start the flip in the middle
+  };
+
   return (
     <Fade in={true} timeout={500}>
       <div
@@ -297,15 +314,14 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
         onClick={handleBackgroundClick}
       >
         <Card
+          className={movieTime ? styles.cardFlipAnimation : ""}
           sx={{
             // width: "55vh",
             // maxHeight: "60vh",
             // minHeight: "40vh",
-
             height: "55vh",
             width: "60vh",
             backgroundColor: "#424541",
-
             position: "relative",
             "&:hover": {
               boxShadow: 6,
@@ -319,6 +335,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
         >
           {movieTime ? (
             <CardContent
+              className={movieTime ? styles.contentUnmirror : ""}
               sx={{
                 display: "flex", // Use flex layout
                 flexDirection: "column", // Stack children vertically
@@ -482,7 +499,6 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                                 "&:before": {
                                   borderBottom: "1px solid lightgray", // Set underline to light gray when not focused
                                 },
-
                                 "&:hover:not(.Mui-disabled):before": {
                                   borderBottom: "1px solid white", // Keep consistent with your focused state if needed
                                 },

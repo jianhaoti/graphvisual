@@ -1,0 +1,18 @@
+/* just comment this file out for no animations. don't change alogdetails. */
+
+/* .cardFlipAnimation {
+  animation: flip 0.7s forwards;
+}
+
+@keyframes flip {
+  from {
+    transform: rotateY(0deg);
+  }
+  to {
+    transform: rotateY(180deg);
+  }
+}
+
+.contentUnmirror {
+  transform: rotateY(180deg);
+} */

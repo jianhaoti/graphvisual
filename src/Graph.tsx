@@ -489,6 +489,9 @@ const Graph: React.FC<GraphProps> = ({
     };
   }, []);
 
+  const currentStep = bfsState.steps[bfsState.currentStepIndex];
+  let nodeStatus: "visited" | "queue" | "processing" | "default" = "default"; // default status
+
   return (
     <div
       className="container container-left"
@@ -502,21 +505,13 @@ const Graph: React.FC<GraphProps> = ({
       <div style={{ flex: 1, height: "100%", overflow: "hidden" }}>
         <svg width="200" height="200">
           {nodes.map((node) => {
-            const currentStep = bfsState.steps[bfsState.currentStepIndex];
-            // let textColor = "#E3C46E"; // Default color, for nodes not in the current step
-            let nodeStatus: "visited" | "queue" | "processing" | "default" =
-              "default"; // default status
-
             if (bfsState.isVisualizationActive) {
               if (currentStep?.visited.includes(node.id)) {
                 nodeStatus = "visited";
-                // textColor = "black";
               } else if (currentStep?.queue.includes(node.id)) {
                 nodeStatus = "queue";
-                // textColor = "gray"; // Color for nodes in queue
               } else if (currentStep?.processing === node.id) {
                 nodeStatus = "processing";
-                // textColor = "red"; // Color for the node currently being processed
               }
             }
 
@@ -542,9 +537,7 @@ const Graph: React.FC<GraphProps> = ({
           {/* Overlays text for BFS */}
           {bfsState.isVisualizationActive &&
             nodes.map((node) => {
-              const currentStep = bfsState.steps[bfsState.currentStepIndex];
               let textColor = "#E3C46E"; // Default color
-
               if (bfsState.isVisualizationActive) {
                 if (currentStep?.visited.includes(node.id)) {
                   return null;

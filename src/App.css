@@ -201,3 +201,29 @@ main {
   scrollbar-width: thin; /* 'auto' or 'thin' for Firefox */
   scrollbar-color: transparent transparent; /* thumb and track color */
 }
+
+/* card flip css */
+@keyframes flipCard {
+  from {
+    transform: rotateY(0deg);
+  }
+  to {
+    transform: rotateY(180deg);
+  }
+}
+
+.cardContainer {
+  perspective: 1000px; /* Adjust as needed */
+}
+
+.card {
+  width: 100%; /* Adjust based on your card size */
+  height: 100%; /* Adjust based on your card size */
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+}
+
+.flip {
+  animation: flipCard 0.6s forwards;
+}
