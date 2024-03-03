@@ -29,8 +29,6 @@ import Julanite3 from "./Julanite3.jpeg";
 import Julanite4 from "./Julanite4.jpeg";
 import Julanite5 from "./Julanite5.jpeg";
 
-import styles from "./AlgoDetails.module.css";
-
 interface AlgoDetailsProps {
   algoTitle: string;
   onClose: () => void;
@@ -314,7 +312,6 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
         onClick={handleBackgroundClick}
       >
         <Card
-          className={movieTime ? styles.cardFlipAnimation : ""}
           sx={{
             // width: "55vh",
             // maxHeight: "60vh",
@@ -335,7 +332,6 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
         >
           {movieTime ? (
             <CardContent
-              className={movieTime ? styles.contentUnmirror : ""}
               sx={{
                 display: "flex", // Use flex layout
                 flexDirection: "column", // Stack children vertically
