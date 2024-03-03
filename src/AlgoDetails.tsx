@@ -404,7 +404,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                   height="200"
                   image={imageUrl}
                   sx={{
-                    height: 250, // This is how much of the image you can see
+                    height: 230, // This is how much of the image you can see
                     objectFit: "cover",
                   }}
                 />{" "}
