@@ -28,7 +28,9 @@ function App() {
 
   // name of graph
   const handleTyping = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setName(event.target.value);
+    if (isGraphEditable) {
+      setName(event.target.value);
+    }
   };
 
   const handleKeyDown = (event: React.KeyboardEvent) => {

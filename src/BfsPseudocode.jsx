@@ -54,9 +54,9 @@ const BfsPseudocode = ({ inputValue }) => {
   // Pseudocode lines
   const pseudocodeLines = [
     `BFS (G, ${inputValue}):`,
-    `  init queue Q = []`,
-    `  init set Visited = ()`,
-    `  init string processing = ${inputValue}`,
+    `  init queue Q = [${inputValue}]`,
+    `  init set Visited = {}`,
+    `  init string processing = ""`,
     ``,
     `  while (Q is nonempty)`,
     `    processing = Q.dequeue()`,
