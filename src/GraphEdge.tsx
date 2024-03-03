@@ -18,6 +18,7 @@ interface GraphEdgeProps {
   onClick: (edgeId: string) => void;
   onDoubleClick: (edge: Edge) => void;
   onContextMenu: (e: React.MouseEvent, edgeId: string) => void;
+  edgeStatus: string;
 }
 
 const Edge: React.FC<GraphEdgeProps> = ({
@@ -28,9 +29,29 @@ const Edge: React.FC<GraphEdgeProps> = ({
   onClick,
   onDoubleClick,
   onContextMenu,
+  edgeStatus,
 }) => {
   const nodeRadius = 10;
-  const color = isSelected ? "white" : "#E3C46E";
+  const getColor = (status: string) => {
+    switch (status) {
+      case "processed":
+        return "black";
+      case "queued":
+        return " #DB380F";
+      case "processing":
+        return "#EFFAF5";
+      default:
+        return isSelected ? "white" : "#E3C46E"; // Default color
+    }
+  };
+
+  const color = getColor(edgeStatus);
+
+  const style = {
+    cursor: "grab",
+    // Directly use `isVisualizationActive` to conditionally set the fill color
+    stroke: color,
+  };
 
   // Only return fully constructed edges
   if (edge.x2 === null || edge.y2 === null) {
@@ -116,8 +137,7 @@ const Edge: React.FC<GraphEdgeProps> = ({
         onClick={handleEdgeClick}
         onDoubleClick={handleEdgeDoubleClick}
         onContextMenu={handleEdgeContextMenu}
-        stroke={color}
-        style={{ cursor: "pointer" }} // Set the cursor style for better UX
+        style={{ ...style }} // Set the cursor style for better UX
       />
 
       {isOriented && (

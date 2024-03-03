@@ -61,8 +61,6 @@ const Graph: React.FC<GraphProps> = ({
     checkedB: true,
   });
 
-  const { bfsState } = useBFS();
-
   const handleOrientationChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -489,9 +487,9 @@ const Graph: React.FC<GraphProps> = ({
     };
   }, []);
 
+  // bfs
+  const { bfsState } = useBFS();
   const currentStep = bfsState.steps[bfsState.currentStepIndex];
-  let nodeStatus: "visited" | "queue" | "processing" | "default" = "default"; // default status
-
   return (
     <div
       className="container container-left"
@@ -505,6 +503,9 @@ const Graph: React.FC<GraphProps> = ({
       <div style={{ flex: 1, height: "100%", overflow: "hidden" }}>
         <svg width="200" height="200">
           {nodes.map((node) => {
+            let nodeStatus: "visited" | "queue" | "processing" | "default" =
+              "default"; // default status
+
             if (bfsState.isVisualizationActive) {
               if (currentStep?.visited.includes(node.id)) {
                 nodeStatus = "visited";
@@ -537,7 +538,8 @@ const Graph: React.FC<GraphProps> = ({
           {/* Overlays text for BFS */}
           {bfsState.isVisualizationActive &&
             nodes.map((node) => {
-              let textColor = "#E3C46E"; // Default color
+              // bfs node coloring logic
+              let textColor = "#E3C46E";
               if (bfsState.isVisualizationActive) {
                 if (currentStep?.visited.includes(node.id)) {
                   return null;
@@ -587,18 +589,62 @@ const Graph: React.FC<GraphProps> = ({
 
           {edges
             .filter((edge) => edge.x2 !== null && edge.y2 !== null)
-            .map((edge) => (
-              <Edge
-                key={`${edge.id1}-${edge.id2}`}
-                edge={edge}
-                isSelected={selectedEdge === `${edge.id1}-${edge.id2}`}
-                onClick={handleEdgeClick}
-                onDoubleClick={handleEdgeDoubleClick}
-                onContextMenu={handleEdgeContextMenu}
-                isOriented={isOriented}
-                showWeight={showWeight}
-              />
-            ))}
+            .map((edge) => {
+              //life cycle of edge is default -> queued -> processing -> processed
+              let edgeStatus:
+                | "processed"
+                | "processing"
+                | "queued"
+                | "default" = "default";
+
+              if (bfsState.isVisualizationActive) {
+                // orange + white  => orange edge
+                if (
+                  currentStep?.processing === edge.id1 &&
+                  currentStep?.queue.includes(edge.id2)
+                ) {
+                  edgeStatus = "queued";
+                }
+
+                // orange + black  => orange edge
+                if (
+                  currentStep?.visited.includes(edge.id1) &&
+                  currentStep?.queue.includes(edge.id2)
+                ) {
+                  edgeStatus = "queued";
+                }
+
+                // black + white  => white edge
+                if (
+                  currentStep?.visited.includes(edge.id1) &&
+                  currentStep?.processing === edge.id2
+                ) {
+                  edgeStatus = "processing";
+                }
+
+                // black + black => black
+                if (
+                  edgeStatus === "default" &&
+                  currentStep?.visited.includes(edge.id1) &&
+                  currentStep?.visited.includes(edge.id2)
+                ) {
+                  edgeStatus = "processed";
+                }
+              }
+              return (
+                <Edge
+                  key={`${edge.id1}-${edge.id2}`}
+                  edge={edge}
+                  isSelected={selectedEdge === `${edge.id1}-${edge.id2}`}
+                  onClick={handleEdgeClick}
+                  onDoubleClick={handleEdgeDoubleClick}
+                  onContextMenu={handleEdgeContextMenu}
+                  isOriented={isOriented}
+                  showWeight={showWeight}
+                  edgeStatus={edgeStatus}
+                />
+              );
+            })}
         </svg>
       </div>
 
