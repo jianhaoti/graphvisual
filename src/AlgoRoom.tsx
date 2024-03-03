@@ -58,16 +58,11 @@ const AlgoRoom: React.FC<AlgoRoomProps> = ({
 
     { title: "Prim", grouping: "MST", description: "Connect the Dots" },
     { title: "Kruskal", grouping: "MST", description: "Thinnest Threads" },
-    { title: "A*", grouping: "Search", description: "A Guided Wanderer" },
 
-    {
-      title: "Tarjan",
-      grouping: "Search",
-      description: "Unraveling the Knots",
-    },
-    { title: "Karger", grouping: "Cuts", description: "Connected Minima" },
     { title: "TBD", grouping: "TBD", description: "TBD" },
-
+    { title: "TBD", grouping: "TBD", description: "TBD" },
+    { title: "TBD", grouping: "TBD", description: "TBD" },
+    { title: "TBD", grouping: "TBD", description: "TBD" },
     { title: "TBD", grouping: "TBD", description: "TBD" },
     { title: "TBD", grouping: "TBD", description: "TBD" },
     { title: "TBD", grouping: "TBD", description: "TBD" },
@@ -125,7 +120,7 @@ const AlgoRoom: React.FC<AlgoRoomProps> = ({
       </ImageList>
       {selectedAlgo && (
         <AlgoDetails
-          title={selectedAlgo}
+          algoTitle={selectedAlgo}
           onClose={handleClose}
           nodes={nodes}
           setSelectedNode={setSelectedNode}

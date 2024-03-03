@@ -23,13 +23,14 @@ import { ReactComponent as RightArrow } from "./assets/rightArrow.svg";
 import { ReactComponent as LeftArrow } from "./assets/leftArrow.svg";
 
 import impressionSunrise from "./monet-impressionSunrise.jpeg";
-import gauguin from "./gauguin-farm.jpeg";
 import sunflowers from "./vanGogh-sunflowers.jpeg";
 import Julanite1 from "./Julanite1.jpeg";
+import Julanite3 from "./Julanite3.jpeg";
+import Julanite4 from "./Julanite4.jpeg";
 import Julanite5 from "./Julanite5.jpeg";
 
 interface AlgoDetailsProps {
-  title: string;
+  algoTitle: string;
   onClose: () => void;
   nodes: Node[];
   edges: Edge[];
@@ -40,7 +41,7 @@ interface AlgoDetailsProps {
 }
 
 const AlgoDetails: React.FC<AlgoDetailsProps> = ({
-  title,
+  algoTitle,
   onClose,
   nodes,
   edges,
@@ -55,13 +56,28 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
     BFS: Julanite1,
     DFS: Julanite5,
     Dijkstra: sunflowers,
+    Prim: Julanite4,
+    Kruskal: Julanite3,
+    TBD: impressionSunrise,
   };
-  const imageUrl = titleToImageUrl[title as keyof typeof titleToImageUrl]; //|| 'https://images.unsplash.com/photo-1599508704512-2f19efd1e35f?q=80&w=2835&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D';
+  const imageUrl = titleToImageUrl[algoTitle as keyof typeof titleToImageUrl]; //|| 'https://images.unsplash.com/photo-1599508704512-2f19efd1e35f?q=80&w=2835&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D';
 
   const algoParameters = {
     BFS: ["Source Node"],
     DFS: ["Source Node"],
     Dijkstra: ["Source Node"],
+    Prim: ["TBD"],
+    Kruskal: ["TBD"],
+    TBD: ["TBD"],
+  };
+
+  const artWork = {
+    BFS: ["Julanite", " by Brookfield"],
+    DFS: ["Julanite", " by Brookfield"],
+    Dijkstra: ["Sunflower", " by van Gogh"],
+    Prim: ["Julanite", " by Brookfield"],
+    Kruskal: ["Julanite", " by Brookfield"],
+    TBD: ["Impression, Sunrise", " by Monet"],
   };
 
   const [inputValue, setInputValue] = useState<string>("");
@@ -312,7 +328,6 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
               }}
             >
               <div>
-                {/* Pseudocode */}
                 <Typography component="div" variant="body2">
                   <BfsPseudocode inputValue={inputValue} />
                 </Typography>
@@ -380,15 +395,40 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
             </CardContent>
           ) : (
             <div>
-              <CardMedia
-                component="img"
-                height="240"
-                image={imageUrl}
-                sx={{
-                  height: 230, // Fixed height for the image
-                  objectFit: "cover", // Cover the box, might crop the image
-                }}
-              />
+              <div style={{ position: "relative", height: "230px" }}>
+                <CardMedia
+                  component="img"
+                  height="200"
+                  image={imageUrl}
+                  sx={{
+                    height: 240, // Fixed height for the image
+                    objectFit: "cover", // Cover the box, might crop the image
+                  }}
+                />{" "}
+                <Typography
+                  variant="caption"
+                  sx={{
+                    position: "absolute",
+                    bottom: 10,
+                    right: 10,
+                    color: "white",
+                    backgroundColor: "rgba(0, 0, 0, 0.5)",
+                    padding: "2px 5px",
+                    borderRadius: "4px",
+                  }}
+                >
+                  {artWork[algoTitle as keyof typeof titleToImageUrl].map(
+                    (part, index) => (
+                      <span
+                        key={index}
+                        style={{ color: index === 0 ? "white" : "#FABD2F" }}
+                      >
+                        {part}
+                      </span>
+                    )
+                  )}
+                </Typography>
+              </div>
               <CardContent
                 sx={{
                   overflow: "auto", // Allows content to scroll if it overflows
@@ -402,7 +442,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                     component="div"
                     color="white"
                   >
-                    {title}
+                    {algoTitle}
                   </Typography>
                 </div>
                 <div>
@@ -412,8 +452,9 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                   <Typography variant="caption" color="white">
                     <List>
                       {(
-                        algoParameters[title as keyof typeof algoParameters] ||
-                        []
+                        algoParameters[
+                          algoTitle as keyof typeof algoParameters
+                        ] || []
                       ).map((param, index) => (
                         <ListItem key={index}>
                           {param}:
@@ -459,7 +500,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                   padding: "0.5rem 1rem",
                 }}
               >
-                <Typography variant="body2" color="text.secondary"></Typography>
+                <Typography variant="body2" color="white"></Typography>
                 <Button
                   onClick={handleRunClick}
                   style={{
