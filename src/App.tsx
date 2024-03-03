@@ -104,6 +104,15 @@ function App() {
             }}
             InputProps={{
               style: { color: "white" }, // Change input text color
+              // Prevent animation on hover by making the underline style consistent
+              sx: {
+                "&:hover:not(.Mui-disabled):before": {
+                  borderBottom: "1px solid white", // Keep consistent with your focused state if needed
+                },
+                "&:after": {
+                  borderBottom: "1.5px solid white", // Ensure this matches the default state or focused state
+                },
+              },
             }}
             variant="standard"
           />
