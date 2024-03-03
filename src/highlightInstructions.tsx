@@ -23,8 +23,10 @@ export const HighlightInstructions = () => {
   }
 
   // need to manually take care of the end
-  if (highlightInstructions.length > 1) {
-    highlightInstructions[highlightInstructions.length - 2] = [6];
-  }
+  highlightInstructions.forEach((instruction, index) => {
+    if (instruction.length === 0 || instruction.includes(0)) {
+      highlightInstructions[index] = [6]; // Default to processing = Q.dequeue() if no specific instructions
+    }
+  });
   return highlightInstructions;
 };

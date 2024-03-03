@@ -62,10 +62,12 @@ const BfsPseudocode = ({ inputValue }) => {
     `    processing = Q.dequeue()`,
     `    init array Neighbors of q`,
     `    for n in Neighbors:`,
-    `      if (n is not registered in Visited nor in Q):`,
+    `      if (n is not in Visited nor in Q):`,
     `        Q.enqueue(n)`,
     `    Visited.add(processing)`,
   ];
+
+  console.log(highlightInstructions);
 
   return (
     <div
