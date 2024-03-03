@@ -355,7 +355,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                         bfsState.currentStepIndex === 0
                           ? "brightness(75%)"
                           : isLeftClicked
-                            ? "bringness(200%)"
+                            ? "brightness(200%)"
                             : LeftIsHovered
                               ? "brightness(130%)"
                               : "none", // Increase brightness on hover and click
