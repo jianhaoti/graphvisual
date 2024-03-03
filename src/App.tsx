@@ -182,6 +182,7 @@ function App() {
           showWeight={showWeight}
           setShowWeight={setShowWeight}
           setIsGraphEditable={setIsGraphEditable}
+          name={name}
         />
       </main>
     </BFSProvider>

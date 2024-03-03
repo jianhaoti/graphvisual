@@ -38,6 +38,7 @@ interface AlgoDetailsProps {
   setSelectedNode: (nodeId: string | null) => void;
   setSelectedEdge: (edgeId: string | null) => void;
   setIsGraphEditable: (editable: boolean) => void;
+  name: string;
 }
 
 const AlgoDetails: React.FC<AlgoDetailsProps> = ({
@@ -49,6 +50,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
   setSelectedNode,
   setSelectedEdge,
   setIsGraphEditable,
+  name,
 }) => {
   const nodeIDs = nodes.map((node) => node.id);
   const [visible, setVisible] = useState(true); // Control visibility with state
@@ -329,7 +331,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
             >
               <div>
                 <Typography component="div" variant="body2">
-                  <BfsPseudocode inputValue={inputValue} />
+                  <BfsPseudocode inputValue={inputValue} name={name} />
                 </Typography>
               </div>
               <div style={{ display: "flex", justifyContent: "flex-end" }}>
