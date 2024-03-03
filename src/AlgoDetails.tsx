@@ -249,8 +249,12 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
     };
   }, [handlePreviousButtonClick, handleNextButtonClick]);
 
+  // Mouse events for L/R buttons
   const [LeftIsHovered, setLeftIsHovered] = useState(false);
+  const [isLeftClicked, setIsLeftClicked] = useState(false);
+
   const [RightIsHovered, setRightIsHovered] = useState(false);
+  const [isRightClicked, setIsRightClicked] = useState(false);
 
   return (
     <Fade in={true} timeout={500}>
@@ -312,6 +316,8 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                 <button
                   onMouseEnter={() => setLeftIsHovered(true)}
                   onMouseLeave={() => setLeftIsHovered(false)}
+                  onMouseDown={() => setIsLeftClicked(true)}
+                  onMouseUp={() => setIsLeftClicked(false)}
                   onClick={handlePreviousButtonClick}
                   disabled={bfsState.currentStepIndex === 0}
                   style={{
@@ -325,13 +331,21 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                 >
                   <LeftArrow
                     style={{
-                      filter: LeftIsHovered ? "brightness(120%)" : "none", // Increase brightness on hover
+                      filter: isLeftClicked
+                        ? "bringness(200%)"
+                        : LeftIsHovered
+                          ? "brightness(130%)"
+                          : bfsState.currentStepIndex === 0
+                            ? "brightness(75%)"
+                            : "none", // Increase brightness on hover and click
                     }}
                   />
                 </button>
                 <button
                   onMouseEnter={() => setRightIsHovered(true)}
                   onMouseLeave={() => setRightIsHovered(false)}
+                  onMouseDown={() => setIsRightClicked(true)}
+                  onMouseUp={() => setIsRightClicked(false)}
                   onClick={handleNextButtonClick}
                   disabled={bfsState.isCompleted}
                   style={{
@@ -345,7 +359,13 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                 >
                   <RightArrow
                     style={{
-                      filter: RightIsHovered ? "brightness(120%)" : "none", // Increase brightness on hover
+                      filter: isRightClicked
+                        ? "brightness(200%)"
+                        : RightIsHovered
+                          ? "brightness(130%)"
+                          : bfsState.isCompleted === true
+                            ? "brightness(75%)"
+                            : "none", // Increase brightness on hover and click
                     }}
                   />
                 </button>
