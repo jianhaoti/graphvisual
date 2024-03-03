@@ -285,7 +285,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
 
             height: "55vh",
             width: "60vh",
-            backgroundColor: "white",
+            backgroundColor: "#424541",
 
             position: "relative",
             "&:hover": {
@@ -395,15 +395,20 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                 }}
               >
                 <div>
-                  <Typography gutterBottom variant="h5" component="div">
+                  <Typography
+                    gutterBottom
+                    variant="h5"
+                    component="div"
+                    color="white"
+                  >
                     {title}
                   </Typography>
                 </div>
                 <div>
-                  <Typography variant="body2" color="text.secondary">
+                  <Typography variant="body2" color="white" fontSize="10px">
                     Parameters
                   </Typography>
-                  <Typography variant="caption">
+                  <Typography variant="caption" color="white">
                     <List>
                       {(
                         algoParameters[title as keyof typeof algoParameters] ||
@@ -421,23 +426,24 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                             onContextMenu={handleRightClick}
                             onBlur={handleBlur}
                             InputProps={{
-                              disableUnderline: false, // Keep the underline
+                              style: { color: "white" }, // Change input text color
+                              inputProps: {
+                                style: { fontSize: "10px" }, // Set font size for the input
+                              },
                               sx: {
-                                fontSize: "0.875rem", // Match caption size
-                                "& input": {
-                                  color: "text.secondary", // Use theme's secondary text color
+                                "&:before": {
+                                  borderBottom: "1px solid lightgray", // Set underline to light gray when not focused
                                 },
-                                "&::before": {
-                                  // Underline styles
-                                  borderBottomColor: "primary.main", // Use theme's primary color
-                                },
+
                                 "&:hover:not(.Mui-disabled):before": {
-                                  // Hover styles
-                                  borderBottom: "2px solid", // Make underline thicker on hover
+                                  borderBottom: "1px solid white", // Keep consistent with your focused state if needed
+                                },
+                                "&:after": {
+                                  borderBottom: "1.5px solid white", // Ensure this matches the default state or focused state
                                 },
                               },
                             }}
-                            sx={{ marginLeft: 2, width: "auto" }} // Adjust spacing and width as needed
+                            sx={{ marginLeft: 1.5, width: "auto" }} // Adjust spacing and width as needed
                           />
                         </ListItem>
                       ))}
@@ -445,7 +451,6 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                   </Typography>
                 </div>
               </CardContent>
-              <Divider />
               <CardActions
                 sx={{
                   display: "flex",
@@ -457,10 +462,14 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                 <Button
                   onClick={handleRunClick}
                   style={{
-                    color: buttonColor === "error" ? "#BA2D0B" : "inherit", // Change text color based on error state
-                    borderColor:
-                      buttonColor === "error" ? "#BA2D0B" : "inherit", // Optional: change border color for outlined buttons
-                    // Add more styling as needed
+                    color: buttonColor === "error" ? "#BA2D0B" : "white", // Change text color based on error state
+                    borderColor: buttonColor === "error" ? "#BA2D0B" : "white", // Optional: change border color for outlined buttons
+                    border:
+                      buttonColor === "error"
+                        ? "1px solid #BA2D0B"
+                        : "1px solid white", // Ensure border is visible
+                    padding: "6px 10px", // Reduce padding
+                    fontSize: "0.65rem", // Reduce font size
                   }}
                 >
                   Run
