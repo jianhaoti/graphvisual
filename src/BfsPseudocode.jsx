@@ -67,8 +67,6 @@ const BfsPseudocode = ({ inputValue, name }) => {
     `    Visited.add(processing)`,
   ];
 
-  console.log(highlightInstructions);
-
   return (
     <div
       style={{

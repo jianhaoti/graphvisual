@@ -175,8 +175,11 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
     const isInvalidName = !nodeIDs.includes(target.value);
 
     if (isInvalidName) {
-      setIsInputValid(false); // Indicate that input is invalid
-      setTimeout(() => setInputValue(""), 500);
+      // don't jiggle if it's a space. run will handle that separately
+      if (inputValue != "") {
+        setIsInputValid(false); // Indicate that input is invalid
+        setTimeout(() => setInputValue(""), 500);
+      }
     } else {
       setIsInputValid(true);
       target.blur();
