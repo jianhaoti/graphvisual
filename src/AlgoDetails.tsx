@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Card,
   CardMedia,
@@ -395,26 +395,30 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
             </CardContent>
           ) : (
             <div>
-              <div style={{ position: "relative", height: "230px" }}>
+              <div
+                className="artwork-container"
+                style={{ position: "relative", height: "230px" }}
+              >
                 <CardMedia
                   component="img"
                   height="200"
                   image={imageUrl}
                   sx={{
-                    height: 240, // Fixed height for the image
-                    objectFit: "cover", // Cover the box, might crop the image
+                    height: 250, // This is how much of the image you can see
+                    objectFit: "cover",
                   }}
                 />{" "}
                 <Typography
                   variant="caption"
                   sx={{
-                    position: "absolute",
-                    bottom: 10,
+                    position: "fixed",
+                    top: 200,
                     right: 10,
                     color: "white",
                     backgroundColor: "rgba(0, 0, 0, 0.5)",
                     padding: "2px 5px",
                     borderRadius: "4px",
+                    zIndex: 1000, // puts this above the artwork
                   }}
                 >
                   {artWork[algoTitle as keyof typeof titleToImageUrl].map(

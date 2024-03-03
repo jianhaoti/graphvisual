@@ -179,3 +179,25 @@ main {
   z-index: 1; /* Ensure it stays on top of other content */
   color: #e3c46e;
 }
+
+/* Custom scrollbar for artwork container */
+.artwork-container::-webkit-scrollbar {
+  width: 1px; /* Adjust the width of the scrollbar */
+}
+
+.artwork-container::-webkit-scrollbar-track {
+  background: transparent; /* Makes scrollbar track transparent */
+}
+
+.artwork-container::-webkit-scrollbar-thumb {
+  background: transparent; /* Scroll thumb color */
+}
+
+.artwork-container::-webkit-scrollbar-thumb:hover {
+  background: transparent; /* Scroll thumb color on hover */
+}
+
+.artwork-container {
+  scrollbar-width: thin; /* 'auto' or 'thin' for Firefox */
+  scrollbar-color: transparent transparent; /* thumb and track color */
+}
