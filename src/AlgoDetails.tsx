@@ -325,7 +325,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                 >
                   <LeftArrow
                     style={{
-                      filter: LeftIsHovered ? "brightness(140%)" : "none", // Increase brightness on hover
+                      filter: LeftIsHovered ? "brightness(120%)" : "none", // Increase brightness on hover
                     }}
                   />
                 </button>
@@ -345,7 +345,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                 >
                   <RightArrow
                     style={{
-                      filter: RightIsHovered ? "brightness(140%)" : "none", // Increase brightness on hover
+                      filter: RightIsHovered ? "brightness(120%)" : "none", // Increase brightness on hover
                     }}
                   />
                 </button>
