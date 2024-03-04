@@ -5,6 +5,7 @@ export type StepType = {
   edgeStatus: Map<string, string>;
 };
 
+// works for oriented graphs. i need to modify this for unoriented graphs
 export const bfs = (
   graph: Map<string, string[]>, // {source node, [target nodes]}
   source: string
