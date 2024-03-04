@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from "react";
 import {
   Card,
   CardMedia,
-  Divider,
   CardContent,
   Typography,
   CardActions,
@@ -217,9 +216,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
       // initalize the statuses
       const initNodeStatus = new Map();
       initNodeStatus.set(inputValue, "processing");
-
       const initEdgeStatus = new Map();
-      edgeIDs.forEach((edgeID) => initEdgeStatus.set(edgeID, "default"));
 
       // Run the algo
       setBfsState({
@@ -231,8 +228,6 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
       });
     }
   };
-
-  useEffect(() => console.log(bfsState.steps), [bfsState]);
 
   const handleNextButtonClick = () => {
     goToNextStep();
@@ -477,6 +472,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                           <TextField
                             className={isInputValid ? "" : "jiggle"}
                             variant="standard"
+                            autoComplete="off"
                             size="small"
                             value={inputValue}
                             onKeyDown={handleKeyDown}

@@ -32,25 +32,35 @@ const Edge: React.FC<GraphEdgeProps> = ({
   edgeStatus,
 }) => {
   const nodeRadius = 10;
-  const getColor = (status: string) => {
+  const getStatusProperties = (status: string) => {
     switch (status) {
-      case "processed":
-        return "black";
+      case "visited":
+        return { color: "black", opacity: 1, arrowOpacity: 1 };
       case "queued":
-        return " #DB380F";
-      case "processing":
-        return "#EFFAF5";
+        return { color: "#DB380F", opacity: 1, arrowOpacity: 1 };
+      case "useless":
+        return {
+          color: isSelected ? "white" : "#E3C46E",
+          opacity: 0.2,
+          arrowOpacity: 0.4,
+        };
       default:
-        return isSelected ? "white" : "#E3C46E"; // Default color
+        return {
+          color: isSelected ? "white" : "#E3C46E",
+          opacity: 1,
+          arrowOpacity: 1,
+        }; // Default properties
     }
   };
 
-  const color = getColor(edgeStatus);
+  const { color, opacity, arrowOpacity } = getStatusProperties(edgeStatus);
 
   const style = {
     cursor: "grab",
     // Directly use `isVisualizationActive` to conditionally set the fill color
     stroke: color,
+    opacity: opacity,
+    arrowOpacity: arrowOpacity,
   };
 
   // Only return fully constructed edges
@@ -124,7 +134,11 @@ const Edge: React.FC<GraphEdgeProps> = ({
           refY="3.5"
           orient="auto"
         >
-          <polygon points="0 0, 10 3.5, 0 7" fill={color} />
+          <polygon
+            points="0 0, 10 3.5, 0 7"
+            fill={color}
+            fillOpacity={arrowOpacity}
+          />
         </marker>
       </defs>
       <line

@@ -60,10 +60,15 @@ const BfsPseudocode = ({ inputValue, name }) => {
     ``,
     `  while (Q is nonempty)`,
     `    processing = Q.dequeue()`,
+    `    set previous edge as processed`,
     `    init array Neighbors of q`,
+    ``,
     `    for n in Neighbors:`,
     `      if (n is not in Visited nor in Q):`,
     `        Q.enqueue(n)`,
+    `        set edge processing → n as queued`,
+    `      else`,
+    `        set edge processing → n as useless`,
     `    Visited.add(processing)`,
   ];
 

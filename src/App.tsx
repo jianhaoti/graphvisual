@@ -38,14 +38,10 @@ function App() {
       // Blur the input field when Enter key is pressed
       textFieldRef.current?.blur();
     }
-  };
-
-  useEffect(() => {
-    if (textFieldRef.current) {
-      textFieldRef.current.focus(); // Focus the input
-      textFieldRef.current.select(); // Select the text
+    if (event.key === "Backspace") {
+      event.stopPropagation(); // don't delte nodes
     }
-  }, []);
+  };
 
   const handleFocus = () => {
     if (textFieldRef.current) {
@@ -96,6 +92,7 @@ function App() {
             className="whiteUnderline"
             id="standard-multiline-flexible"
             value={name}
+            autoComplete="off"
             onChange={handleTyping}
             onKeyDown={handleKeyDown}
             onFocus={handleFocus}

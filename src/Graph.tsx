@@ -548,43 +548,13 @@ const Graph: React.FC<GraphProps> = ({
           {edges
             .filter((edge) => edge.x2 !== null && edge.y2 !== null)
             .map((edge) => {
-              //life cycle of edge is default -> queued -> processing -> processed
-              // let edgeStatus:
-              //   | "processed"
-              //   | "processing"
-              //   | "queued"
-              //   | "default" = "default";
-
+              const edgeID = `${edge.id1}-${edge.id2}`;
+              let edgeStatus = "default";
               if (bfsState.isVisualizationActive) {
-                // orange + white  => orange edge
-                // if (
-                //   currentStep?.processing === edge.id1 &&
-                //   currentStep?.queue.includes(edge.id2)
-                // ) {
-                //   edgeStatus = "queued";
-                // }
-                // // orange + black  => orange edge
-                // if (
-                //   currentStep?.visited.includes(edge.id1) &&
-                //   currentStep?.queue.includes(edge.id2)
-                // ) {
-                //   edgeStatus = "queued";
-                // }
-                // // black + white  => white edge
-                // if (
-                //   currentStep?.visited.includes(edge.id1) &&
-                //   currentStep?.processing === edge.id2
-                // ) {
-                //   edgeStatus = "processing";
-                // }
-                // // black + black => black
-                // if (
-                //   edgeStatus === "processing" &&
-                //   currentStep?.visited.includes(edge.id1) &&
-                //   currentStep?.visited.includes(edge.id2)
-                // ) {
-                //   edgeStatus = "processed";
-                // }
+                edgeStatus =
+                  bfsState.steps[bfsState.currentStepIndex].edgeStatus.get(
+                    edgeID
+                  );
               }
               return (
                 <Edge
@@ -596,7 +566,7 @@ const Graph: React.FC<GraphProps> = ({
                   onContextMenu={handleEdgeContextMenu}
                   isOriented={isOriented}
                   showWeight={showWeight}
-                  edgeStatus={"default"}
+                  edgeStatus={edgeStatus}
                 />
               );
             })}
