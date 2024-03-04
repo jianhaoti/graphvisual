@@ -624,7 +624,7 @@ const Graph: React.FC<GraphProps> = ({
 
                 // black + black => black
                 if (
-                  edgeStatus === "default" &&
+                  edgeStatus === "processing" &&
                   currentStep?.visited.includes(edge.id1) &&
                   currentStep?.visited.includes(edge.id2)
                 ) {

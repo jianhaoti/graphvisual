@@ -52,18 +52,12 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
   setIsGraphEditable,
   name,
 }) => {
-  const nodeIDs = nodes.map((node) => node.id);
-  const [visible, setVisible] = useState(true); // Control visibility with state
-  const titleToImageUrl = {
-    BFS: Julanite1,
-    DFS: Julanite5,
-    Dijkstra: sunflowers,
-    Prim: Julanite4,
-    Kruskal: Julanite3,
-    TBD: impressionSunrise,
-  };
-  const imageUrl = titleToImageUrl[algoTitle as keyof typeof titleToImageUrl]; //|| 'https://images.unsplash.com/photo-1599508704512-2f19efd1e35f?q=80&w=2835&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D';
+  // State data
+  const [visible, setVisible] = useState(true); // control background dim or not
+  const [movieTime, setMovieTime] = useState<boolean>(false);
 
+  // Graph Data
+  const adjacencyList = convertToAdjacencyList(nodes, edges, isOriented);
   const algoParameters = {
     BFS: ["Source Node"],
     DFS: ["Source Node"],
@@ -72,6 +66,27 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
     Kruskal: ["TBD"],
     TBD: ["TBD"],
   };
+  const nodeIDs = nodes.map((node) => node.id);
+  const edgeIDs = edges.map((edge) => `${edge.id1}-${edge.id2}`);
+
+  //Algorithm information
+  const [inputValue, setInputValue] = useState<string>("");
+  const [isInputValid, setIsInputValid] = useState<boolean>(true);
+
+  // BFS
+  const { steps: bfsSteps, layers: bfsLayers } = bfs(adjacencyList, inputValue);
+  const { bfsState, setBfsState, goToNextStep, goToPreviousStep } = useBFS();
+
+  // Artwork
+  const titleToImageUrl = {
+    BFS: Julanite1,
+    DFS: Julanite5,
+    Dijkstra: sunflowers,
+    Prim: Julanite4,
+    Kruskal: Julanite3,
+    TBD: impressionSunrise,
+  };
+  const imageUrl = titleToImageUrl[algoTitle as keyof typeof titleToImageUrl];
 
   const artWork = {
     BFS: ["Julanite", " by Brookfield"],
@@ -82,10 +97,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
     TBD: ["Impression, Sunrise", " by Monet"],
   };
 
-  const [inputValue, setInputValue] = useState<string>("");
-  const [isInputValid, setIsInputValid] = useState<boolean>(true);
-  const [movieTime, setMovieTime] = useState<boolean>(false);
-
+  // Rest of code
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
     setIsInputValid(true); // This resets the state so we can jiggle in sucession.
@@ -187,11 +199,6 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
   };
 
   const [buttonColor, setButtonColor] = useState<string>("default");
-  // Graph Data avaliable here
-  const adjacencyList = convertToAdjacencyList(nodes, edges, isOriented);
-  const { steps: bfsSteps, layers: bfsLayers } = bfs(adjacencyList, inputValue);
-  const { bfsState, setBfsState, goToNextStep, goToPreviousStep } = useBFS();
-
   // what happens when you click "run"
   const handleRunClick = () => {
     // we need this second conditional or else get jiggle/free run bug
@@ -281,21 +288,6 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
 
   const [RightIsHovered, setRightIsHovered] = useState(false);
   const [isRightClicked, setIsRightClicked] = useState(false);
-
-  //animation details
-  const [animationClass, setAnimationClass] = useState("");
-
-  useEffect(() => {
-    // Set the animation class based on the movieTime state
-    setAnimationClass(movieTime ? "cardFlipIn" : "cardFlipOut");
-  }, [movieTime]);
-
-  const toggleMovieTime = () => {
-    setAnimationClass("cardFlipOut");
-    setTimeout(() => {
-      setMovieTime(!movieTime);
-    }, 250); // Half the animation duration to start the flip in the middle
-  };
 
   return (
     <Fade in={true} timeout={500}>

@@ -7,11 +7,23 @@ export const BFSProvider = ({ children }) => {
     steps: [],
     currentStepIndex: 0,
     nodeStatus: new Map(), // Map node IDs to states ('visited', 'queue', 'processing', default)
+    edgeStaus: new Map(),
     isVisualizationActive: false,
     isCompleted: false,
   });
 
-  const updateStatus = (currentStepIndex) => {
+  const updateEdgeStatus = (currentStepIndex) => {
+    const newStatus = new Map();
+    const step = bfsState.steps[currentStepIndex];
+
+    // handle beginning case as edge case
+    if (currentStepIndex === 0) {
+      // newStatus.set(edgeID, "default");
+    } else {
+    }
+  };
+
+  const updateNodeStatus = (currentStepIndex) => {
     const newStatus = new Map();
     const step = bfsState.steps[currentStepIndex];
 
@@ -27,7 +39,9 @@ export const BFSProvider = ({ children }) => {
     setBfsState((prevState) => {
       if (prevState.currentStepIndex < prevState.steps.length - 1) {
         const nextIndex = prevState.currentStepIndex + 1;
-        const nodeStatus = updateStatus(nextIndex);
+        const nodeStatus = updateNodeStatus(nextIndex);
+        // const edgeStatus = updateEdgeStatus(nextIndex);
+
         return {
           ...prevState,
           currentStepIndex: nextIndex,
@@ -43,7 +57,8 @@ export const BFSProvider = ({ children }) => {
     setBfsState((prevState) => {
       if (prevState.currentStepIndex > 0) {
         const prevIndex = prevState.currentStepIndex - 1;
-        const nodeStatus = updateStatus(prevIndex);
+        const nodeStatus = updateNodeStatus(prevIndex);
+        // const edgeStatus = updateEdgeStatus(prevIndex);
         return {
           ...prevState,
           currentStepIndex: prevIndex,
@@ -60,7 +75,7 @@ export const BFSProvider = ({ children }) => {
     setBfsState,
     goToNextStep,
     goToPreviousStep,
-    updateStatus,
+    updateNodeStatus,
   };
 
   return <BFSContext.Provider value={value}>{children}</BFSContext.Provider>;
