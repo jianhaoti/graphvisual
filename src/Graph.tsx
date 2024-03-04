@@ -378,43 +378,6 @@ const Graph: React.FC<GraphProps> = ({
       setSelectedEdge(null);
     }
   };
-  // const handleNodeDoubleClick = (nodeId: string) => {
-  //   // Check if the graph is editable and oriented
-  //   if (isGraphEditable && isOriented) {
-  //     // Temporary storage for edges to be reversed
-  //     let edgesToBeReversed: Edge[] = [];
-
-  //     // Filter out edges that are not connected to the node
-  //     const remainingEdges = edges.filter((edge) => {
-  //       const isConnectedToNode = edge.id1 === nodeId || edge.id2 === nodeId;
-  //       if (
-  //         isConnectedToNode &&
-  //         edge.id2 &&
-  //         edge.x2 !== null &&
-  //         edge.y2 !== null
-  //       ) {
-  //         // If an edge is connected to the node, prepare to reverse it
-  //         edgesToBeReversed.push({
-  //           ...edge,
-  //           id1: edge.id2, // Swap id1 with id2
-  //           id2: edge.id1, // Swap id2 with id1
-  //           x1: edge.x2, // Swap x1 with x2
-  //           y1: edge.y2, // Swap y1 with y2
-  //           x2: edge.x1, // Swap x2 with x1
-  //           y2: edge.y1, // Swap y2 with y1
-  //         });
-  //         return false; // Exclude this edge from remainingEdges
-  //       }
-  //       return true; // Keep the edge that's not connected to the node
-  //     });
-
-  //     // Combine the remaining edges with the reversed ones
-  //     const newEdges = [...remainingEdges, ...edgesToBeReversed];
-
-  //     // Update the edges state
-  //     setEdges(newEdges);
-  //   }
-  // };
 
   const handleEdgeDoubleClick = (reverseThisEdge: Edge) => {
     // exit on trying to reverse temp edge
@@ -489,7 +452,9 @@ const Graph: React.FC<GraphProps> = ({
 
   // bfs
   const { bfsState } = useBFS();
-  const { nodeStatus } = bfsState;
+
+  useEffect(() => console.log(bfsState), [bfsState]);
+
   return (
     <div
       className="container container-left"
@@ -503,10 +468,10 @@ const Graph: React.FC<GraphProps> = ({
       <div style={{ flex: 1, height: "100%", overflow: "hidden" }}>
         <svg width="200" height="200">
           {nodes.map((node) => {
-            let currentNodeStatus = "default"; // Default status if not found in the map
+            let currentNodeStatus = "default";
 
-            if (bfsState.isVisualizationActive && nodeStatus.has(node.id)) {
-              currentNodeStatus = nodeStatus.get(node.id);
+            if (bfsState.isVisualizationActive && currentNodeStatus) {
+              currentNodeStatus = bfsState.nodeStatus.get(node.id);
             }
 
             return (
@@ -534,7 +499,8 @@ const Graph: React.FC<GraphProps> = ({
               // text coloring logic
               let textColor = "transparent";
               if (bfsState.isVisualizationActive) {
-                let currentNodeStatus = nodeStatus.get(node.id) || "default";
+                let currentNodeStatus =
+                  bfsState.nodeStatus.get(node.id) || "default";
 
                 // show name if white
                 if (currentNodeStatus === "processing") {

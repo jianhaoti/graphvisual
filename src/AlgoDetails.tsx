@@ -219,8 +219,8 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
       nodeIDs.forEach((nodeID) => {
         initializeNodeStatus.set(nodeID, "default");
       });
-      // Set the source node as "visited"
-      initializeNodeStatus.set(inputValue, "visited");
+      // Set the source node as "processing"
+      initializeNodeStatus.set(inputValue, "processing");
 
       // Run the algo
       setBfsState({
@@ -289,9 +289,6 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
   const [RightIsHovered, setRightIsHovered] = useState(false);
   const [isRightClicked, setIsRightClicked] = useState(false);
 
-  useEffect(() => {
-    console.log(bfsState.nodeStatus);
-  }, [bfsState]);
   return (
     <Fade in={true} timeout={500}>
       <div

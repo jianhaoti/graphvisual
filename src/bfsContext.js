@@ -15,12 +15,6 @@ export const BFSProvider = ({ children }) => {
   const updateEdgeStatus = (currentStepIndex) => {
     const newStatus = new Map();
     const step = bfsState.steps[currentStepIndex];
-
-    // handle beginning case as edge case
-    if (currentStepIndex === 0) {
-      // newStatus.set(edgeID, "default");
-    } else {
-    }
   };
 
   const updateNodeStatus = (currentStepIndex) => {
