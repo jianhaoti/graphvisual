@@ -214,23 +214,25 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
       setIsGraphEditable(false);
       setMovieTime(true);
 
-      // initalize the status
-      const initializeNodeStatus = new Map();
-      nodeIDs.forEach((nodeID) => {
-        initializeNodeStatus.set(nodeID, "default");
-      });
-      // Set the source node as "processing"
-      initializeNodeStatus.set(inputValue, "processing");
+      // initalize the statuses
+      const initNodeStatus = new Map();
+      initNodeStatus.set(inputValue, "processing");
+
+      const initEdgeStatus = new Map();
+      edgeIDs.forEach((edgeID) => initEdgeStatus.set(edgeID, "default"));
 
       // Run the algo
       setBfsState({
         steps: bfsSteps,
         currentStepIndex: 0,
-        nodeStatus: initializeNodeStatus, // Optionally initialize nodeStates based on the first step if needed
+        nodeStatus: initNodeStatus, // Optionally initialize nodeStates based on the first step if needed
+        edgeStatus: initEdgeStatus,
         isVisualizationActive: true, // Ensure visualization is active to show new steps
       });
     }
   };
+
+  useEffect(() => console.log(bfsState.steps), [bfsState]);
 
   const handleNextButtonClick = () => {
     goToNextStep();

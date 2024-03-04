@@ -2,6 +2,7 @@ export type StepType = {
   visited: string[];
   queue: string[];
   processing: string;
+  uselessEdges: string[];
 };
 
 export const bfs = (
@@ -18,6 +19,7 @@ export const bfs = (
   while (queue.length > 0) {
     let currentLayer: string[] = [];
     let newQueue: string[] = [];
+    let currentStepUselessEdges: string[] = []; // Track useless edges for the current step
 
     while (queue.length > 0) {
       const node = queue.shift()!;
@@ -27,6 +29,7 @@ export const bfs = (
         visited: Array.from(visited),
         queue: queue.concat(newQueue),
         processing: processing,
+        uselessEdges: [...currentStepUselessEdges],
       });
 
       const neighbors = graph.get(node) || [];
@@ -42,6 +45,8 @@ export const bfs = (
           newQueue.push(neighbor);
           currentLayer.push(neighbor);
           skipNext = false; // flag for added in new neighbors
+        } else if (processing != "") {
+          currentStepUselessEdges.push(`${processing}-${neighbor}`);
         }
       }
 
@@ -51,6 +56,7 @@ export const bfs = (
           visited: Array.from(visited),
           queue: queue.concat(newQueue), // Reflects the current state of the queue
           processing: processing,
+          uselessEdges: [...currentStepUselessEdges],
         });
         skipNext = true;
       }
@@ -63,6 +69,7 @@ export const bfs = (
         visited: Array.from(visited),
         queue: queue.concat(newQueue), // Reflects the current state of the queue
         processing: processing,
+        uselessEdges: [...currentStepUselessEdges],
       });
     }
 

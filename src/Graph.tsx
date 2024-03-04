@@ -453,8 +453,6 @@ const Graph: React.FC<GraphProps> = ({
   // bfs
   const { bfsState } = useBFS();
 
-  useEffect(() => console.log(bfsState), [bfsState]);
-
   return (
     <div
       className="container container-left"

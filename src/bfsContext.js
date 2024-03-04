@@ -7,26 +7,20 @@ export const BFSProvider = ({ children }) => {
     steps: [],
     currentStepIndex: 0,
     nodeStatus: new Map(), // Map node IDs to states ('visited', 'queue', 'processing', default)
-    edgeStatus: new Map(), // Map edge IDs to states in the lifecycle (default -> queued -> processing -> processed)
     isVisualizationActive: false,
     isCompleted: false,
   });
 
-  const updateEdgeStatus = (currentStepIndex) => {
-    const newStatus = new Map();
-    const step = bfsState.steps[currentStepIndex];
-  };
-
   const updateNodeStatus = (currentStepIndex) => {
-    const newStatus = new Map();
+    const newNodeStatus = new Map();
     const step = bfsState.steps[currentStepIndex];
 
-    step.visited.forEach((nodeID) => newStatus.set(nodeID, "visited"));
-    step.queue.forEach((nodeID) => newStatus.set(nodeID, "queue"));
+    step.visited.forEach((nodeID) => newNodeStatus.set(nodeID, "visited"));
+    step.queue.forEach((nodeID) => newNodeStatus.set(nodeID, "queue"));
     if (step.processing !== "") {
-      newStatus.set(step.processing, "processing");
+      newNodeStatus.set(step.processing, "processing");
     }
-    return newStatus;
+    return newNodeStatus;
   };
 
   const goToNextStep = () => {
@@ -34,13 +28,11 @@ export const BFSProvider = ({ children }) => {
       if (prevState.currentStepIndex < prevState.steps.length - 1) {
         const nextIndex = prevState.currentStepIndex + 1;
         const nodeStatus = updateNodeStatus(nextIndex);
-        const edgeStatus = updateEdgeStatus(nextIndex);
 
         return {
           ...prevState,
           currentStepIndex: nextIndex,
           nodeStatus,
-          edgeStatus,
           isCompleted: nextIndex === prevState.steps.length - 1,
         };
       }
@@ -53,12 +45,10 @@ export const BFSProvider = ({ children }) => {
       if (prevState.currentStepIndex > 0) {
         const prevIndex = prevState.currentStepIndex - 1;
         const nodeStatus = updateNodeStatus(prevIndex);
-        const edgeStatus = updateEdgeStatus(prevIndex);
         return {
           ...prevState,
           currentStepIndex: prevIndex,
           nodeStatus,
-          edgeStatus,
           isCompleted: false,
         };
       }
