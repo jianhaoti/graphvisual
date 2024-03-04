@@ -22,7 +22,7 @@ interface NodeProps {
   onMouseEnter: () => void;
   onMouseLeave: () => void;
   onDoubleClick?: (nodeId: string) => void;
-  nodeStatus?: "visited" | "queue" | "processing" | "default";
+  nodeStatus: string;
 }
 
 const Node: React.FC<NodeProps> = ({

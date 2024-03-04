@@ -489,7 +489,7 @@ const Graph: React.FC<GraphProps> = ({
 
   // bfs
   const { bfsState } = useBFS();
-  const currentStep = bfsState.steps[bfsState.currentStepIndex];
+  const { nodeStatus } = bfsState;
   return (
     <div
       className="container container-left"
@@ -503,17 +503,10 @@ const Graph: React.FC<GraphProps> = ({
       <div style={{ flex: 1, height: "100%", overflow: "hidden" }}>
         <svg width="200" height="200">
           {nodes.map((node) => {
-            let nodeStatus: "visited" | "queue" | "processing" | "default" =
-              "default"; // default status
+            let currentNodeStatus = "default"; // Default status if not found in the map
 
-            if (bfsState.isVisualizationActive) {
-              if (currentStep?.visited.includes(node.id)) {
-                nodeStatus = "visited";
-              } else if (currentStep?.queue.includes(node.id)) {
-                nodeStatus = "queue";
-              } else if (currentStep?.processing === node.id) {
-                nodeStatus = "processing";
-              }
+            if (bfsState.isVisualizationActive && nodeStatus.has(node.id)) {
+              currentNodeStatus = nodeStatus.get(node.id);
             }
 
             return (
@@ -530,7 +523,7 @@ const Graph: React.FC<GraphProps> = ({
                 onContextMenu={(e) => handleNodeContextMenu(e, node.id)}
                 onMouseEnter={() => handleMouseEnter(node.id)}
                 onMouseLeave={handleMouseLeave}
-                nodeStatus={nodeStatus} // Pass the node status here
+                nodeStatus={currentNodeStatus} // Pass the node status here
               />
             );
           })}
@@ -538,17 +531,18 @@ const Graph: React.FC<GraphProps> = ({
           {/* Overlays text for BFS */}
           {bfsState.isVisualizationActive &&
             nodes.map((node) => {
-              // bfs node coloring logic
-              let textColor = "#E3C46E";
+              // text coloring logic
+              let textColor = "transparent";
               if (bfsState.isVisualizationActive) {
-                if (currentStep?.visited.includes(node.id)) {
-                  return null;
-                } else if (currentStep?.queue.includes(node.id)) {
-                  textColor = "#DB380F"; // Color for nodes in queue
-                } else if (currentStep?.processing === node.id) {
-                  textColor = "#D5F2E3"; // Color for the node currently being processed
-                } else {
-                  return null; // Skip rendering text for nodes not in the current step
+                let currentNodeStatus = nodeStatus.get(node.id) || "default";
+
+                // show name if white
+                if (currentNodeStatus === "processing") {
+                  textColor = "#EFFAF5";
+                }
+                // show name if orange
+                else if (currentNodeStatus === "queue") {
+                  textColor = "#DB380F";
                 }
               }
               return (
@@ -591,45 +585,42 @@ const Graph: React.FC<GraphProps> = ({
             .filter((edge) => edge.x2 !== null && edge.y2 !== null)
             .map((edge) => {
               //life cycle of edge is default -> queued -> processing -> processed
-              let edgeStatus:
-                | "processed"
-                | "processing"
-                | "queued"
-                | "default" = "default";
+              // let edgeStatus:
+              //   | "processed"
+              //   | "processing"
+              //   | "queued"
+              //   | "default" = "default";
 
               if (bfsState.isVisualizationActive) {
                 // orange + white  => orange edge
-                if (
-                  currentStep?.processing === edge.id1 &&
-                  currentStep?.queue.includes(edge.id2)
-                ) {
-                  edgeStatus = "queued";
-                }
-
-                // orange + black  => orange edge
-                if (
-                  currentStep?.visited.includes(edge.id1) &&
-                  currentStep?.queue.includes(edge.id2)
-                ) {
-                  edgeStatus = "queued";
-                }
-
-                // black + white  => white edge
-                if (
-                  currentStep?.visited.includes(edge.id1) &&
-                  currentStep?.processing === edge.id2
-                ) {
-                  edgeStatus = "processing";
-                }
-
-                // black + black => black
-                if (
-                  edgeStatus === "processing" &&
-                  currentStep?.visited.includes(edge.id1) &&
-                  currentStep?.visited.includes(edge.id2)
-                ) {
-                  edgeStatus = "processed";
-                }
+                // if (
+                //   currentStep?.processing === edge.id1 &&
+                //   currentStep?.queue.includes(edge.id2)
+                // ) {
+                //   edgeStatus = "queued";
+                // }
+                // // orange + black  => orange edge
+                // if (
+                //   currentStep?.visited.includes(edge.id1) &&
+                //   currentStep?.queue.includes(edge.id2)
+                // ) {
+                //   edgeStatus = "queued";
+                // }
+                // // black + white  => white edge
+                // if (
+                //   currentStep?.visited.includes(edge.id1) &&
+                //   currentStep?.processing === edge.id2
+                // ) {
+                //   edgeStatus = "processing";
+                // }
+                // // black + black => black
+                // if (
+                //   edgeStatus === "processing" &&
+                //   currentStep?.visited.includes(edge.id1) &&
+                //   currentStep?.visited.includes(edge.id2)
+                // ) {
+                //   edgeStatus = "processed";
+                // }
               }
               return (
                 <Edge
@@ -641,7 +632,7 @@ const Graph: React.FC<GraphProps> = ({
                   onContextMenu={handleEdgeContextMenu}
                   isOriented={isOriented}
                   showWeight={showWeight}
-                  edgeStatus={edgeStatus}
+                  edgeStatus={"default"}
                 />
               );
             })}

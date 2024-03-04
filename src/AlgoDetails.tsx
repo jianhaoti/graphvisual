@@ -289,6 +289,9 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
   const [RightIsHovered, setRightIsHovered] = useState(false);
   const [isRightClicked, setIsRightClicked] = useState(false);
 
+  useEffect(() => {
+    console.log(bfsState.nodeStatus);
+  }, [bfsState]);
   return (
     <Fade in={true} timeout={500}>
       <div

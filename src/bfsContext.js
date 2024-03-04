@@ -7,7 +7,7 @@ export const BFSProvider = ({ children }) => {
     steps: [],
     currentStepIndex: 0,
     nodeStatus: new Map(), // Map node IDs to states ('visited', 'queue', 'processing', default)
-    edgeStaus: new Map(),
+    edgeStatus: new Map(), // Map edge IDs to states in the lifecycle (default -> queued -> processing -> processed)
     isVisualizationActive: false,
     isCompleted: false,
   });
@@ -40,12 +40,13 @@ export const BFSProvider = ({ children }) => {
       if (prevState.currentStepIndex < prevState.steps.length - 1) {
         const nextIndex = prevState.currentStepIndex + 1;
         const nodeStatus = updateNodeStatus(nextIndex);
-        // const edgeStatus = updateEdgeStatus(nextIndex);
+        const edgeStatus = updateEdgeStatus(nextIndex);
 
         return {
           ...prevState,
           currentStepIndex: nextIndex,
           nodeStatus,
+          edgeStatus,
           isCompleted: nextIndex === prevState.steps.length - 1,
         };
       }
@@ -58,11 +59,12 @@ export const BFSProvider = ({ children }) => {
       if (prevState.currentStepIndex > 0) {
         const prevIndex = prevState.currentStepIndex - 1;
         const nodeStatus = updateNodeStatus(prevIndex);
-        // const edgeStatus = updateEdgeStatus(prevIndex);
+        const edgeStatus = updateEdgeStatus(prevIndex);
         return {
           ...prevState,
           currentStepIndex: prevIndex,
           nodeStatus,
+          edgeStatus,
           isCompleted: false,
         };
       }
