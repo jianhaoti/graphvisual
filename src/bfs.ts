@@ -5,9 +5,13 @@ export type StepType = {
   edgeStatus: Map<string, string>;
 };
 
-// works for oriented graphs. i need to modify this for unoriented graphs
+// works for both the oriented and unoriented case.
+// the complexity of the code is mostly due to the unoriented case, leading to more checks
+// please read the oriented case to understand the logic.
+// the unoriented case is a straightforward generalization
+
 export const bfs = (
-  graph: Map<string, string[]>, // {source node, [target nodes]}
+  theNeighbors: Map<string, string[]>, // {FROM, [all possible TOs]}
   source: string,
   isOriented: boolean
 ): { steps: StepType[]; layers: string[][] } => {
@@ -22,7 +26,6 @@ export const bfs = (
   while (queue.length > 0) {
     let currentLayer: string[] = [];
     let newQueue: string[] = [];
-    let currentStepUselessEdges: string[] = []; // Track useless edges for the current step
 
     while (queue.length > 0) {
       // orange node turns white
@@ -53,7 +56,7 @@ export const bfs = (
         edgeStatus: new Map(edgeStatus),
       });
 
-      const neighbors = graph.get(node) || [];
+      const neighbors = theNeighbors.get(node) || [];
 
       for (const neighbor of neighbors) {
         // existence of undiscovered neighbors
@@ -74,7 +77,6 @@ export const bfs = (
           processing !== "" &&
           !edgeStatus.get(`${processing}-${neighbor}`)
         ) {
-          currentStepUselessEdges.push(`${processing}-${neighbor}`);
           edgeStatus.set(`${processing}-${neighbor}`, "useless");
           if (!isOriented) {
             edgeStatus.set(`${neighbor}-${processing}`, "useless");
