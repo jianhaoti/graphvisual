@@ -103,6 +103,21 @@ const Edge: React.FC<GraphEdgeProps> = ({
   // Calculate angle for text rotation to align with edge direction
   const angleRad = Math.atan2(edge.y2! - edge.y1, edge.x2! - edge.x1);
   let angleDeg = (angleRad * 180) / Math.PI;
+  const isVertical = Math.abs(angleDeg) > 45 && Math.abs(angleDeg) < 135;
+
+  // Adjust weight text position based on the angle
+  const sideOffset = 5; // Distance from the edge to display the weight text
+  let weightPosXAdjusted = weightPosX;
+  let weightPosYAdjusted = weightPosY;
+  let textAnchor = "middle"; // Default text anchor
+
+  if (isVertical) {
+    // Move the text to the side of the edge instead of above/below
+    // Decide on left or right side based on the direction of the edge
+    weightPosXAdjusted += (edge.x1 > edge.x2 ? -1 : 1) * sideOffset;
+    weightPosYAdjusted += sideOffset / 2; // Slight vertical adjustment for better visibility
+    textAnchor = edge.x1 > edge.x2 ? "end" : "start"; // Align text based on side
+  }
 
   // Check the direction of the edge to adjust text orientation
   // If the edge is oriented from right to left, add 180 degrees to flip the text
@@ -173,12 +188,12 @@ const Edge: React.FC<GraphEdgeProps> = ({
 
       {showWeight && (
         <text
-          x={weightPosX}
-          y={weightPosY}
+          x={weightPosXAdjusted}
+          y={weightPosYAdjusted}
           fill={color}
-          dy="5"
-          textAnchor="middle"
-          transform={`rotate(${angleDeg}, ${weightPosX}, ${weightPosY})`}
+          dy="0.1em"
+          textAnchor={textAnchor} // Use the dynamically adjusted text anchor
+          transform={`rotate(${isVertical ? 0 : angleDeg}, ${weightPosXAdjusted}, ${weightPosYAdjusted})`} // Rotate only if not vertical
           style={{
             userSelect: "none",
             pointerEvents: "none",
