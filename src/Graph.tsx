@@ -395,7 +395,7 @@ const Graph: React.FC<GraphProps> = ({
         id2: reverseThisEdge.id1 as string,
         x2: reverseThisEdge.x1 as number,
         y2: reverseThisEdge.y1 as number,
-        weight: 1,
+        weight: reverseThisEdge.weight,
       };
       setEdges([...newEdges, reversedEdge]);
       const reversedId = `${reversedEdge.id1}-${reversedEdge.id2}`;
