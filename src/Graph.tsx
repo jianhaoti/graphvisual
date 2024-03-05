@@ -451,7 +451,7 @@ const Graph: React.FC<GraphProps> = ({
   }, []);
 
   // bfs
-  const { bfsState } = useBFS();
+  const { bfsState, bfsSourceNode } = useBFS();
 
   return (
     <div
@@ -467,11 +467,16 @@ const Graph: React.FC<GraphProps> = ({
         <svg width="200" height="200">
           {nodes.map((node) => {
             let currentNodeStatus = "default";
+            let isBfsSource = false;
 
-            if (bfsState.isVisualizationActive && currentNodeStatus) {
-              currentNodeStatus = bfsState.nodeStatus.get(node.id);
+            if (bfsState.isVisualizationActive) {
+              if (currentNodeStatus) {
+                currentNodeStatus = bfsState.nodeStatus.get(node.id);
+              }
+              if (node.id === bfsSourceNode) {
+                isBfsSource = true;
+              }
             }
-
             return (
               <Node
                 key={node.id}
@@ -487,6 +492,7 @@ const Graph: React.FC<GraphProps> = ({
                 onMouseEnter={() => handleMouseEnter(node.id)}
                 onMouseLeave={handleMouseLeave}
                 nodeStatus={currentNodeStatus} // Pass the node status here
+                createCircle={isBfsSource && bfsState.isCompleted}
               />
             );
           })}

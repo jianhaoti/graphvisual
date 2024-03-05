@@ -1,6 +1,7 @@
 // GraphNode.tsx
-import React, { useRef, useCallback } from "react";
+import React, { useRef, useCallback, useEffect } from "react";
 import useDraggerSVG from "./useDraggerSVG";
+import styles from "./GraphNode.module.css"; // Import the CSS module
 
 interface Node {
   id: string;
@@ -23,6 +24,7 @@ interface NodeProps {
   onMouseLeave: () => void;
   onDoubleClick?: (nodeId: string) => void;
   nodeStatus: string;
+  createCircle: boolean;
 }
 
 const Node: React.FC<NodeProps> = ({
@@ -36,6 +38,7 @@ const Node: React.FC<NodeProps> = ({
   onMouseLeave,
   onDoubleClick,
   nodeStatus = "default",
+  createCircle,
 }) => {
   const nodeRef = useRef<SVGCircleElement | null>(null);
   const radius = 10;
@@ -79,20 +82,51 @@ const Node: React.FC<NodeProps> = ({
   };
 
   return (
-    <circle
-      className="graph-node"
-      id={node.id}
-      ref={nodeRef}
-      cx={node.x}
-      cy={node.y}
-      r={radius}
-      onClick={() => onClick(node.id)}
-      onContextMenu={(e) => onContextMenu(e, node.id)}
-      style={{ ...style }} // Set the cursor style for better UX
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
-      onDoubleClick={handleDoubleClick}
-    />
+    <>
+      <circle
+        className="graph-node"
+        id={node.id}
+        ref={nodeRef}
+        cx={node.x}
+        cy={node.y}
+        r={radius}
+        onClick={() => onClick(node.id)}
+        onContextMenu={(e) => onContextMenu(e, node.id)}
+        style={{ ...style }} // Set the cursor style for better UX
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
+        onDoubleClick={handleDoubleClick}
+      />
+      {createCircle && (
+        <>
+          <circle
+            cx={node.x}
+            cy={node.y}
+            r={20}
+            fill="none"
+            stroke="white"
+            strokeWidth="2"
+            opacity=".3"
+          />
+          <text
+            x={node.x}
+            y={node.y - 30} // Adjust based on your needs
+            // className={styles.rotatingText} // controls rotation css
+            style={{
+              dominantBaseline: "middle",
+              textAnchor: "middle",
+              fill: "white",
+              fontSize: "12px",
+              userSelect: "none",
+              transform: `rotate(0, ${node.x}, ${node.y})`,
+              transformOrigin: `${node.x}px ${node.y}px`,
+            }}
+          >
+            Source
+          </text>
+        </>
+      )}
+    </>
   );
 };
 

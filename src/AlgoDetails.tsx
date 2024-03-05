@@ -187,7 +187,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
 
     if (isInvalidName) {
       // don't jiggle if it's a space. run will handle that separately
-      if (inputValue != "") {
+      if (inputValue !== "") {
         setIsInputValid(false); // Indicate that input is invalid
         setTimeout(() => setInputValue(""), 500);
       }

@@ -11,6 +11,8 @@ export const BFSProvider = ({ children }) => {
     isCompleted: false,
   });
 
+  const bfsSourceNode = bfsState.steps[0]?.processing;
+
   const updateNodeStatus = (currentStepIndex) => {
     const newNodeStatus = new Map();
     const step = bfsState.steps[currentStepIndex];
@@ -62,6 +64,7 @@ export const BFSProvider = ({ children }) => {
     goToNextStep,
     goToPreviousStep,
     updateNodeStatus,
+    bfsSourceNode,
   };
 
   return <BFSContext.Provider value={value}>{children}</BFSContext.Provider>;
