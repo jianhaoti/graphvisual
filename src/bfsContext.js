@@ -25,7 +25,7 @@ export const BFSProvider = ({ children }) => {
     return newNodeStatus;
   };
 
-  const goToNextStep = () => {
+  const goToNextStepBFS = () => {
     setBfsState((prevState) => {
       if (prevState.currentStepIndex < prevState.steps.length - 1) {
         const nextIndex = prevState.currentStepIndex + 1;
@@ -42,7 +42,7 @@ export const BFSProvider = ({ children }) => {
     });
   };
 
-  const goToPreviousStep = () => {
+  const goToPreviousStepBFS = () => {
     setBfsState((prevState) => {
       if (prevState.currentStepIndex > 0) {
         const prevIndex = prevState.currentStepIndex - 1;
@@ -61,8 +61,8 @@ export const BFSProvider = ({ children }) => {
   const value = {
     bfsState,
     setBfsState,
-    goToNextStep,
-    goToPreviousStep,
+    goToNextStepBFS,
+    goToPreviousStepBFS,
     updateNodeStatus,
     bfsSourceNode,
   };

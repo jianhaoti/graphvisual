@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Card,
   CardMedia,
@@ -39,6 +39,12 @@ interface AlgoDetailsProps {
   setIsGraphEditable: (editable: boolean) => void;
   name: string;
 }
+interface BFSStateType {
+  steps: StepType[];
+  currentStepIndex: number;
+  nodeStatus: Map<string, string>; // Adjust according to your actual type
+  isVisualizationActive: boolean;
+}
 
 const AlgoDetails: React.FC<AlgoDetailsProps> = ({
   algoTitle,
@@ -72,13 +78,21 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
   const [inputValue, setInputValue] = useState<string>("");
   const [isInputValid, setIsInputValid] = useState<boolean>(true);
 
+  const algoComponentMap = {
+    BFS: BfsPseudocode,
+  };
+
+  const AlgoPseudocode =
+    algoComponentMap[algoTitle as keyof typeof algoComponentMap] || null; // Default to null or a fallback component
+
   // BFS
   const { steps: bfsSteps, layers: bfsLayers } = bfs(
     adjacencyList,
     inputValue,
     isOriented
   );
-  const { bfsState, setBfsState, goToNextStep, goToPreviousStep } = useBFS();
+  const { bfsState, setBfsState, goToNextStepBFS, goToPreviousStepBFS } =
+    useBFS();
 
   // Artwork
   const titleToImageUrl = {
@@ -151,13 +165,6 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
     }
   };
 
-  interface BFSStateType {
-    steps: StepType[];
-    currentStepIndex: number;
-    nodeStatus: Map<string, string>; // Adjust according to your actual type
-    isVisualizationActive: boolean;
-  }
-
   // Transition fade-in
   const handleBackgroundClick = () => {
     setVisible(false); // Trigger fade-out
@@ -165,10 +172,12 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
     setSelectedEdge(null);
     setSelectedNode(null);
 
-    setBfsState((prevState: BFSStateType) => ({
-      ...prevState,
-      isVisualizationActive: false,
-    }));
+    if (algoTitle === "BFS") {
+      setBfsState((prevState: BFSStateType) => ({
+        ...prevState,
+        isVisualizationActive: false,
+      }));
+    }
 
     setTimeout(onClose, 500); // Delay the onClose callback until after the fade-out animation completes
   };
@@ -217,26 +226,32 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
       setIsGraphEditable(false);
       setMovieTime(true);
 
-      // initalize the statuses
-      const initNodeStatus = new Map();
-      initNodeStatus.set(inputValue, "processing");
+      if (algoTitle === "BFS") {
+        // initalize the statuses
+        const initNodeStatus = new Map();
+        initNodeStatus.set(inputValue, "processing");
 
-      // Run the algo
-      setBfsState({
-        steps: bfsSteps,
-        currentStepIndex: 0,
-        nodeStatus: initNodeStatus, // Optionally initialize nodeStates based on the first step if needed
-        isVisualizationActive: true, // Ensure visualization is active to show new steps
-      });
+        // Run the algo
+        setBfsState({
+          steps: bfsSteps,
+          currentStepIndex: 0,
+          nodeStatus: initNodeStatus, // Optionally initialize nodeStates based on the first step if needed
+          isVisualizationActive: true, // Ensure visualization is active to show new steps
+        });
+      }
     }
   };
 
   const handleNextButtonClick = () => {
-    goToNextStep();
+    if (algoTitle === "BFS") {
+      goToNextStepBFS();
+    }
   };
 
   const handlePreviousButtonClick = () => {
-    goToPreviousStep();
+    if (algoTitle === "BFS") {
+      goToPreviousStepBFS();
+    }
   };
 
   // Keyboard navigation handler
@@ -253,12 +268,14 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
           case "Backspace":
             setMovieTime(false);
             setIsGraphEditable(true);
-            setBfsState({
-              steps: bfsSteps,
-              currentStepIndex: 0,
-              nodeStatus: new Map(), // Optionally initialize nodeStates based on the first step if needed
-              isVisualizationActive: false, // Ensure visualization is active to show new steps
-            });
+            if (algoTitle === "BFS") {
+              setBfsState({
+                steps: bfsSteps,
+                currentStepIndex: 0,
+                nodeStatus: new Map(), // Optionally initialize nodeStates based on the first step if needed
+                isVisualizationActive: false, // Ensure visualization is active to show new steps
+              });
+            }
 
             break;
           case "Escape":
@@ -279,19 +296,32 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [handlePreviousButtonClick, handleNextButtonClick]);
+  }, [handlePreviousButtonClick, handleNextButtonClick, algoTitle, movieTime]);
 
-  // Mouse events for L/R buttons
+  // Logic and constants for handling L/R buttons
   const [LeftIsHovered, setLeftIsHovered] = useState(false);
   const [isLeftClicked, setIsLeftClicked] = useState(false);
 
   const [RightIsHovered, setRightIsHovered] = useState(false);
   const [isRightClicked, setIsRightClicked] = useState(false);
 
-  useEffect(
-    () => console.log(bfsState.steps[bfsState.currentStepIndex]?.edgeStatus),
-    [bfsState]
-  );
+  let atStart = true;
+  let atEnd = false;
+
+  if (algoTitle === "BFS" && bfsState) {
+    // at start
+    if (bfsState.currentStepIndex === 0) {
+      atStart = true;
+    } else {
+      atStart = false;
+    }
+    // at end
+    if (bfsState.isCompleted) {
+      atEnd = true;
+    } else {
+      atEnd = false;
+    }
+  }
 
   return (
     <Fade in={true} timeout={500}>
@@ -312,9 +342,6 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
       >
         <Card
           sx={{
-            // width: "55vh",
-            // maxHeight: "60vh",
-            // minHeight: "40vh",
             height: "55vh",
             width: "60vh",
             backgroundColor: "#424541",
@@ -343,7 +370,13 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
             >
               <div>
                 <Typography component="div" variant="body2">
-                  <BfsPseudocode inputValue={inputValue} name={name} />
+                  {AlgoPseudocode ? (
+                    <AlgoPseudocode inputValue={inputValue} name={name} />
+                  ) : (
+                    <Typography sx={{ color: "white" }}>
+                      Coming soon.
+                    </Typography>
+                  )}
                 </Typography>
               </div>
               <div style={{ display: "flex", justifyContent: "flex-end" }}>
@@ -353,7 +386,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                   onMouseDown={() => setIsLeftClicked(true)}
                   onMouseUp={() => setIsLeftClicked(false)}
                   onClick={handlePreviousButtonClick}
-                  disabled={bfsState.currentStepIndex === 0}
+                  disabled={atStart}
                   style={{
                     userSelect: "none",
                     cursor: "pointer",
@@ -365,14 +398,13 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                 >
                   <LeftArrow
                     style={{
-                      filter:
-                        bfsState.currentStepIndex === 0
-                          ? "brightness(75%)"
-                          : isLeftClicked
-                            ? "brightness(200%)"
-                            : LeftIsHovered
-                              ? "brightness(130%)"
-                              : "none", // Increase brightness on hover and click
+                      filter: atStart
+                        ? "brightness(75%)"
+                        : isLeftClicked
+                          ? "brightness(200%)"
+                          : LeftIsHovered
+                            ? "brightness(130%)"
+                            : "none", // Increase brightness on hover and click
                     }}
                   />
                 </button>
@@ -382,7 +414,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                   onMouseDown={() => setIsRightClicked(true)}
                   onMouseUp={() => setIsRightClicked(false)}
                   onClick={handleNextButtonClick}
-                  disabled={bfsState.isCompleted}
+                  disabled={atEnd}
                   style={{
                     userSelect: "none",
                     cursor: "pointer",
@@ -394,14 +426,13 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                 >
                   <RightArrow
                     style={{
-                      filter:
-                        bfsState.isCompleted === true
-                          ? "brightness(75%)"
-                          : isRightClicked
-                            ? "brightness(200%)"
-                            : RightIsHovered
-                              ? "brightness(130%)"
-                              : "none", // Increase brightness on hover and click
+                      filter: atEnd
+                        ? "brightness(75%)"
+                        : isRightClicked
+                          ? "brightness(200%)"
+                          : RightIsHovered
+                            ? "brightness(130%)"
+                            : "none", // Increase brightness on hover and click
                     }}
                   />
                 </button>

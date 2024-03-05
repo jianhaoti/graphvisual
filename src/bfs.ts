@@ -29,7 +29,6 @@ export const bfs = (
       const node = queue.shift()!;
       processing = node;
 
-      // edgeStatus.set(`${prevProcessing}-${processing}`, "visited");
       visited.forEach((node) => {
         if (edgeStatus.get(`${node}-${processing}`) === "queued") {
           edgeStatus.set(`${node}-${processing}`, "visited");
