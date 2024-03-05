@@ -57,6 +57,26 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
   setIsGraphEditable,
   name,
 }) => {
+  // Artwork
+  const titleToImage = {
+    BFS: Julanite1,
+    DFS: Julanite5,
+    Dijkstra: sunflowers,
+    Prim: Julanite4,
+    Kruskal: Julanite3,
+    TBD: impressionSunrise,
+  };
+  const image = titleToImage[algoTitle as keyof typeof titleToImage];
+
+  const artWork = {
+    BFS: ["Julanite", " by Brookfield"],
+    DFS: ["Julanite", " by Brookfield"],
+    Dijkstra: ["Sunflower", " by van Gogh"],
+    Prim: ["Julanite", " by Brookfield"],
+    Kruskal: ["Julanite", " by Brookfield"],
+    TBD: ["Impression, Sunrise", " by Monet"],
+  };
+
   // State data
   const [visible, setVisible] = useState(true); // control background dim or not
   const [movieTime, setMovieTime] = useState<boolean>(false);
@@ -93,26 +113,6 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
   );
   const { bfsState, setBfsState, goToNextStepBFS, goToPreviousStepBFS } =
     useBFS();
-
-  // Artwork
-  const titleToImageUrl = {
-    BFS: Julanite1,
-    DFS: Julanite5,
-    Dijkstra: sunflowers,
-    Prim: Julanite4,
-    Kruskal: Julanite3,
-    TBD: impressionSunrise,
-  };
-  const imageUrl = titleToImageUrl[algoTitle as keyof typeof titleToImageUrl];
-
-  const artWork = {
-    BFS: ["Julanite", " by Brookfield"],
-    DFS: ["Julanite", " by Brookfield"],
-    Dijkstra: ["Sunflower", " by van Gogh"],
-    Prim: ["Julanite", " by Brookfield"],
-    Kruskal: ["Julanite", " by Brookfield"],
-    TBD: ["Impression, Sunrise", " by Monet"],
-  };
 
   // Rest of code
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -447,7 +447,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                 <CardMedia
                   component="img"
                   height="200"
-                  image={imageUrl}
+                  image={image}
                   sx={{
                     height: 230, // This is how much of the image you can see
                     objectFit: "cover",
@@ -466,7 +466,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                     zIndex: 1000, // puts this above the artwork
                   }}
                 >
-                  {artWork[algoTitle as keyof typeof titleToImageUrl].map(
+                  {artWork[algoTitle as keyof typeof titleToImage].map(
                     (part, index) => (
                       <span
                         key={index}
