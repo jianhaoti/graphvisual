@@ -59,20 +59,20 @@ export const bfs = (
       const neighbors = theNeighbors.get(node) || [];
 
       for (const neighbor of neighbors) {
-        // existence of undiscovered neighbors
+        // if the neighbor is undiscovered
         if (
           !visited.has(neighbor) &&
           !queue.includes(neighbor) &&
-          !newQueue.includes(neighbor) // duplicates may not yet be pushed onto (the main) queue
+          !newQueue.includes(neighbor) // duplicates may not yet be pushed onto (the main) queue!
         ) {
-          newQueue.push(neighbor); //newQueue contains unique neighbors
+          newQueue.push(neighbor); // newQueue contains unique neighbors!
           currentLayer.push(neighbor);
           edgeStatus.set(`${processing}-${neighbor}`, "queued"); // white + orange
           if (!isOriented) {
             edgeStatus.set(`${neighbor}-${processing}`, "queued"); // white + orange
           }
         }
-        // all neighbors are discovered
+        // if the neighbor are discovered
         else if (
           processing !== "" &&
           !edgeStatus.get(`${processing}-${neighbor}`)
@@ -87,7 +87,7 @@ export const bfs = (
       // added in all the neighbors, if there are any. also adds new edge status
       steps.push({
         visited: Array.from(visited),
-        queue: queue.concat(newQueue), // Reflects the current state of the queue
+        queue: queue.concat(newQueue),
         processing: processing,
         edgeStatus: new Map(edgeStatus),
       });
@@ -108,7 +108,7 @@ export const bfs = (
       layers.push(currentLayer);
     }
 
-    queue = newQueue; // Prepare for the next layer
+    queue = newQueue; // prepare for the next round
   }
 
   return { steps, layers };
