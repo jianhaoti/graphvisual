@@ -73,7 +73,11 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
   const [isInputValid, setIsInputValid] = useState<boolean>(true);
 
   // BFS
-  const { steps: bfsSteps, layers: bfsLayers } = bfs(adjacencyList, inputValue);
+  const { steps: bfsSteps, layers: bfsLayers } = bfs(
+    adjacencyList,
+    inputValue,
+    isOriented
+  );
   const { bfsState, setBfsState, goToNextStep, goToPreviousStep } = useBFS();
 
   // Artwork
@@ -216,14 +220,12 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
       // initalize the statuses
       const initNodeStatus = new Map();
       initNodeStatus.set(inputValue, "processing");
-      const initEdgeStatus = new Map();
 
       // Run the algo
       setBfsState({
         steps: bfsSteps,
         currentStepIndex: 0,
         nodeStatus: initNodeStatus, // Optionally initialize nodeStates based on the first step if needed
-        edgeStatus: initEdgeStatus,
         isVisualizationActive: true, // Ensure visualization is active to show new steps
       });
     }
@@ -285,6 +287,11 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
 
   const [RightIsHovered, setRightIsHovered] = useState(false);
   const [isRightClicked, setIsRightClicked] = useState(false);
+
+  useEffect(
+    () => console.log(bfsState.steps[bfsState.currentStepIndex]?.edgeStatus),
+    [bfsState]
+  );
 
   return (
     <Fade in={true} timeout={500}>

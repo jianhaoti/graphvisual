@@ -8,7 +8,8 @@ export type StepType = {
 // works for oriented graphs. i need to modify this for unoriented graphs
 export const bfs = (
   graph: Map<string, string[]>, // {source node, [target nodes]}
-  source: string
+  source: string,
+  isOriented: boolean
 ): { steps: StepType[]; layers: string[][] } => {
   let layers: string[][] = [[source]];
   let steps: StepType[] = [];
@@ -32,6 +33,16 @@ export const bfs = (
       visited.forEach((node) => {
         if (edgeStatus.get(`${node}-${processing}`) === "queued") {
           edgeStatus.set(`${node}-${processing}`, "visited");
+          if (!isOriented) {
+            edgeStatus.set(`${processing}-${node}`, "visited");
+          }
+        }
+        if (
+          !isOriented &&
+          edgeStatus.get(`${processing}-${node}`) === "queued"
+        ) {
+          edgeStatus.set(`${node}-${processing}`, "visited");
+          edgeStatus.set(`${processing}-${node}`, "visited");
         }
       });
 
@@ -55,11 +66,20 @@ export const bfs = (
           newQueue.push(neighbor); //newQueue contains unique neighbors
           currentLayer.push(neighbor);
           edgeStatus.set(`${processing}-${neighbor}`, "queued"); // white + orange
+          if (!isOriented) {
+            edgeStatus.set(`${neighbor}-${processing}`, "queued"); // white + orange
+          }
         }
         // all neighbors are discovered
-        else if (processing != "") {
+        else if (
+          processing !== "" &&
+          !edgeStatus.get(`${processing}-${neighbor}`)
+        ) {
           currentStepUselessEdges.push(`${processing}-${neighbor}`);
           edgeStatus.set(`${processing}-${neighbor}`, "useless");
+          if (!isOriented) {
+            edgeStatus.set(`${neighbor}-${processing}`, "useless");
+          }
         }
       }
 
