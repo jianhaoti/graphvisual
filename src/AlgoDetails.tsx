@@ -349,7 +349,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
             "&:hover": {
               boxShadow: 6,
             },
-            overflow: "hidden",
+            overflow: "auto",
             opacity: visible ? 1 : 0, // Control opacity for fade effect
             transform: visible ? "translateY(0)" : "translateY(-20px)", // Slight move up on exit
             transition: "opacity 500ms, transform 500ms", // Smooth transition for both opacity and transform
