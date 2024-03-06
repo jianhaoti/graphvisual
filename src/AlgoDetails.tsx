@@ -344,15 +344,21 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
           sx={{
             height: "55vh",
             width: "60vh",
-            backgroundColor: "#424541",
+            backgroundColor: movieTime === false ? "#424541" : "#1E1E1E",
             position: "relative",
-            "&:hover": {
-              boxShadow: 6,
+            overflow: "auto", // this does NOT control the overflow in the pseudococde
+            opacity: visible ? 1 : 0,
+            transform: visible ? "translateY(0)" : "translateY(-20px)",
+            transition: "opacity 500ms, transform 500ms",
+
+            // hide the scrollbar
+            "&::-webkit-scrollbar": {
+              width: "0px",
+              background: "transparent", // Makes scrollbar transparent
             },
-            overflow: "auto",
-            opacity: visible ? 1 : 0, // Control opacity for fade effect
-            transform: visible ? "translateY(0)" : "translateY(-20px)", // Slight move up on exit
-            transition: "opacity 500ms, transform 500ms", // Smooth transition for both opacity and transform
+            "&::-webkit-scrollbar-thumb": {
+              background: "transparent", // Makes scrollbar thumb transparent
+            },
           }}
           onClick={(e) => e.stopPropagation()} // Prevent background click inside the card
         >
@@ -365,20 +371,17 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                 flexGrow: 1, // Allows content area to grow and fill available space
                 backgroundColor: "#1E1E1E",
                 justifyContent: "space-between", // Push content to start and buttons to end
-                overflow: "auto",
+                overflow: "hiden",
               }}
             >
-              <div>
-                <Typography component="div" variant="body2">
-                  {AlgoPseudocode ? (
-                    <AlgoPseudocode inputValue={inputValue} name={name} />
-                  ) : (
-                    <Typography sx={{ color: "white" }}>
-                      Coming soon.
-                    </Typography>
-                  )}
-                </Typography>
-              </div>
+              {/* overflow problem is somewhere here. if we comment this out, the scrollbar style is applied as expected */}
+              <Typography component="div" variant="body2">
+                {AlgoPseudocode ? (
+                  <AlgoPseudocode inputValue={inputValue} name={name} />
+                ) : (
+                  <Typography sx={{ color: "white" }}>Coming soon.</Typography>
+                )}
+              </Typography>
               <div style={{ display: "flex", justifyContent: "flex-end" }}>
                 <button
                   onMouseEnter={() => setLeftIsHovered(true)}
@@ -480,7 +483,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
               </div>
               <CardContent
                 sx={{
-                  overflow: "auto", // Allows content to scroll if it overflows
+                  overflow: "hidden", // Allows content to scroll if it overflows
                   flexGrow: 1, // Allows content area to grow and fill available space
                 }}
               >
