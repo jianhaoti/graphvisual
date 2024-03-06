@@ -75,6 +75,9 @@ const Graph: React.FC<GraphProps> = ({
 
   const deleteSelected = useCallback(() => {
     if (selectedNode) {
+      setHoveredNode(null);
+      setSelectedNode(null);
+
       setNodes((prevNodes) =>
         prevNodes.filter((node) => node.id !== selectedNode)
       );
@@ -83,7 +86,6 @@ const Graph: React.FC<GraphProps> = ({
           (edge) => edge.id1 !== selectedNode && edge.id2 !== selectedNode
         )
       );
-      setSelectedNode(null);
 
       // If the selected edge has its head or tail as selected node
       if (selectedEdge) {
@@ -493,10 +495,37 @@ const Graph: React.FC<GraphProps> = ({
                 onMouseLeave={handleMouseLeave}
                 nodeStatus={currentNodeStatus} // Pass the node status here
                 createCircle={isBfsSource && bfsState.isCompleted}
+                size="large"
               />
             );
           })}
 
+          {edges
+            .filter((edge) => edge.x2 !== null && edge.y2 !== null)
+            .map((edge) => {
+              const edgeID = `${edge.id1}-${edge.id2}`;
+              let edgeStatus = "default";
+              if (bfsState.isVisualizationActive) {
+                edgeStatus =
+                  bfsState.steps[bfsState.currentStepIndex].edgeStatus.get(
+                    edgeID
+                  );
+              }
+              return (
+                <Edge
+                  key={`${edge.id1}-${edge.id2}`}
+                  edge={edge}
+                  isSelected={selectedEdge === `${edge.id1}-${edge.id2}`}
+                  onClick={handleEdgeClick}
+                  onDoubleClick={handleEdgeDoubleClick}
+                  onContextMenu={handleEdgeContextMenu}
+                  isOriented={isOriented}
+                  showWeight={showWeight}
+                  edgeStatus={edgeStatus}
+                  size="large"
+                />
+              );
+            })}
           {/* Overlays text for BFS */}
           {bfsState.isVisualizationActive &&
             nodes.map((node) => {
@@ -534,7 +563,6 @@ const Graph: React.FC<GraphProps> = ({
                 </text>
               );
             })}
-
           {hoveredNode && !bfsState.isVisualizationActive && (
             <text
               x={hoveredNode.x + 5}
@@ -550,32 +578,6 @@ const Graph: React.FC<GraphProps> = ({
               {hoveredNode.id}
             </text>
           )}
-
-          {edges
-            .filter((edge) => edge.x2 !== null && edge.y2 !== null)
-            .map((edge) => {
-              const edgeID = `${edge.id1}-${edge.id2}`;
-              let edgeStatus = "default";
-              if (bfsState.isVisualizationActive) {
-                edgeStatus =
-                  bfsState.steps[bfsState.currentStepIndex].edgeStatus.get(
-                    edgeID
-                  );
-              }
-              return (
-                <Edge
-                  key={`${edge.id1}-${edge.id2}`}
-                  edge={edge}
-                  isSelected={selectedEdge === `${edge.id1}-${edge.id2}`}
-                  onClick={handleEdgeClick}
-                  onDoubleClick={handleEdgeDoubleClick}
-                  onContextMenu={handleEdgeContextMenu}
-                  isOriented={isOriented}
-                  showWeight={showWeight}
-                  edgeStatus={edgeStatus}
-                />
-              );
-            })}
         </svg>
       </div>
 

@@ -1,7 +1,6 @@
 // GraphNode.tsx
-import React, { useRef, useCallback, useEffect } from "react";
+import React, { useRef, useCallback } from "react";
 import useDraggerSVG from "./useDraggerSVG";
-import styles from "./GraphNode.module.css"; // Import the CSS module
 
 interface Node {
   id: string;
@@ -25,6 +24,7 @@ interface NodeProps {
   onDoubleClick?: (nodeId: string) => void;
   nodeStatus: string;
   createCircle: boolean;
+  size: "small" | "large";
 }
 
 const Node: React.FC<NodeProps> = ({
@@ -39,9 +39,9 @@ const Node: React.FC<NodeProps> = ({
   onDoubleClick,
   nodeStatus = "default",
   createCircle,
+  size,
 }) => {
   const nodeRef = useRef<SVGCircleElement | null>(null);
-  const radius = 10;
 
   const getColor = (status: string) => {
     switch (status) {
@@ -80,7 +80,9 @@ const Node: React.FC<NodeProps> = ({
       onDoubleClick(node.id);
     }
   };
-
+  const radius = size === "small" ? 10 : 11;
+  const whiteCircleRadius = size === "small" ? 20 : 21;
+  const whiteTextAlignment = size === "small" ? 30 : 31;
   return (
     <>
       <circle
@@ -102,7 +104,7 @@ const Node: React.FC<NodeProps> = ({
           <circle
             cx={node.x}
             cy={node.y}
-            r={20}
+            r={whiteCircleRadius}
             fill="none"
             stroke="white"
             strokeWidth="2"
@@ -110,7 +112,7 @@ const Node: React.FC<NodeProps> = ({
           />
           <text
             x={node.x}
-            y={node.y - 30} // Adjust based on your needs
+            y={node.y - whiteTextAlignment} // Adjust based on your needs
             // className={styles.rotatingText} // controls rotation css
             style={{
               dominantBaseline: "middle",
@@ -118,8 +120,8 @@ const Node: React.FC<NodeProps> = ({
               fill: "white",
               fontSize: "12px",
               userSelect: "none",
-              transform: `rotate(0, ${node.x}, ${node.y})`,
-              transformOrigin: `${node.x}px ${node.y}px`,
+              // transform: `rotate(0, ${node.x}, ${node.y})`,
+              // transformOrigin: `${node.x}px ${node.y}px`,
             }}
           >
             Source

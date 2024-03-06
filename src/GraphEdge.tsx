@@ -19,6 +19,7 @@ interface GraphEdgeProps {
   onDoubleClick: (edge: Edge) => void;
   onContextMenu: (e: React.MouseEvent, edgeId: string) => void;
   edgeStatus: string;
+  size: "small" | "large";
 }
 
 const Edge: React.FC<GraphEdgeProps> = ({
@@ -30,6 +31,7 @@ const Edge: React.FC<GraphEdgeProps> = ({
   onDoubleClick,
   onContextMenu,
   edgeStatus,
+  size,
 }) => {
   const nodeRadius = 10;
   const getStatusProperties = (status: string) => {
@@ -42,7 +44,7 @@ const Edge: React.FC<GraphEdgeProps> = ({
         return {
           color: isSelected ? "white" : "#E3C46E",
           opacity: 0.2,
-          arrowOpacity: 0.4,
+          arrowOpacity: 0.3,
         };
       default:
         return {
@@ -80,9 +82,11 @@ const Edge: React.FC<GraphEdgeProps> = ({
   const normX = dirX / length;
   const normY = dirY / length;
 
-  // Scale the vector by the node radius
-  const offsetX = normX * nodeRadius;
-  const offsetY = normY * nodeRadius;
+  const bufferFactor = size === "small" ? 1 : 1.1;
+
+  // Apply the bufferFactor to the offsetX and offsetY calculations
+  const offsetX = normX * nodeRadius * bufferFactor;
+  const offsetY = normY * nodeRadius * bufferFactor;
 
   // Adjust start and end points
   const adjustedStartX = edge.x1 + offsetX;
@@ -138,19 +142,24 @@ const Edge: React.FC<GraphEdgeProps> = ({
     onContextMenu(e, edgeId);
   };
 
+  const markerWidth = size === "small" ? "10" : "12.5";
+  const markerHeight = size === "small" ? "7" : "8.75";
+  const refX = size === "small" ? "0" : "5";
+  const refY = size === "small" ? "3.5" : "4.375";
+
   return (
     <g>
       <defs>
         <marker
           id={arrowheadId}
-          markerWidth="10"
-          markerHeight="7"
-          refX="0"
-          refY="3.5"
+          markerWidth={markerWidth}
+          markerHeight={markerHeight}
+          refX={refX} // Adjusted for positioning; you might need to experiment with this
+          refY={refY} // Adjusted to half of markerHeight to center the arrow vertically
           orient="auto"
         >
           <polygon
-            points="0 0, 10 3.5, 0 7"
+            points={`0 0, ${markerWidth} ${Number(markerHeight) / 2}, 0 ${markerHeight}`}
             fill={color}
             fillOpacity={arrowOpacity}
           />
@@ -162,7 +171,7 @@ const Edge: React.FC<GraphEdgeProps> = ({
         y1={adjustedStartY}
         x2={adjustedEndX}
         y2={adjustedEndY}
-        strokeWidth={2}
+        strokeWidth={2.5}
         onClick={handleEdgeClick}
         onDoubleClick={handleEdgeDoubleClick}
         onContextMenu={handleEdgeContextMenu}
