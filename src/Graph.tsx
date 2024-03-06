@@ -572,7 +572,8 @@ const Graph: React.FC<GraphProps> = ({
                       fill={textColor}
                       fontSize="14"
                       textAnchor="start"
-                      pointerEvents="none" // Directly applied as an attribute
+                      pointerEvents="none"
+                      style={{ userSelect: "none", WebkitUserSelect: "none" }}
                     >
                       {node.id}
                     </text>
@@ -613,6 +614,7 @@ const Graph: React.FC<GraphProps> = ({
               fill={"white"}
               fontSize="14"
               textAnchor="middle"
+              style={{ userSelect: "none", WebkitUserSelect: "none" }}
             >
               {hoveredNode.id}
             </text>
