@@ -12,51 +12,30 @@ type Edge = {
 
 interface GraphEdgeProps {
   edge: Edge;
-  isSelected: boolean;
   isOriented: boolean;
   showWeight: boolean;
   onClick: (edgeId: string) => void;
   onDoubleClick: (edge: Edge) => void;
   onContextMenu: (e: React.MouseEvent, edgeId: string) => void;
-  edgeStatus: string;
   size: string;
+  color: string;
+  opacity: number;
+  arrowOpacity: number;
 }
 
 const Edge: React.FC<GraphEdgeProps> = ({
   edge,
-  isSelected,
   isOriented,
   showWeight,
   onClick,
   onDoubleClick,
   onContextMenu,
-  edgeStatus,
   size,
+  color,
+  opacity,
+  arrowOpacity,
 }) => {
   const nodeRadius = size === "small" ? 10 : 11;
-  const getStatusProperties = (status: string) => {
-    switch (status) {
-      case "visited":
-        return { color: "black", opacity: 1, arrowOpacity: 1 };
-      case "queued":
-        return { color: "#DB380F", opacity: 1, arrowOpacity: 1 };
-      case "useless":
-        return {
-          color: isSelected ? "white" : "#E3C46E",
-          opacity: 0.2,
-          arrowOpacity: 0.3,
-        };
-      default:
-        return {
-          color: isSelected ? "white" : "#E3C46E",
-          opacity: 1,
-          arrowOpacity: 1,
-        }; // Default properties
-    }
-  };
-
-  const { color, opacity, arrowOpacity } = getStatusProperties(edgeStatus);
-
   const style = {
     stroke: color,
     opacity: opacity,

@@ -458,20 +458,6 @@ const Graph: React.FC<GraphProps> = ({
   let size = "large";
   const whiteCircleRadius = size === "small" ? 20 : 21;
   const whiteTextAlignment = size === "small" ? 30 : 31;
-  // const getColor = (status: string) => {
-  //   switch (status) {
-  //     case "visited":
-  //       return "black";
-  //     case "queue":
-  //       return " #DB380F";
-  //     case "processing":
-  //       return "#EFFAF5";
-  //     default:
-  //       let color = isSelected ? "white" : "#E3C46E"; // Default color
-  //   }
-  // };
-
-  // const color = getColor(nodeStatus);
 
   return (
     <div
@@ -525,25 +511,42 @@ const Graph: React.FC<GraphProps> = ({
             .filter((edge) => edge.x2 !== null && edge.y2 !== null)
             .map((edge) => {
               const edgeID = `${edge.id1}-${edge.id2}`;
+              let color = edgeID === selectedEdge ? "white" : "#E3C46E";
+              let opacity = 1;
+              let arrowOpacity = 1;
+
               let edgeStatus = "default";
               if (bfsState.isVisualizationActive) {
                 edgeStatus =
                   bfsState.steps[bfsState.currentStepIndex].edgeStatus.get(
                     edgeID
                   );
+                switch (edgeStatus) {
+                  case "visited":
+                    color = "black";
+                    break;
+                  case "queued":
+                    color = "#DB380F";
+                    break;
+                  case "useless":
+                    opacity = 0.2;
+                    arrowOpacity = 0.3;
+                    break;
+                }
               }
               return (
                 <Edge
                   key={`${edge.id1}-${edge.id2}`}
                   edge={edge}
-                  isSelected={selectedEdge === `${edge.id1}-${edge.id2}`}
                   onClick={handleEdgeClick}
                   onDoubleClick={handleEdgeDoubleClick}
                   onContextMenu={handleEdgeContextMenu}
                   isOriented={isOriented}
                   showWeight={showWeight}
-                  edgeStatus={edgeStatus}
                   size={size}
+                  color={color}
+                  opacity={opacity}
+                  arrowOpacity={arrowOpacity}
                 />
               );
             })}
