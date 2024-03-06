@@ -19,7 +19,7 @@ interface GraphEdgeProps {
   onDoubleClick: (edge: Edge) => void;
   onContextMenu: (e: React.MouseEvent, edgeId: string) => void;
   edgeStatus: string;
-  size: "small" | "large";
+  size: string;
 }
 
 const Edge: React.FC<GraphEdgeProps> = ({
@@ -33,7 +33,7 @@ const Edge: React.FC<GraphEdgeProps> = ({
   edgeStatus,
   size,
 }) => {
-  const nodeRadius = 10;
+  const nodeRadius = size === "small" ? 10 : 11;
   const getStatusProperties = (status: string) => {
     switch (status) {
       case "visited":
@@ -58,8 +58,6 @@ const Edge: React.FC<GraphEdgeProps> = ({
   const { color, opacity, arrowOpacity } = getStatusProperties(edgeStatus);
 
   const style = {
-    cursor: "grab",
-    // Directly use `isVisualizationActive` to conditionally set the fill color
     stroke: color,
     opacity: opacity,
     arrowOpacity: arrowOpacity,
@@ -82,11 +80,9 @@ const Edge: React.FC<GraphEdgeProps> = ({
   const normX = dirX / length;
   const normY = dirY / length;
 
-  const bufferFactor = size === "small" ? 1 : 1.1;
-
   // Apply the bufferFactor to the offsetX and offsetY calculations
-  const offsetX = normX * nodeRadius * bufferFactor;
-  const offsetY = normY * nodeRadius * bufferFactor;
+  const offsetX = normX * nodeRadius;
+  const offsetY = normY * nodeRadius;
 
   // Adjust start and end points
   const adjustedStartX = edge.x1 + offsetX;
@@ -175,7 +171,7 @@ const Edge: React.FC<GraphEdgeProps> = ({
         onClick={handleEdgeClick}
         onDoubleClick={handleEdgeDoubleClick}
         onContextMenu={handleEdgeContextMenu}
-        style={{ ...style }} // Set the cursor style for better UX
+        style={{ ...style, cursor: "grab" }}
       />
 
       {isOriented && (

@@ -455,6 +455,24 @@ const Graph: React.FC<GraphProps> = ({
   // bfs
   const { bfsState, bfsSourceNode } = useBFS();
 
+  let size = "large";
+  const whiteCircleRadius = size === "small" ? 20 : 21;
+  const whiteTextAlignment = size === "small" ? 30 : 31;
+  // const getColor = (status: string) => {
+  //   switch (status) {
+  //     case "visited":
+  //       return "black";
+  //     case "queue":
+  //       return " #DB380F";
+  //     case "processing":
+  //       return "#EFFAF5";
+  //     default:
+  //       let color = isSelected ? "white" : "#E3C46E"; // Default color
+  //   }
+  // };
+
+  // const color = getColor(nodeStatus);
+
   return (
     <div
       className="container container-left"
@@ -468,15 +486,19 @@ const Graph: React.FC<GraphProps> = ({
       <div style={{ flex: 1, height: "100%", overflow: "hidden" }}>
         <svg width="200" height="200">
           {nodes.map((node) => {
-            let currentNodeStatus = "default";
-            let isBfsSource = false;
-
+            let color = node.id === selectedNode ? "white" : "#E3C46E";
             if (bfsState.isVisualizationActive) {
-              if (currentNodeStatus) {
-                currentNodeStatus = bfsState.nodeStatus.get(node.id);
-              }
-              if (node.id === bfsSourceNode) {
-                isBfsSource = true;
+              let nodeStatus = bfsState.nodeStatus?.get(node.id);
+              switch (nodeStatus) {
+                case "visited":
+                  color = "black";
+                  break;
+                case "queue":
+                  color = " #DB380F";
+                  break;
+                case "processing":
+                  color = "#EFFAF5";
+                  break;
               }
             }
             return (
@@ -493,9 +515,8 @@ const Graph: React.FC<GraphProps> = ({
                 onContextMenu={(e) => handleNodeContextMenu(e, node.id)}
                 onMouseEnter={() => handleMouseEnter(node.id)}
                 onMouseLeave={handleMouseLeave}
-                nodeStatus={currentNodeStatus} // Pass the node status here
-                createCircle={isBfsSource && bfsState.isCompleted}
-                size="large"
+                color={color} // Pass the node status here
+                size={size}
               />
             );
           })}
@@ -522,56 +543,74 @@ const Graph: React.FC<GraphProps> = ({
                   isOriented={isOriented}
                   showWeight={showWeight}
                   edgeStatus={edgeStatus}
-                  size="large"
+                  size={size}
                 />
               );
             })}
-          {/* Overlays text for BFS */}
-          {bfsState.isVisualizationActive &&
-            nodes.map((node) => {
-              // text coloring logic
-              let textColor = "transparent";
-              if (bfsState.isVisualizationActive) {
-                let currentNodeStatus =
-                  bfsState.nodeStatus.get(node.id) || "default";
 
-                // show name if white
-                if (currentNodeStatus === "processing") {
-                  textColor = "#EFFAF5";
+          <svg>
+            {bfsState.isVisualizationActive &&
+              nodes.map((node) => {
+                let textColor = "transparent";
+                if (bfsState.isVisualizationActive) {
+                  let currentNodeStatus =
+                    bfsState.nodeStatus.get(node.id) || "default";
+
+                  if (currentNodeStatus === "processing") {
+                    textColor = "#EFFAF5";
+                  } else if (currentNodeStatus === "queue") {
+                    textColor = "#DB380F";
+                  }
                 }
-                // show name if orange
-                else if (currentNodeStatus === "queue") {
-                  textColor = "#DB380F";
-                }
-              }
-              return (
-                <text
-                  key={`text-${node.id}`}
-                  x={node.x + 5} // Adjust position relative to the node
-                  y={node.y - 15}
-                  fill={textColor}
-                  fontSize="14"
-                  textAnchor="start"
-                  style={{
-                    userSelect: "none", // Standard
-                    WebkitUserSelect: "none", // Safari, Chrome and Opera
-                    MozUserSelect: "none", // Firefox
-                    pointerEvents: "none", // This also prevents interactions like mouse events
-                  }}
-                >
-                  {node.id}
-                </text>
-              );
-            })}
+                return (
+                  <g key={node.id}>
+                    {" "}
+                    {/* Use a group to wrap related SVG elements */}
+                    <text
+                      x={node.x + 5}
+                      y={node.y - 15}
+                      fill={textColor}
+                      fontSize="14"
+                      textAnchor="start"
+                      pointerEvents="none" // Directly applied as an attribute
+                    >
+                      {node.id}
+                    </text>
+                    {/* logic for white circle to appear at end of bfs */}
+                    {node.id === bfsSourceNode && bfsState.isCompleted && (
+                      <>
+                        <circle
+                          cx={node.x}
+                          cy={node.y}
+                          r={whiteCircleRadius}
+                          fill="none"
+                          stroke="white"
+                          strokeWidth="2"
+                          opacity=".3"
+                        />
+                        <text
+                          x={node.x}
+                          y={node.y - whiteTextAlignment}
+                          fill="white"
+                          fontSize="12"
+                          textAnchor="middle"
+                          pointerEvents="none"
+                        >
+                          Source
+                        </text>
+                      </>
+                    )}
+                  </g>
+                );
+              })}
+          </svg>
+
+          {/* logic for text to appear at end of bfs */}
           {hoveredNode && !bfsState.isVisualizationActive && (
             <text
               x={hoveredNode.x + 5}
               y={hoveredNode.y - 15} // Adjust position as needed
-              fill={
-                hoveredNode && hoveredNode.id === selectedNode
-                  ? "white"
-                  : "#E3C46E"
-              }
+              fill={"white"}
               fontSize="14"
               textAnchor="middle"
             >

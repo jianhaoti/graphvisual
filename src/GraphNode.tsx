@@ -22,9 +22,8 @@ interface NodeProps {
   onMouseEnter: () => void;
   onMouseLeave: () => void;
   onDoubleClick?: (nodeId: string) => void;
-  nodeStatus: string;
-  createCircle: boolean;
-  size: "small" | "large";
+  color: string;
+  size: string;
 }
 
 const Node: React.FC<NodeProps> = ({
@@ -37,30 +36,13 @@ const Node: React.FC<NodeProps> = ({
   onMouseEnter,
   onMouseLeave,
   onDoubleClick,
-  nodeStatus = "default",
-  createCircle,
+  color,
   size,
 }) => {
   const nodeRef = useRef<SVGCircleElement | null>(null);
 
-  const getColor = (status: string) => {
-    switch (status) {
-      case "visited":
-        return "black";
-      case "queue":
-        return " #DB380F";
-      case "processing":
-        return "#EFFAF5";
-      default:
-        return isSelected ? "white" : "#E3C46E"; // Default color
-    }
-  };
-
-  const color = getColor(nodeStatus);
-
   const style = {
     cursor: "grab",
-    // Directly use `isVisualizationActive` to conditionally set the fill color
     fill: color,
   };
 
@@ -81,54 +63,21 @@ const Node: React.FC<NodeProps> = ({
     }
   };
   const radius = size === "small" ? 10 : 11;
-  const whiteCircleRadius = size === "small" ? 20 : 21;
-  const whiteTextAlignment = size === "small" ? 30 : 31;
   return (
-    <>
-      <circle
-        className="graph-node"
-        id={node.id}
-        ref={nodeRef}
-        cx={node.x}
-        cy={node.y}
-        r={radius}
-        onClick={() => onClick(node.id)}
-        onContextMenu={(e) => onContextMenu(e, node.id)}
-        style={{ ...style }} // Set the cursor style for better UX
-        onMouseEnter={onMouseEnter}
-        onMouseLeave={onMouseLeave}
-        onDoubleClick={handleDoubleClick}
-      />
-      {createCircle && (
-        <>
-          <circle
-            cx={node.x}
-            cy={node.y}
-            r={whiteCircleRadius}
-            fill="none"
-            stroke="white"
-            strokeWidth="2"
-            opacity=".3"
-          />
-          <text
-            x={node.x}
-            y={node.y - whiteTextAlignment} // Adjust based on your needs
-            // className={styles.rotatingText} // controls rotation css
-            style={{
-              dominantBaseline: "middle",
-              textAnchor: "middle",
-              fill: "white",
-              fontSize: "12px",
-              userSelect: "none",
-              // transform: `rotate(0, ${node.x}, ${node.y})`,
-              // transformOrigin: `${node.x}px ${node.y}px`,
-            }}
-          >
-            Source
-          </text>
-        </>
-      )}
-    </>
+    <circle
+      className="graph-node"
+      id={node.id}
+      ref={nodeRef}
+      cx={node.x}
+      cy={node.y}
+      r={radius}
+      onClick={() => onClick(node.id)}
+      onContextMenu={(e) => onContextMenu(e, node.id)}
+      style={{ ...style }} // Set the cursor style for better UX
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+      onDoubleClick={handleDoubleClick}
+    />
   );
 };
 
