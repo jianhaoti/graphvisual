@@ -375,13 +375,17 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
               }}
             >
               {/* overflow problem is somewhere here. if we comment this out, the scrollbar style is applied as expected */}
-              <Typography component="div" variant="body2">
-                {AlgoPseudocode ? (
-                  <AlgoPseudocode inputValue={inputValue} name={name} />
-                ) : (
-                  <Typography sx={{ color: "white" }}>Coming soon.</Typography>
-                )}
-              </Typography>
+              <div className="hideScrollbar">
+                <Typography component="div" variant="body2">
+                  {AlgoPseudocode ? (
+                    <AlgoPseudocode inputValue={inputValue} name={name} />
+                  ) : (
+                    <Typography sx={{ color: "white" }}>
+                      Coming soon.
+                    </Typography>
+                  )}
+                </Typography>
+              </div>
               <div style={{ display: "flex", justifyContent: "flex-end" }}>
                 <button
                   onMouseEnter={() => setLeftIsHovered(true)}

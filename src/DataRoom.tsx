@@ -215,7 +215,7 @@ const DataRoom: React.FC<DataRoomProps> = ({
           <Typography
             variant="h6"
             className="dataRoomTitle"
-            style={{ overflow: "hidden" }}
+            style={{ overflow: "hidden", color: "whitesmoke" }}
           >
             Nodes
           </Typography>
@@ -266,7 +266,7 @@ const DataRoom: React.FC<DataRoomProps> = ({
           <Typography
             variant="h6"
             className="dataRoomTitle"
-            style={{ overflow: "hidden" }}
+            style={{ overflow: "hidden", color: "whitesmoke" }}
           >
             Edges
           </Typography>

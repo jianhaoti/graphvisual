@@ -201,3 +201,11 @@ main {
   scrollbar-width: thin; /* 'auto' or 'thin' for Firefox */
   scrollbar-color: transparent transparent; /* thumb and track color */
 }
+/* styles.css */
+.hideScrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.hideScrollbar {
+  scrollbar-width: none; /* For Firefox */
+}
