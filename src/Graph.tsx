@@ -5,7 +5,7 @@ import Switch from "@mui/material/Switch";
 import { styled } from "@mui/material/styles";
 import { useBFS } from "./bfsContext.js";
 import { Watermark } from "antd";
-import type { ColorPickerProps, GetProp, WatermarkProps } from "antd";
+import type { WatermarkProps } from "antd";
 import styles from "./Graph.module.css";
 
 const CustomSwitch = styled(Switch)(({ theme }) => ({
@@ -461,35 +461,28 @@ const Graph: React.FC<GraphProps> = ({
   }, []);
   // Watermark
   const [showWatermark, setShowWatermark] = useState(true);
-  type Color = GetProp<ColorPickerProps, "color">;
   interface WatermarkConfig {
     content: string;
-    color: string | Color;
+    color: string;
     fontSize: number;
-    zIndex: number;
     rotate: number;
     gap: [number, number];
-    offset?: [number, number];
   }
-  const [config, setConfig] = useState<WatermarkConfig>({
+  const [config] = useState<WatermarkConfig>({
     content: "Click Me",
     color: "rgba(0, 0, 0, 0.2)",
     fontSize: 16,
-    zIndex: 11,
     rotate: -22,
     gap: [100, 100],
-    offset: undefined,
   });
-  const { content, color, fontSize, zIndex, rotate, gap, offset } = config;
+  const { content, color, fontSize, rotate, gap } = config;
 
   const watermarkProps: WatermarkProps = {
     content,
-    zIndex,
     rotate,
     gap,
-    offset,
     font: {
-      color: typeof color === "string" ? color : color.toRgbString(),
+      color,
       fontSize,
     },
   };
