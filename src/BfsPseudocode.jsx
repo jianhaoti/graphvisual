@@ -76,7 +76,7 @@ const BfsPseudocode = ({ inputValue, name }) => {
         whiteSpace: "pre-wrap",
         wordWrap: "break-word",
         textAlign: "left",
-        paddingTop: "20px", // Adds padding at the top
+        paddingTop: "20px",
       }}
     >
       {pseudocodeLines.map((line, index) => {
@@ -88,28 +88,25 @@ const BfsPseudocode = ({ inputValue, name }) => {
         if (index >= 0 && index <= 5) {
           opacity = 0.8;
         }
-        // Handling for the line break before the while loop
-        const isLineBreak =
-          line.trim() === "" &&
-          pseudocodeLines[index + 1]?.trim().startsWith("while");
 
         return (
           <div
             key={index}
             style={{
               display: "flex",
-              alignItems: isLineBreak ? "flex-end" : "baseline",
+              flexDirection: "row", // Ensures line number and code are in the same row
+              alignItems: "flex-start", // Aligns items to the start, respecting top alignment
               opacity,
             }}
           >
             <span
               style={{
-                width: "30px",
+                minWidth: "30px", // Ensures a minimum width for the line number
                 textAlign: "right",
                 paddingRight: "10px",
-                textColor: "white",
-                fontSize: ".75em", // Reduce font size by half
                 color: "white",
+                fontSize: ".75em", // Adjusted for overall size, can be customized
+                userSelect: "none",
               }}
             >
               {index + 1}

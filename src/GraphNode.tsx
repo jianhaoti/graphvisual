@@ -14,7 +14,6 @@ interface NodeProps {
     x: number;
     y: number;
   };
-  isSelected: boolean;
   isDraggable: boolean;
   onClick: (nodeId: string) => void;
   onContextMenu: (e: React.MouseEvent, nodeId: string) => void;
@@ -28,7 +27,6 @@ interface NodeProps {
 
 const Node: React.FC<NodeProps> = ({
   node,
-  isSelected,
   isDraggable,
   onClick,
   onContextMenu,
@@ -45,6 +43,7 @@ const Node: React.FC<NodeProps> = ({
     cursor: "grab",
     fill: color,
   };
+  const radius = size === "small" ? 10 : 11;
 
   // Memoize the onDrag callback
   const memoizedOnDrag = useCallback(
@@ -62,7 +61,6 @@ const Node: React.FC<NodeProps> = ({
       onDoubleClick(node.id);
     }
   };
-  const radius = size === "small" ? 10 : 11;
   return (
     <circle
       className="graph-node"
@@ -73,7 +71,7 @@ const Node: React.FC<NodeProps> = ({
       r={radius}
       onClick={() => onClick(node.id)}
       onContextMenu={(e) => onContextMenu(e, node.id)}
-      style={{ ...style }} // Set the cursor style for better UX
+      style={{ ...style }}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
       onDoubleClick={handleDoubleClick}

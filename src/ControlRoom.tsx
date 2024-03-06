@@ -42,7 +42,8 @@ const ControlRoom: React.FC<ControlRoomProps> = ({
 }) => {
   const { setBfsState } = useBFS();
 
-  // stop visualization when not in "algo" mode. can't do this at top level
+  // stop visualization when click out of algo mode.
+  // can't do this at top level
   useEffect(() => {
     if (mode !== "algo") {
       setBfsState((prevState: any) => ({

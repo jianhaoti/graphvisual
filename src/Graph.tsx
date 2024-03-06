@@ -31,6 +31,7 @@ interface GraphProps {
   setIsOriented: React.Dispatch<React.SetStateAction<boolean>>;
   showWeight: boolean;
   isGraphEditable: boolean;
+  size: string;
 }
 
 const Graph: React.FC<GraphProps> = ({
@@ -46,6 +47,7 @@ const Graph: React.FC<GraphProps> = ({
   setIsOriented,
   showWeight,
   isGraphEditable,
+  size,
 }) => {
   // Mine
   const currentNodeRef = useRef<SVGCircleElement | null>(null);
@@ -416,7 +418,7 @@ const Graph: React.FC<GraphProps> = ({
   }, [nodes]);
 
   const handleMouseEnter = useCallback(
-    (nodeId: string) => {
+    (enteredNode: string) => {
       // Clear any existing timer to prevent duplicate name displays
       if (hoverTimerRef.current) {
         clearTimeout(hoverTimerRef.current);
@@ -425,11 +427,13 @@ const Graph: React.FC<GraphProps> = ({
       hoverTimerRef.current = setTimeout(() => {
         // Access the latest nodes state directly from the ref
         const currentNodes = nodesRef.current;
-        const nodeExists = currentNodes.some((n) => n.id === nodeId);
+        const nodeExists = currentNodes.some((node) => node.id === enteredNode);
         if (!isMouseDown && nodeExists) {
           // Find the node to set as hoveredNode
-          const node = currentNodes.find((n) => n.id === nodeId);
-          setHoveredNode(node || null);
+          const hoveredNode = currentNodes.find(
+            (node) => node.id === enteredNode
+          );
+          setHoveredNode(hoveredNode || null);
         }
       }, 1000); // Wait for 1 second before showing the name
     },
@@ -455,7 +459,6 @@ const Graph: React.FC<GraphProps> = ({
   // bfs
   const { bfsState, bfsSourceNode } = useBFS();
 
-  let size = "large";
   const whiteCircleRadius = size === "small" ? 20 : 21;
   const whiteTextAlignment = size === "small" ? 30 : 31;
 
@@ -472,7 +475,12 @@ const Graph: React.FC<GraphProps> = ({
       <div style={{ flex: 1, height: "100%", overflow: "hidden" }}>
         <svg width="200" height="200">
           {nodes.map((node) => {
-            let color = node.id === selectedNode ? "white" : "#E3C46E";
+            const nodeIsSelected = node.id === selectedNode;
+
+            // default value
+            let color = nodeIsSelected ? "white" : "#E3C46E";
+
+            // bfs
             if (bfsState.isVisualizationActive) {
               let nodeStatus = bfsState.nodeStatus?.get(node.id);
               switch (nodeStatus) {
@@ -491,8 +499,7 @@ const Graph: React.FC<GraphProps> = ({
               <Node
                 key={node.id}
                 node={node}
-                isSelected={node.id === selectedNode}
-                isDraggable={node.id === selectedNode && !isSpaceDown}
+                isDraggable={nodeIsSelected && !isSpaceDown}
                 onClick={() => handleNodeClick(node.id)}
                 onDrag={handleNodeDrag}
                 onDoubleClick={(nodeId) =>
@@ -511,32 +518,43 @@ const Graph: React.FC<GraphProps> = ({
             .filter((edge) => edge.x2 !== null && edge.y2 !== null)
             .map((edge) => {
               const edgeID = `${edge.id1}-${edge.id2}`;
-              let color = edgeID === selectedEdge ? "white" : "#E3C46E";
+              const edgeIsSelected = edgeID === selectedEdge;
+
+              // default values
+              let color = edgeIsSelected ? "white" : "#E3C46E";
               let opacity = 1;
               let arrowOpacity = 1;
+              let weightColor = "white";
 
-              let edgeStatus = "default";
+              // bfs
               if (bfsState.isVisualizationActive) {
-                edgeStatus =
+                weightColor = "#E3C46E"; // blend weight color in with nodes, since it doesnt matter
+                const edgeStatus =
                   bfsState.steps[bfsState.currentStepIndex].edgeStatus.get(
                     edgeID
                   );
                 switch (edgeStatus) {
                   case "visited":
                     color = "black";
+                    weightColor = "black";
                     break;
                   case "queued":
                     color = "#DB380F";
+                    weightColor = "#DB380F";
+
                     break;
                   case "useless":
                     opacity = 0.2;
                     arrowOpacity = 0.3;
+
+                    weightColor = "transparent";
                     break;
                 }
               }
+
               return (
                 <Edge
-                  key={`${edge.id1}-${edge.id2}`}
+                  key={edgeID}
                   edge={edge}
                   onClick={handleEdgeClick}
                   onDoubleClick={handleEdgeDoubleClick}
@@ -547,10 +565,12 @@ const Graph: React.FC<GraphProps> = ({
                   color={color}
                   opacity={opacity}
                   arrowOpacity={arrowOpacity}
+                  weightColor={weightColor}
                 />
               );
             })}
 
+          {/* overlay for bfs. needs to be done seperately */}
           <svg>
             {bfsState.isVisualizationActive &&
               nodes.map((node) => {

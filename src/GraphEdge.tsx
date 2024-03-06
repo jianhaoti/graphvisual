@@ -21,6 +21,7 @@ interface GraphEdgeProps {
   color: string;
   opacity: number;
   arrowOpacity: number;
+  weightColor: string;
 }
 
 const Edge: React.FC<GraphEdgeProps> = ({
@@ -34,6 +35,7 @@ const Edge: React.FC<GraphEdgeProps> = ({
   color,
   opacity,
   arrowOpacity,
+  weightColor,
 }) => {
   const nodeRadius = size === "small" ? 10 : 11;
   const style = {
@@ -174,7 +176,7 @@ const Edge: React.FC<GraphEdgeProps> = ({
         <text
           x={weightPosXAdjusted}
           y={weightPosYAdjusted}
-          fill={color}
+          fill={weightColor}
           dy="0.1em"
           textAnchor={textAnchor} // Use the dynamically adjusted text anchor
           transform={`rotate(${isVertical ? 0 : angleDeg}, ${weightPosXAdjusted}, ${weightPosYAdjusted})`} // Rotate only if not vertical

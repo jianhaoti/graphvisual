@@ -17,6 +17,7 @@ function App() {
 
   // Controls functionality of +/- nodes and edges
   const [isGraphEditable, setIsGraphEditable] = useState(true);
+  let size = "large";
 
   // Graph Data
   const [nodes, setNodes] = useState<Node[]>([]);
@@ -164,6 +165,7 @@ function App() {
           setIsOriented={setIsOriented}
           showWeight={showWeight}
           isGraphEditable={isGraphEditable}
+          size={size}
         />
         <ControlRoom
           mode={mode}
