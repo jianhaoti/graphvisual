@@ -1,0 +1,12 @@
+.watermark-transition {
+  transition: opacity 0.5s ease-in-out; /* Adjust time and easing function to your liking */
+  opacity: 1; /* Start with the watermark fully visible */
+}
+
+.watermark-hidden {
+  opacity: 0; /* This class will be added to hide the watermark */
+  visibility: hidden;
+  transition:
+    visibility 0s 0.5s,
+    opacity 0.25s ease-in-out; /* Hide the watermark after the opacity transition */
+}

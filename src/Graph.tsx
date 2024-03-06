@@ -4,6 +4,9 @@ import Edge from "./GraphEdge";
 import Switch from "@mui/material/Switch";
 import { styled } from "@mui/material/styles";
 import { useBFS } from "./bfsContext.js";
+import { Watermark } from "antd";
+import type { ColorPickerProps, GetProp, WatermarkProps } from "antd";
+import styles from "./Graph.module.css";
 
 const CustomSwitch = styled(Switch)(({ theme }) => ({
   "& .MuiSwitch-switchBase": {
@@ -204,6 +207,7 @@ const Graph: React.FC<GraphProps> = ({
   };
 
   const handleNodeCreation = (e: React.MouseEvent) => {
+    setShowWatermark(false);
     const svgRect = e.currentTarget.getBoundingClientRect();
     const newNode = {
       id: `${Date.now()}`,
@@ -455,6 +459,40 @@ const Graph: React.FC<GraphProps> = ({
       }
     };
   }, []);
+  // Watermark
+  const [showWatermark, setShowWatermark] = useState(true);
+  type Color = GetProp<ColorPickerProps, "color">;
+  interface WatermarkConfig {
+    content: string;
+    color: string | Color;
+    fontSize: number;
+    zIndex: number;
+    rotate: number;
+    gap: [number, number];
+    offset?: [number, number];
+  }
+  const [config, setConfig] = useState<WatermarkConfig>({
+    content: "Click Me",
+    color: "rgba(0, 0, 0, 0.2)",
+    fontSize: 16,
+    zIndex: 11,
+    rotate: -22,
+    gap: [100, 100],
+    offset: undefined,
+  });
+  const { content, color, fontSize, zIndex, rotate, gap, offset } = config;
+
+  const watermarkProps: WatermarkProps = {
+    content,
+    zIndex,
+    rotate,
+    gap,
+    offset,
+    font: {
+      color: typeof color === "string" ? color : color.toRgbString(),
+      fontSize,
+    },
+  };
 
   // bfs
   const { bfsState, bfsSourceNode } = useBFS();
@@ -473,6 +511,15 @@ const Graph: React.FC<GraphProps> = ({
       tabIndex={0}
     >
       <div style={{ flex: 1, height: "100%", overflow: "hidden" }}>
+        <div
+          className={`${styles.watermarkTransition} ${!showWatermark ? styles.watermarkHidden : ""}`}
+        >
+          {showWatermark && (
+            <Watermark {...watermarkProps}>
+              <div style={{ height: 1000 }} />
+            </Watermark>
+          )}{" "}
+        </div>
         <svg width="200" height="200">
           {nodes.map((node) => {
             const nodeIsSelected = node.id === selectedNode;
