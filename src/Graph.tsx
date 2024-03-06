@@ -596,6 +596,10 @@ const Graph: React.FC<GraphProps> = ({
                           fontSize="12"
                           textAnchor="middle"
                           pointerEvents="none"
+                          style={{
+                            userSelect: "none",
+                            WebkitUserSelect: "none",
+                          }}
                         >
                           Source
                         </text>
