@@ -11,6 +11,7 @@ import Edge from "./GraphEdge";
 import { BFSProvider } from "./bfsContext";
 
 function App() {
+  const [showWatermark, setShowWatermark] = useState(true);
   const [mode, setMode] = useState("data");
   const [name, setName] = useState("Untitled");
   const textFieldRef = useRef<HTMLInputElement>(null);
@@ -166,7 +167,10 @@ function App() {
           showWeight={showWeight}
           isGraphEditable={isGraphEditable}
           size={size}
+          showWatermark={showWatermark}
+          setShowWatermark={setShowWatermark}
         />
+
         <ControlRoom
           mode={mode}
           nodes={nodes}

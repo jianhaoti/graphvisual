@@ -27,14 +27,16 @@ interface GraphProps {
   edges: Edge[];
   setEdges: React.Dispatch<React.SetStateAction<Edge[]>>;
   selectedNode: string | null;
-  setSelectedNode: React.Dispatch<React.SetStateAction<string | null>>;
+  setSelectedNode: (nodeId: string | null) => void; // Updated to a function type
   selectedEdge: string | null;
-  setSelectedEdge: React.Dispatch<React.SetStateAction<string | null>>;
+  setSelectedEdge: (edgeIs: string | null) => void; // Updated to a function type
   isOriented: boolean;
   setIsOriented: React.Dispatch<React.SetStateAction<boolean>>;
   showWeight: boolean;
   isGraphEditable: boolean;
   size: string;
+  showWatermark: boolean;
+  setShowWatermark: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const Graph: React.FC<GraphProps> = ({
@@ -51,6 +53,8 @@ const Graph: React.FC<GraphProps> = ({
   showWeight,
   isGraphEditable,
   size,
+  showWatermark,
+  setShowWatermark,
 }) => {
   // Mine
   const currentNodeRef = useRef<SVGCircleElement | null>(null);
@@ -459,8 +463,8 @@ const Graph: React.FC<GraphProps> = ({
       }
     };
   }, []);
+
   // Watermark
-  const [showWatermark, setShowWatermark] = useState(true);
   interface WatermarkConfig {
     content: string;
     color: string;
@@ -513,6 +517,7 @@ const Graph: React.FC<GraphProps> = ({
             </Watermark>
           )}{" "}
         </div>
+
         <svg width="200" height="200">
           {nodes.map((node) => {
             const nodeIsSelected = node.id === selectedNode;
@@ -522,6 +527,7 @@ const Graph: React.FC<GraphProps> = ({
 
             // bfs
             if (bfsState.isVisualizationActive) {
+              color = "E3C46E"; // disable white for selection
               let nodeStatus = bfsState.nodeStatus?.get(node.id);
               switch (nodeStatus) {
                 case "visited":
@@ -689,19 +695,21 @@ const Graph: React.FC<GraphProps> = ({
         </svg>
       </div>
 
-      <div style={{ position: "absolute", bottom: "2px", right: "10px" }}>
-        <CustomSwitch
-          ref={switchContainerRef}
-          id="mySwitchContainer"
-          checked={isSwitchOn.checkedB}
-          onChange={handleOrientationChange}
-          name="checkedB"
-          inputProps={{ "aria-label": "primary checkbox" }}
-          style={{
-            color: "#74A19E", // Changes the thumb color when 'off'
-          }}
-        />
-      </div>
+      {!showWatermark && (
+        <div style={{ position: "absolute", bottom: "2px", right: "10px" }}>
+          <CustomSwitch
+            ref={switchContainerRef}
+            id="mySwitchContainer"
+            checked={isSwitchOn.checkedB}
+            onChange={handleOrientationChange}
+            name="checkedB"
+            inputProps={{ "aria-label": "primary checkbox" }}
+            style={{
+              color: "#74A19E", // Changes the thumb color when 'off'
+            }}
+          />
+        </div>
+      )}
     </div>
   );
 };
