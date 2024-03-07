@@ -10,3 +10,10 @@
     visibility 0s 0.5s,
     opacity 0.25s ease-in-out; /* Hide the watermark after the opacity transition */
 }
+.custom-switch-checked .ant-switch-inner {
+  background-color: #96aacd !important; /* ON state color */
+}
+
+.custom-switch-unchecked .ant-switch-handle {
+  background-color: white !important; /* OFF state handle color */
+}

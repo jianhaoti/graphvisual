@@ -5,7 +5,7 @@ import { useBFS } from "./bfsContext.js";
 import { Watermark } from "antd";
 import type { WatermarkProps } from "antd";
 import styles from "./Graph.module.css";
-import { Switch } from "antd";
+import { Switch, ConfigProvider } from "antd";
 
 interface GraphProps {
   nodes: Node[];
@@ -677,20 +677,30 @@ const Graph: React.FC<GraphProps> = ({
       </div>
       {!showWatermark && (
         <div style={{ position: "absolute", bottom: "15px", right: "15px" }}>
-          <Switch
-            defaultChecked
-            ref={switchContainerRef}
-            id="orientationSwitch"
-            checked={isOriented}
-            onChange={(checked) =>
-              handleOrientationChange(checked, "orientationSwitch")
-            }
-            style={{
-              color: "#74A19E", // Changes the thumb color when 'off'
-              backgroundColor: "#96AACD",
-              zIndex: 10,
+          <ConfigProvider
+            theme={{
+              components: {
+                Switch: {
+                  handleBg: "#74A19E",
+                  colorPrimary: "#616282",
+                  colorPrimaryHover: "#1B1B1B",
+                },
+              },
             }}
-          />
+          >
+            <Switch
+              defaultChecked
+              ref={switchContainerRef}
+              id="orientationSwitch"
+              checked={isOriented}
+              onChange={(checked) =>
+                handleOrientationChange(checked, "orientationSwitch")
+              }
+              style={{
+                zIndex: 10,
+              }}
+            />
+          </ConfigProvider>
         </div>
       )}
       <div
@@ -698,8 +708,8 @@ const Graph: React.FC<GraphProps> = ({
           position: "absolute",
           right: 0,
           bottom: 0,
-          width: "70px", // Adjust the width as needed
-          height: "45px", // Adjust the height as needed
+          width: "75px", // Adjust the width as needed
+          height: "55px", // Adjust the height as needed
           zIndex: 5, // Ensure it's above other clickable elements but not blocking your UI
           backgroundColor: "transparent",
           opacity: ".35",
