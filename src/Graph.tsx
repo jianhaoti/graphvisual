@@ -1,25 +1,11 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import Node from "./GraphNode";
 import Edge from "./GraphEdge";
-import Switch from "@mui/material/Switch";
-import { styled } from "@mui/material/styles";
 import { useBFS } from "./bfsContext.js";
 import { Watermark } from "antd";
 import type { WatermarkProps } from "antd";
 import styles from "./Graph.module.css";
-
-const CustomSwitch = styled(Switch)(({ theme }) => ({
-  "& .MuiSwitch-switchBase": {
-    // thumb color
-    color: theme.palette.primary.main,
-    "&.Mui-checked": {
-      color: theme.palette.primary.main,
-    },
-    "&.Mui-checked + .MuiSwitch-track": {
-      backgroundColor: "#96AACD", // track color when checked
-    },
-  },
-}));
+import { Switch } from "antd";
 
 interface GraphProps {
   nodes: Node[];
@@ -65,19 +51,13 @@ const Graph: React.FC<GraphProps> = ({
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [isSpaceDown, setIsSpaceDown] = useState(false);
   const [isEdgeClicked, setIsEdgeClicked] = useState(false);
-  const [isSwitchOn, setIsSwitchOn] = React.useState({
-    checkedA: true,
-    checkedB: true,
-  });
 
-  const handleOrientationChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  interface SwitchState {
+    [key: string]: boolean;
+  }
+
+  const handleOrientationChange = (checked: boolean, name: string) => {
     if (isGraphEditable) {
-      setIsSwitchOn({
-        ...isSwitchOn,
-        [event.target.name]: event.target.checked,
-      });
       setIsOriented(!isOriented);
     }
   };
@@ -211,6 +191,14 @@ const Graph: React.FC<GraphProps> = ({
   };
 
   const handleNodeCreation = (e: React.MouseEvent) => {
+    // Check if the click is inside the switch container. If so, leave.
+    if (
+      e.target instanceof Element &&
+      (e.target.closest("#orientationSwitch") || e.target.closest("#deadZone"))
+    ) {
+      return;
+    }
+
     setShowWatermark(false);
     const svgRect = e.currentTarget.getBoundingClientRect();
     const newNode = {
@@ -247,13 +235,6 @@ const Graph: React.FC<GraphProps> = ({
         clearTimeout(hoverTimerRef.current);
       }
       setHoveredNode(null);
-      // Check if the click is inside the switch container
-      if (
-        e.target instanceof Element &&
-        e.target.closest("#mySwitchContainer")
-      ) {
-        return; // Do nothing if the click is on or within the switch
-      }
 
       clickStartTime.current = new Date().getTime();
       if (e.target && (e.target as Element).classList.contains("graph-node")) {
@@ -694,22 +675,37 @@ const Graph: React.FC<GraphProps> = ({
           )}
         </svg>
       </div>
-
       {!showWatermark && (
-        <div style={{ position: "absolute", bottom: "2px", right: "10px" }}>
-          <CustomSwitch
+        <div style={{ position: "absolute", bottom: "15px", right: "15px" }}>
+          <Switch
+            defaultChecked
             ref={switchContainerRef}
-            id="mySwitchContainer"
-            checked={isSwitchOn.checkedB}
-            onChange={handleOrientationChange}
-            name="checkedB"
-            inputProps={{ "aria-label": "primary checkbox" }}
+            id="orientationSwitch"
+            checked={isOriented}
+            onChange={(checked) =>
+              handleOrientationChange(checked, "orientationSwitch")
+            }
             style={{
               color: "#74A19E", // Changes the thumb color when 'off'
+              backgroundColor: "#96AACD",
+              zIndex: 10,
             }}
           />
         </div>
       )}
+      <div
+        style={{
+          position: "absolute",
+          right: 0,
+          bottom: 0,
+          width: "70px", // Adjust the width as needed
+          height: "45px", // Adjust the height as needed
+          zIndex: 5, // Ensure it's above other clickable elements but not blocking your UI
+          backgroundColor: "transparent",
+          opacity: ".35",
+        }}
+        id="deadZone" // Optional: For identifying this element, if needed
+      ></div>
     </div>
   );
 };
