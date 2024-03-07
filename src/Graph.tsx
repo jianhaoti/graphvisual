@@ -61,19 +61,9 @@ const Graph: React.FC<GraphProps> = ({
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [isSpaceDown, setIsSpaceDown] = useState(false);
   const [isEdgeClicked, setIsEdgeClicked] = useState(false);
-  const [isSwitchOn, setIsSwitchOn] = React.useState({
-    checkedA: true,
-    checkedB: true,
-  });
 
-  const handleOrientationChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleOrientationChange = () => {
     if (isGraphEditable) {
-      setIsSwitchOn({
-        ...isSwitchOn,
-        [event.target.name]: event.target.checked,
-      });
       setIsOriented(!isOriented);
     }
   };
@@ -708,7 +698,7 @@ const Graph: React.FC<GraphProps> = ({
           position: "absolute",
           right: 0,
           bottom: 0,
-          width: "75px", // Adjust the width as needed
+          width: "70px", // Adjust the width as needed
           height: "55px", // Adjust the height as needed
           zIndex: 5, // Ensure it's above other clickable elements but not blocking your UI
           backgroundColor: "transparent",
@@ -728,9 +718,8 @@ const Graph: React.FC<GraphProps> = ({
         >
           <CustomSwitch
             ref={switchContainerRef}
-            checked={isSwitchOn.checkedB}
+            checked={isOriented}
             onChange={handleOrientationChange}
-            name="checkedB"
             inputProps={{ "aria-label": "primary checkbox" }}
             style={{
               color: "#74A19E", // Changes the thumb color when 'off'
