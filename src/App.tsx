@@ -167,8 +167,6 @@ function App() {
           showWeight={showWeight}
           isGraphEditable={isGraphEditable}
           size={size}
-          showWatermark={showWatermark}
-          setShowWatermark={setShowWatermark}
         />
 
         <ControlRoom

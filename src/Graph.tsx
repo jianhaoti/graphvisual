@@ -1,11 +1,25 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import Node from "./GraphNode";
 import Edge from "./GraphEdge";
+import Switch from "@mui/material/Switch";
+import { styled } from "@mui/material/styles";
 import { useBFS } from "./bfsContext.js";
 import { Watermark } from "antd";
-import type { WatermarkProps } from "antd";
+import type { ColorPickerProps, GetProp, WatermarkProps } from "antd";
 import styles from "./Graph.module.css";
-import { Switch, ConfigProvider } from "antd";
+
+const CustomSwitch = styled(Switch)(({ theme }) => ({
+  "& .MuiSwitch-switchBase": {
+    // thumb color
+    color: theme.palette.primary.main,
+    "&.Mui-checked": {
+      color: theme.palette.primary.main,
+    },
+    "&.Mui-checked + .MuiSwitch-track": {
+      backgroundColor: "#96AACD", // track color when checked
+    },
+  },
+}));
 
 interface GraphProps {
   nodes: Node[];
@@ -13,16 +27,14 @@ interface GraphProps {
   edges: Edge[];
   setEdges: React.Dispatch<React.SetStateAction<Edge[]>>;
   selectedNode: string | null;
-  setSelectedNode: (nodeId: string | null) => void; // Updated to a function type
+  setSelectedNode: React.Dispatch<React.SetStateAction<string | null>>;
   selectedEdge: string | null;
-  setSelectedEdge: (edgeIs: string | null) => void; // Updated to a function type
+  setSelectedEdge: React.Dispatch<React.SetStateAction<string | null>>;
   isOriented: boolean;
   setIsOriented: React.Dispatch<React.SetStateAction<boolean>>;
   showWeight: boolean;
   isGraphEditable: boolean;
   size: string;
-  showWatermark: boolean;
-  setShowWatermark: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const Graph: React.FC<GraphProps> = ({
@@ -39,8 +51,6 @@ const Graph: React.FC<GraphProps> = ({
   showWeight,
   isGraphEditable,
   size,
-  showWatermark,
-  setShowWatermark,
 }) => {
   // Mine
   const currentNodeRef = useRef<SVGCircleElement | null>(null);
@@ -51,13 +61,19 @@ const Graph: React.FC<GraphProps> = ({
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [isSpaceDown, setIsSpaceDown] = useState(false);
   const [isEdgeClicked, setIsEdgeClicked] = useState(false);
+  const [isSwitchOn, setIsSwitchOn] = React.useState({
+    checkedA: true,
+    checkedB: true,
+  });
 
-  interface SwitchState {
-    [key: string]: boolean;
-  }
-
-  const handleOrientationChange = (checked: boolean, name: string) => {
+  const handleOrientationChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     if (isGraphEditable) {
+      setIsSwitchOn({
+        ...isSwitchOn,
+        [event.target.name]: event.target.checked,
+      });
       setIsOriented(!isOriented);
     }
   };
@@ -191,12 +207,12 @@ const Graph: React.FC<GraphProps> = ({
   };
 
   const handleNodeCreation = (e: React.MouseEvent) => {
-    // Check if the click is inside the switch container. If so, leave.
-    if (
-      e.target instanceof Element &&
-      (e.target.closest("#orientationSwitch") || e.target.closest("#deadZone"))
-    ) {
-      return;
+    if (e.target instanceof Element && e.target.closest("#mySwitchContainer")) {
+      return; // Do nothing if the click is on or within the switch
+    }
+
+    if (e.target instanceof Element && e.target.closest("#deadZone")) {
+      return; // Do nothing if the click is on or within the switch
     }
 
     setShowWatermark(false);
@@ -235,6 +251,13 @@ const Graph: React.FC<GraphProps> = ({
         clearTimeout(hoverTimerRef.current);
       }
       setHoveredNode(null);
+      // Check if the click is inside the switch container
+      // if (
+      //   e.target instanceof Element &&
+      //   e.target.closest("#mySwitchContainer")
+      // ) {
+      //   return; // Do nothing if the click is on or within the switch
+      // }
 
       clickStartTime.current = new Date().getTime();
       if (e.target && (e.target as Element).classList.contains("graph-node")) {
@@ -444,30 +467,37 @@ const Graph: React.FC<GraphProps> = ({
       }
     };
   }, []);
-
   // Watermark
+  const [showWatermark, setShowWatermark] = useState(true);
+  type Color = GetProp<ColorPickerProps, "color">;
   interface WatermarkConfig {
     content: string;
-    color: string;
+    color: string | Color;
     fontSize: number;
+    zIndex: number;
     rotate: number;
     gap: [number, number];
+    offset?: [number, number];
   }
-  const [config] = useState<WatermarkConfig>({
+  const [config, setConfig] = useState<WatermarkConfig>({
     content: "Click Me",
     color: "rgba(0, 0, 0, 0.2)",
     fontSize: 16,
+    zIndex: 11,
     rotate: -22,
     gap: [100, 100],
+    offset: undefined,
   });
-  const { content, color, fontSize, rotate, gap } = config;
+  const { content, color, fontSize, zIndex, rotate, gap, offset } = config;
 
   const watermarkProps: WatermarkProps = {
     content,
+    zIndex,
     rotate,
     gap,
+    offset,
     font: {
-      color,
+      color: typeof color === "string" ? color : color.toRgbString(),
       fontSize,
     },
   };
@@ -498,7 +528,6 @@ const Graph: React.FC<GraphProps> = ({
             </Watermark>
           )}{" "}
         </div>
-
         <svg width="200" height="200">
           {nodes.map((node) => {
             const nodeIsSelected = node.id === selectedNode;
@@ -508,7 +537,6 @@ const Graph: React.FC<GraphProps> = ({
 
             // bfs
             if (bfsState.isVisualizationActive) {
-              color = "E3C46E"; // disable white for selection
               let nodeStatus = bfsState.nodeStatus?.get(node.id);
               switch (nodeStatus) {
                 case "visited":
@@ -675,34 +703,6 @@ const Graph: React.FC<GraphProps> = ({
           )}
         </svg>
       </div>
-      {!showWatermark && (
-        <div style={{ position: "absolute", bottom: "15px", right: "15px" }}>
-          <ConfigProvider
-            theme={{
-              components: {
-                Switch: {
-                  handleBg: "#74A19E",
-                  colorPrimary: "#616282",
-                  colorPrimaryHover: "#1B1B1B",
-                },
-              },
-            }}
-          >
-            <Switch
-              defaultChecked
-              ref={switchContainerRef}
-              id="orientationSwitch"
-              checked={isOriented}
-              onChange={(checked) =>
-                handleOrientationChange(checked, "orientationSwitch")
-              }
-              style={{
-                zIndex: 10,
-              }}
-            />
-          </ConfigProvider>
-        </div>
-      )}
       <div
         style={{
           position: "absolute",
@@ -715,7 +715,29 @@ const Graph: React.FC<GraphProps> = ({
           opacity: ".35",
         }}
         id="deadZone" // Optional: For identifying this element, if needed
-      ></div>
+      />
+      {!showWatermark && (
+        <div
+          id="mySwitchContainer"
+          style={{
+            position: "absolute",
+            bottom: "2px",
+            right: "10px",
+            zIndex: 5,
+          }}
+        >
+          <CustomSwitch
+            ref={switchContainerRef}
+            checked={isSwitchOn.checkedB}
+            onChange={handleOrientationChange}
+            name="checkedB"
+            inputProps={{ "aria-label": "primary checkbox" }}
+            style={{
+              color: "#74A19E", // Changes the thumb color when 'off'
+            }}
+          />
+        </div>
+      )}{" "}
     </div>
   );
 };
