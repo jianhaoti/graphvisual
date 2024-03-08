@@ -73,7 +73,6 @@ const AlgoRoom: React.FC<AlgoRoomProps> = ({
   const handleContextMenu = (e: React.MouseEvent) => {
     e.preventDefault();
   };
-
   return (
     <Box
       onContextMenu={(e) => handleContextMenu(e)}

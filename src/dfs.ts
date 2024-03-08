@@ -22,8 +22,7 @@ export const dfs = (
 
     while (stack.length > 0) {
       // orange node turns white
-      const node = stack.pop()!;
-      processing = node;
+      processing = stack.pop()!;
 
       visited.forEach((node) => {
         if (edgeStatus.get(`${node}-${processing}`) === "stacked") {
@@ -49,7 +48,7 @@ export const dfs = (
         edgeStatus: new Map(edgeStatus),
       });
 
-      const neighbors = theNeighbors.get(node) || [];
+      const neighbors = theNeighbors.get(processing) || [];
 
       for (const neighbor of neighbors) {
         // if the neighbor is undiscovered
@@ -84,7 +83,7 @@ export const dfs = (
         edgeStatus: new Map(edgeStatus),
       });
 
-      visited.add(node); // processing node turns black
+      visited.add(processing); // processing node turns black
       processing = "";
 
       // white node turns black. no change in edge status

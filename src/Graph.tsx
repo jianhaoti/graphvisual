@@ -496,9 +496,6 @@ const Graph: React.FC<GraphProps> = ({
   const whiteCircleRadius = size === "small" ? 20 : 21;
   const whiteTextAlignment = size === "small" ? 30 : 31;
 
-  useEffect(() => {
-    console.log(bfsState.nodeStatus);
-  }, [bfsState]);
   return (
     <div
       className="container container-left"
@@ -625,7 +622,7 @@ const Graph: React.FC<GraphProps> = ({
                     color = "black";
                     weightColor = "black";
                     break;
-                  case "queued":
+                  case "stacked":
                     color = "#DB380F";
                     weightColor = "#DB380F";
 
@@ -686,7 +683,6 @@ const Graph: React.FC<GraphProps> = ({
                 return (
                   <g key={node.id}>
                     {" "}
-                    {/* Use a group to wrap related SVG elements */}
                     <text
                       x={node.x + 5}
                       y={node.y - 15}
@@ -699,34 +695,38 @@ const Graph: React.FC<GraphProps> = ({
                       {node.id}
                     </text>
                     {/* logic for white circle to appear at end of bfs */}
-                    {(node.id === bfsSourceNode && bfsState.isCompleted) ||
-                      (node.id === dfsSourceNode && dfsState.isCompleted && (
-                        <>
-                          <circle
-                            cx={node.x}
-                            cy={node.y}
-                            r={whiteCircleRadius}
-                            fill="none"
-                            stroke="white"
-                            strokeWidth="2"
-                            opacity=".3"
-                          />
-                          <text
-                            x={node.x}
-                            y={node.y - whiteTextAlignment}
-                            fill="white"
-                            fontSize="12"
-                            textAnchor="middle"
-                            pointerEvents="none"
-                            style={{
-                              userSelect: "none",
-                              WebkitUserSelect: "none",
-                            }}
-                          >
-                            Source
-                          </text>
-                        </>
-                      ))}
+                    {((node.id === bfsSourceNode &&
+                      bfsState.isCompleted &&
+                      bfsState.isVisualizationActive) ||
+                      (node.id === dfsSourceNode &&
+                        dfsState.isCompleted &&
+                        dfsState.isVisualizationActive)) && (
+                      <>
+                        <circle
+                          cx={node.x}
+                          cy={node.y}
+                          r={whiteCircleRadius}
+                          fill="none"
+                          stroke="white"
+                          strokeWidth="2"
+                          opacity=".3"
+                        />
+                        <text
+                          x={node.x}
+                          y={node.y - whiteTextAlignment}
+                          fill="white"
+                          fontSize="12"
+                          textAnchor="middle"
+                          pointerEvents="none"
+                          style={{
+                            userSelect: "none",
+                            WebkitUserSelect: "none",
+                          }}
+                        >
+                          Source
+                        </text>
+                      </>
+                    )}
                   </g>
                 );
               })}

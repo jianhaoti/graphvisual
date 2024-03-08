@@ -384,9 +384,9 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
     };
   }, [handlePreviousButtonClick, handleNextButtonClick, algoTitle, movieTime]);
 
-  // useEffect(() => {
-  //   console.log(dfsState.steps[dfsState.currentStepIndex].stack);
-  // }, [dfsState]);
+  useEffect(() => {
+    console.log(dfsState.steps[dfsState.currentStepIndex].stack);
+  }, [dfsState.steps[dfsState.currentStepIndex].stack]);
 
   return (
     <Fade in={true} timeout={500}>
