@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 import "./App.css";
-import Graph from "./Graph";
+import Graph from "./graph";
 import ControlRoom from "./controlRoom";
 import { Button, ButtonGroup } from "@mui/material";
 import { ReactComponent as AlgoIcon } from "./assets/algoIcon.svg";
