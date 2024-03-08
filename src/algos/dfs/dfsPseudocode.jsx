@@ -1,10 +1,10 @@
 import React from "react";
-import { HighlightInstructions } from "../bfs/bfsHighlightInstructions"; // Ensure this path matches your project structure
+import { HighlightInstructions } from "../dfs/dfsHighlightInstructions"; // Ensure this path matches your project structure
 import { useDFS } from "./dfsContext";
 
 const DfsPseudocode = ({ inputValue, name }) => {
-  const { bfsState } = useBFS();
-  const { currentStepIndex } = bfsState;
+  const { dfsState } = useDFS();
+  const { currentStepIndex } = dfsState;
   const highlightInstructions = HighlightInstructions();
 
   // Define colors and styles
@@ -26,13 +26,13 @@ const DfsPseudocode = ({ inputValue, name }) => {
         case "init":
           color = initializeColor;
           break;
-        case "queue":
+        case "stack":
         case "set":
         case "string":
         case "array":
           color = typeColor;
           break;
-        case "Q":
+        case "S":
         case "Visited":
         case "processing":
         case "Neighbors":
@@ -53,17 +53,17 @@ const DfsPseudocode = ({ inputValue, name }) => {
 
   // Pseudocode lines
   const pseudocodeLines = [
-    `BFS (${name}, ${inputValue}):`,
-    `  init queue Q = [${inputValue}]`,
+    `DFS (${name}, ${inputValue}):`,
+    `  init stack S = [${inputValue}]`,
     `  init set Visited = {}`,
     `  init string processing = ""`,
     ``,
-    `  while (Q is nonempty)`,
-    `    processing = Q.dequeue()`,
+    `  while (S is nonempty)`,
+    `    processing = S.destack()`,
     `    init array Neighbors of q`,
     `    for n in Neighbors:`,
-    `      if (n is not in Visited nor in Q):`,
-    `        Q.enqueue(n)`,
+    `      if (n is not in Visited nor in S):`,
+    `        S.enstack(n)`,
     `    Visited.add(processing)`,
   ];
 
@@ -119,4 +119,4 @@ const DfsPseudocode = ({ inputValue, name }) => {
   );
 };
 
-export default BfsPseudocode;
+export default DfsPseudocode;

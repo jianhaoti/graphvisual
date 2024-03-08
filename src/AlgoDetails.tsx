@@ -20,6 +20,7 @@ import BfsPseudocode from "./algos/bfs/bfsPseudocode";
 
 import { dfs, DFSStepType } from "./algos/dfs/dfs";
 import { useDFS } from "./algos/dfs/dfsContext";
+import DfsPseudocode from "./algos/dfs/dfsPseudocode";
 
 import { ReactComponent as RightArrow } from "./assets/rightArrow.svg";
 import { ReactComponent as LeftArrow } from "./assets/leftArrow.svg";
@@ -110,6 +111,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
 
   const algoComponentMap = {
     BFS: BfsPseudocode,
+    DFS: DfsPseudocode,
   };
 
   const AlgoPseudocode =
