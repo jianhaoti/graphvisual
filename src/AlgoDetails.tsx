@@ -461,7 +461,55 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                     backgroundColor: "transparent",
                   }}
                   onClick={handleCarouselClick}
-                ></div>
+                >
+                  <ConfigProvider
+                    theme={{
+                      components: {
+                        Carousel: {
+                          dotHeight: 3,
+                        },
+                      },
+                    }}
+                  >
+                    {/* putting the fade animation makes resizing not bug out */}
+                    {/* otherwise, multiple contents are shown at once for a bit as you go from sm to big */}
+                    <Carousel dotPosition="bottom" effect="fade">
+                      <div>
+                        <Typography
+                          component="div"
+                          variant="body2"
+                          sx={{
+                            height: "40vh",
+                            width: "40vw",
+                          }}
+                        >
+                          {AlgoPseudocode ? (
+                            <AlgoPseudocode
+                              inputValue={inputValue}
+                              name={name}
+                            />
+                          ) : (
+                            <Typography sx={{ color: "white" }}>
+                              Coming soon.
+                            </Typography>
+                          )}
+                        </Typography>
+                      </div>
+                      <div>
+                        <Typography
+                          variant="body1"
+                          sx={{
+                            color: "white",
+                            height: "40vh",
+                            width: "40vw",
+                          }}
+                        >
+                          Test
+                        </Typography>
+                      </div>
+                    </Carousel>
+                  </ConfigProvider>
+                </div>
                 {/* buttons */}
                 <div
                   style={{
