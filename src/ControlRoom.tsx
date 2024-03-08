@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
-import DataRoom from "./dataRoom";
+import DataRoom from "./DataRoom";
 import Node from "./GraphNode";
 import Edge from "./GraphEdge";
-import AlgoRoom from "./algoRoom";
+import AlgoRoom from "./AlgoRoom";
 import { useBFS } from "./algos/bfs/bfsContext";
 
 interface ControlRoomProps {

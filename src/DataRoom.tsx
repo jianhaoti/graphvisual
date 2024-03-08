@@ -45,6 +45,8 @@ const DataRoom: React.FC<DataRoomProps> = ({
 }) => {
   const maxLengthNode = 25;
 
+  // console.log("test")
+
   const renderNodeItem = (node: Node) => {
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
       if (e.key === "Enter") {
