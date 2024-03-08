@@ -2,8 +2,8 @@ import React, { useState, useRef, useEffect, useCallback } from "react";
 import styles from "./Graph.module.css";
 
 // basics
-import Node from "./GraphNode";
-import Edge from "./GraphEdge";
+import Node from "./graphNode";
+import Edge from "./graphEdge";
 
 // material
 import Switch from "@mui/material/Switch";
@@ -14,8 +14,8 @@ import { Watermark } from "antd";
 import type { ColorPickerProps, GetProp, WatermarkProps } from "antd";
 
 // algorithms
-import { useBFS } from "./bfsContext.js";
-import { useDFS } from "./dfsContext";
+import { useBFS } from "./algos/bfs/bfsContext.js";
+import { useDFS } from "./algos/dfs/dfsContext";
 
 const CustomSwitch = styled(Switch)(({ theme }) => ({
   "& .MuiSwitch-switchBase": {

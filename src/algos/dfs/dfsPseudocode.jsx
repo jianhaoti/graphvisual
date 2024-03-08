@@ -1,8 +1,8 @@
 import React from "react";
-import { HighlightInstructions } from "./highlightInstructions"; // Ensure this path matches your project structure
-import { useBFS } from "./bfsContext";
+import { HighlightInstructions } from "../bfs/bfsHighlightInstructions"; // Ensure this path matches your project structure
+import { useDFS } from "./dfsContext";
 
-const BfsPseudocode = ({ inputValue, name }) => {
+const DfsPseudocode = ({ inputValue, name }) => {
   const { bfsState } = useBFS();
   const { currentStepIndex } = bfsState;
   const highlightInstructions = HighlightInstructions();

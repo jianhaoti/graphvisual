@@ -1,8 +1,9 @@
 import { useBFS } from "./bfsContext";
-
 export const HighlightInstructions = () => {
   const { bfsState } = useBFS();
+
   const bfsSteps = bfsState.steps;
+
   const highlightInstructions = new Array(bfsSteps.length).fill([]);
 
   let stepIndex = 0;
@@ -15,8 +16,8 @@ export const HighlightInstructions = () => {
       stepIndex + 1 < bfsSteps.length &&
       bfsSteps[stepIndex + 1].processing !== ""
     ) {
-      highlightInstructions[stepIndex + 1] = [7, 8, 9, 10];
-      highlightInstructions[stepIndex] = [6];
+      highlightInstructions[stepIndex + 1] = [7, 8, 9, 10]; // orange
+      highlightInstructions[stepIndex] = [6]; // white
       stepIndex += 1;
     }
     stepIndex += 1;

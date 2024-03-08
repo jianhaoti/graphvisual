@@ -11,15 +11,15 @@ import {
   ListItem,
   TextField,
 } from "@mui/material";
-import Node from "./GraphNode";
+import Node from "./graphNode";
 import { convertToAdjacencyList } from "./graphToAdjList";
-import Edge from "./GraphEdge";
-import { bfs, BFSStepType } from "./bfs";
-import { useBFS } from "./bfsContext.js";
-import BfsPseudocode from "./BfsPseudocode";
+import Edge from "./graphEdge";
+import { bfs, BFSStepType } from "./algos/bfs/bfs";
+import { useBFS } from "./algos/bfs/bfsContext.js";
+import BfsPseudocode from "./algos/bfs/bfsPseudocode";
 
-import { dfs, DFSStepType } from "./dfs";
-import { useDFS } from "./dfsContext";
+import { dfs, DFSStepType } from "./algos/dfs/dfs";
+import { useDFS } from "./algos/dfs/dfsContext";
 
 import { ReactComponent as RightArrow } from "./assets/rightArrow.svg";
 import { ReactComponent as LeftArrow } from "./assets/leftArrow.svg";

@@ -1,15 +1,15 @@
 import React, { useState, useRef } from "react";
 import "./App.css";
 import Graph from "./Graph";
-import ControlRoom from "./ControlRoom";
+import ControlRoom from "./controlRoom";
 import { Button, ButtonGroup } from "@mui/material";
 import { ReactComponent as AlgoIcon } from "./assets/algoIcon.svg";
 import { ReactComponent as DataIcon } from "./assets/dataIcon.svg";
 import TextField from "@mui/material/TextField";
-import Node from "./GraphNode";
-import Edge from "./GraphEdge";
-import { BFSProvider } from "./bfsContext";
-import { DFSProvider } from "./dfsContext";
+import Node from "./graphNode";
+import Edge from "./graphEdge";
+import { BFSProvider } from "./algos/bfs/bfsContext";
+import { DFSProvider } from "./algos/dfs/dfsContext";
 
 function App() {
   const [showWatermark, setShowWatermark] = useState(true);
