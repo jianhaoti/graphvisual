@@ -70,6 +70,12 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
   setIsGraphEditable,
   name,
 }) => {
+  // Card sizing
+  const cardSizing = {
+    height: "55vh",
+    width: "30vw",
+  };
+
   // Artwork
   const titleToImage = {
     BFS: Julanite1,
@@ -414,15 +420,14 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
       >
         <Card
           sx={{
-            height: "55vh",
-            width: "60vh",
+            // height: "55vh",
+            // width: "60vh",
             backgroundColor: movieTime === false ? "#424541" : "#1E1E1E",
             position: "relative",
             overflow: "auto", // this does NOT control the overflow in the pseudococde
             opacity: visible ? 1 : 0,
             transform: visible ? "translateY(0)" : "translateY(-20px)",
             transition: "opacity 500ms, transform 500ms",
-
             // hide the scrollbar
             "&::-webkit-scrollbar": {
               width: "0px",
@@ -435,123 +440,137 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
           onClick={(e) => e.stopPropagation()} // Prevent background click inside the card
         >
           {movieTime ? (
-            <CardContent
-              sx={{
-                display: "flex", // Use flex layout
-                flexDirection: "column", // Stack children vertically
-                height: "50vh", // Fixed height for the container
-                flexGrow: 1, // Allows content area to grow and fill available space
-                backgroundColor: "#1E1E1E",
-                justifyContent: "space-between", // Push content to start and buttons to end
-                overflow: "hiden",
-              }}
-            >
-              {/* overflow problem is somewhere here. if we comment this out, the scrollbar style is applied as expected */}
-              <div
-                className="hideScrollbar"
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  // backgroundColor: "red",
+            <div style={cardSizing} className="hideScrollbar">
+              <CardContent
+                sx={{
+                  display: "flex", // Use flex layout
+                  flexDirection: "column", // Stack children vertically
+                  height: "50vh", // Fixed height for the container
+                  flexGrow: 1, // Allows content area to grow and fill available space
+                  backgroundColor: "#1E1E1E",
+                  justifyContent: "space-between", // Push content to start and buttons to end
+                  overflow: "hidden",
+                  position: "relative", // Needed for absolute positioning of children
                 }}
-                onClick={handleCarouselClick}
               >
-                <Carousel dotPosition="bottom">
-                  <div>
-                    <Typography
-                      component="div"
-                      variant="body2"
-                      sx={{
-                        // backgroundColor: "blue",
-                        height: "40vh",
-                        width: "41vw",
-                      }}
-                    >
-                      {AlgoPseudocode ? (
-                        <AlgoPseudocode inputValue={inputValue} name={name} />
-                      ) : (
-                        <Typography sx={{ color: "white" }}>
-                          Coming soon.
-                        </Typography>
-                      )}
-                    </Typography>
-                  </div>
-                  <div>
-                    <Typography
-                      variant="body1"
-                      sx={{
-                        color: "white",
-                        // backgroundColor: "blue",
-                        height: "40vh",
-                        width: "40vw",
-                      }}
-                    >
-                      Test
-                    </Typography>
-                  </div>
-                </Carousel>
-              </div>
-              <div style={{ display: "flex", justifyContent: "flex-end" }}>
-                <button
-                  onMouseEnter={() => setLeftIsHovered(true)}
-                  onMouseLeave={() => setLeftIsHovered(false)}
-                  onMouseDown={() => setIsLeftClicked(true)}
-                  onMouseUp={() => setIsLeftClicked(false)}
-                  onClick={handlePreviousButtonClick}
-                  disabled={atStart}
+                <div
                   style={{
-                    userSelect: "none",
-                    cursor: "pointer",
-                    backgroundColor: "inherit",
-                    border: "none",
-                    outline: "none",
-                    overflow: "hidden",
+                    overflowX: "auto",
+                    width: "100%",
+                    height: "100%",
+                    position: "relative", // Ensure positioning context is correct
+                  }}
+                  onClick={handleCarouselClick}
+                >
+                  {/* putting the fade animation makes resizing not bug out */}
+                  {/* otherwise, multiple contents are shown at once for a bit as you go from sm to big */}
+                  <Carousel dotPosition="bottom" effect="fade">
+                    <div>
+                      <Typography
+                        component="div"
+                        variant="body2"
+                        sx={{
+                          height: "40vh",
+                          width: "40vw",
+                          backgroundColor: "inherit",
+                        }}
+                      >
+                        {AlgoPseudocode ? (
+                          <AlgoPseudocode inputValue={inputValue} name={name} />
+                        ) : (
+                          <Typography sx={{ color: "white" }}>
+                            Coming soon.
+                          </Typography>
+                        )}
+                      </Typography>
+                    </div>
+                    <div>
+                      <Typography
+                        variant="body1"
+                        sx={{
+                          color: "white",
+                          height: "40vh",
+                          width: "40vw",
+                        }}
+                      >
+                        Test
+                      </Typography>
+                    </div>
+                  </Carousel>
+                </div>
+                <div
+                  style={{
+                    backgroundColor: "transparent",
+                    position: "fixed",
+                    bottom: "2.5vh",
+                    right: "1vw",
+                    zIndex: "20",
+                    display: "flex",
+                    justifyContent: "flex-end",
                   }}
                 >
-                  <LeftArrow
+                  <button
+                    onMouseEnter={() => setLeftIsHovered(true)}
+                    onMouseLeave={() => setLeftIsHovered(false)}
+                    onMouseDown={() => setIsLeftClicked(true)}
+                    onMouseUp={() => setIsLeftClicked(false)}
+                    onClick={handlePreviousButtonClick}
+                    disabled={atStart}
                     style={{
-                      filter: atStart
-                        ? "brightness(75%)"
-                        : isLeftClicked
-                          ? "brightness(200%)"
-                          : LeftIsHovered
-                            ? "brightness(130%)"
-                            : "none", // Increase brightness on hover and click
+                      userSelect: "none",
+                      cursor: "pointer",
+                      backgroundColor: "inherit",
+                      border: "none",
+                      outline: "none",
+                      overflow: "hidden",
+                      position: "relative",
                     }}
-                  />
-                </button>
-                <button
-                  onMouseEnter={() => setRightIsHovered(true)}
-                  onMouseLeave={() => setRightIsHovered(false)}
-                  onMouseDown={() => setIsRightClicked(true)}
-                  onMouseUp={() => setIsRightClicked(false)}
-                  onClick={handleNextButtonClick}
-                  disabled={atEnd}
-                  style={{
-                    userSelect: "none",
-                    cursor: "pointer",
-                    backgroundColor: "#1E1E1E",
-                    border: "none",
-                    outline: "none",
-                    overflow: "hidden",
-                  }}
-                >
-                  <RightArrow
+                  >
+                    <LeftArrow
+                      style={{
+                        filter: atStart
+                          ? "brightness(75%)"
+                          : isLeftClicked
+                            ? "brightness(200%)"
+                            : LeftIsHovered
+                              ? "brightness(130%)"
+                              : "none", // Increase brightness on hover and click
+                      }}
+                    />
+                  </button>
+                  <button
+                    onMouseEnter={() => setRightIsHovered(true)}
+                    onMouseLeave={() => setRightIsHovered(false)}
+                    onMouseDown={() => setIsRightClicked(true)}
+                    onMouseUp={() => setIsRightClicked(false)}
+                    onClick={handleNextButtonClick}
+                    disabled={atEnd}
                     style={{
-                      filter: atEnd
-                        ? "brightness(75%)"
-                        : isRightClicked
-                          ? "brightness(200%)"
-                          : RightIsHovered
-                            ? "brightness(130%)"
-                            : "none", // Increase brightness on hover and click
+                      userSelect: "none",
+                      cursor: "pointer",
+                      backgroundColor: "inherit",
+                      border: "none",
+                      outline: "none",
+                      overflow: "hidden",
                     }}
-                  />
-                </button>
-              </div>
-            </CardContent>
+                  >
+                    <RightArrow
+                      style={{
+                        filter: atEnd
+                          ? "brightness(75%)"
+                          : isRightClicked
+                            ? "brightness(200%)"
+                            : RightIsHovered
+                              ? "brightness(130%)"
+                              : "none", // Increase brightness on hover and click
+                      }}
+                    />
+                  </button>
+                </div>
+              </CardContent>
+            </div>
           ) : (
-            <div>
+            <div style={cardSizing}>
               <div
                 className="artwork-container"
                 style={{ position: "relative", height: "230px" }}
@@ -568,7 +587,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                 <Typography
                   variant="caption"
                   sx={{
-                    position: "fixed",
+                    position: "absolute", // absolute relative to artwork
                     top: 200,
                     right: 10,
                     color: "white",

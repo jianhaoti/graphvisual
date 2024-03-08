@@ -73,7 +73,7 @@ const BfsPseudocode = ({ inputValue, name }) => {
         color: textColor,
         backgroundColor: backgroundColor,
         fontFamily: '"SF Mono", "Consolas", Menlo, monospace',
-        whiteSpace: "pre-wrap",
+        whiteSpace: "pre",
         wordWrap: "break-word",
         textAlign: "left",
         paddingTop: "20px",
