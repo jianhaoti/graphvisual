@@ -32,7 +32,7 @@ import Julanite3 from "./Julanite3.jpeg";
 import Julanite4 from "./Julanite4.jpeg";
 import Julanite5 from "./Julanite5.jpeg";
 
-import { Carousel } from "antd";
+import { Carousel, ConfigProvider } from "antd";
 
 interface AlgoDetailsProps {
   algoTitle: string;
@@ -453,51 +453,65 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                   position: "relative", // Needed for absolute positioning of children
                 }}
               >
+                {/* Carousel elements */}
                 <div
                   style={{
-                    overflowX: "auto",
                     width: "100%",
                     height: "100%",
                     position: "relative", // Ensure positioning context is correct
+                    backgroundColor: "transparent",
                   }}
                   onClick={handleCarouselClick}
                 >
-                  {/* putting the fade animation makes resizing not bug out */}
-                  {/* otherwise, multiple contents are shown at once for a bit as you go from sm to big */}
-                  <Carousel dotPosition="bottom" effect="fade">
-                    <div>
-                      <Typography
-                        component="div"
-                        variant="body2"
-                        sx={{
-                          height: "40vh",
-                          width: "40vw",
-                          backgroundColor: "inherit",
-                        }}
-                      >
-                        {AlgoPseudocode ? (
-                          <AlgoPseudocode inputValue={inputValue} name={name} />
-                        ) : (
-                          <Typography sx={{ color: "white" }}>
-                            Coming soon.
-                          </Typography>
-                        )}
-                      </Typography>
-                    </div>
-                    <div>
-                      <Typography
-                        variant="body1"
-                        sx={{
-                          color: "white",
-                          height: "40vh",
-                          width: "40vw",
-                        }}
-                      >
-                        Test
-                      </Typography>
-                    </div>
-                  </Carousel>
+                  <ConfigProvider
+                    theme={{
+                      components: {
+                        Carousel: {
+                          dotHeight: 3,
+                        },
+                      },
+                    }}
+                  >
+                    {/* putting the fade animation makes resizing not bug out */}
+                    {/* otherwise, multiple contents are shown at once for a bit as you go from sm to big */}
+                    <Carousel dotPosition="bottom" effect="fade">
+                      <div>
+                        <Typography
+                          component="div"
+                          variant="body2"
+                          sx={{
+                            height: "40vh",
+                            width: "40vw",
+                          }}
+                        >
+                          {AlgoPseudocode ? (
+                            <AlgoPseudocode
+                              inputValue={inputValue}
+                              name={name}
+                            />
+                          ) : (
+                            <Typography sx={{ color: "white" }}>
+                              Coming soon.
+                            </Typography>
+                          )}
+                        </Typography>
+                      </div>
+                      <div>
+                        <Typography
+                          variant="body1"
+                          sx={{
+                            color: "white",
+                            height: "40vh",
+                            width: "40vw",
+                          }}
+                        >
+                          Test
+                        </Typography>
+                      </div>
+                    </Carousel>
+                  </ConfigProvider>
                 </div>
+                {/* buttons */}
                 <div
                   style={{
                     backgroundColor: "transparent",
