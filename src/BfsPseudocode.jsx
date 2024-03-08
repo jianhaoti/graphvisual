@@ -77,7 +77,6 @@ const BfsPseudocode = ({ inputValue, name }) => {
         wordWrap: "break-word",
         textAlign: "left",
         paddingTop: "20px",
-        overflow: "hidden",
       }}
     >
       {pseudocodeLines.map((line, index) => {

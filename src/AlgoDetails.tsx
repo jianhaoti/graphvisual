@@ -14,10 +14,13 @@ import {
 import Node from "./GraphNode";
 import { convertToAdjacencyList } from "./graphToAdjList";
 import Edge from "./GraphEdge";
-import { bfs } from "./bfs";
+import { bfs, BFSStepType } from "./bfs";
 import { useBFS } from "./bfsContext.js";
 import BfsPseudocode from "./BfsPseudocode";
-import { StepType } from "./bfs";
+
+import { dfs, DFSStepType } from "./dfs";
+import { useDFS } from "./dfsContext";
+
 import { ReactComponent as RightArrow } from "./assets/rightArrow.svg";
 import { ReactComponent as LeftArrow } from "./assets/leftArrow.svg";
 
@@ -40,9 +43,16 @@ interface AlgoDetailsProps {
   name: string;
 }
 interface BFSStateType {
-  steps: StepType[];
+  steps: BFSStepType[];
   currentStepIndex: number;
-  nodeStatus: Map<string, string>; // Adjust according to your actual type
+  nodeStatus: Map<string, string>;
+  isVisualizationActive: boolean;
+}
+
+interface DFSStateType {
+  steps: DFSStepType[];
+  currentStepIndex: number;
+  nodeStatus: Map<string, string>;
   isVisualizationActive: boolean;
 }
 
@@ -106,14 +116,55 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
     algoComponentMap[algoTitle as keyof typeof algoComponentMap] || null; // Default to null or a fallback component
 
   // BFS
-  const { steps: bfsSteps, layers: bfsLayers } = bfs(
-    adjacencyList,
-    inputValue,
-    isOriented
-  );
+  const { steps: bfsSteps } = bfs(adjacencyList, inputValue, isOriented);
   const { bfsState, setBfsState, goToNextStepBFS, goToPreviousStepBFS } =
     useBFS();
 
+  // DFS
+  const { steps: dfsSteps } = dfs(adjacencyList, inputValue, isOriented);
+
+  const { dfsState, setDfsState, goToNextStepDFS, goToPreviousStepDFS } =
+    useDFS();
+
+  // Logic and constants for handling L/R buttons
+  const [LeftIsHovered, setLeftIsHovered] = useState(false);
+  const [isLeftClicked, setIsLeftClicked] = useState(false);
+
+  const [RightIsHovered, setRightIsHovered] = useState(false);
+  const [isRightClicked, setIsRightClicked] = useState(false);
+
+  let atStart = true;
+  let atEnd = false;
+
+  if (algoTitle === "BFS" && bfsState) {
+    // at start
+    if (bfsState.currentStepIndex === 0) {
+      atStart = true;
+    } else {
+      atStart = false;
+    }
+    // at end
+    if (bfsState.isCompleted) {
+      atEnd = true;
+    } else {
+      atEnd = false;
+    }
+  }
+
+  if (algoTitle === "DFS" && dfsState) {
+    // at start
+    if (dfsState.currentStepIndex === 0) {
+      atStart = true;
+    } else {
+      atStart = false;
+    }
+    // at end
+    if (dfsState.isCompleted) {
+      atEnd = true;
+    } else {
+      atEnd = false;
+    }
+  }
   // Rest of code
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
@@ -171,6 +222,8 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
     setIsGraphEditable(true);
     setSelectedEdge(null);
     setSelectedNode(null);
+    atStart = true;
+    atEnd = false;
 
     if (algoTitle === "BFS") {
       setBfsState((prevState: BFSStateType) => ({
@@ -178,7 +231,12 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
         isVisualizationActive: false,
       }));
     }
-
+    if (algoTitle === "DFS") {
+      setDfsState((prevState: DFSStateType) => ({
+        ...prevState,
+        isVisualizationActive: false,
+      }));
+    }
     setTimeout(onClose, 500); // Delay the onClose callback until after the fade-out animation completes
   };
 
@@ -239,6 +297,17 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
           isVisualizationActive: true, // Ensure visualization is active to show new steps
         });
       }
+
+      if (algoTitle === "DFS") {
+        const initNodeStatus = new Map();
+        initNodeStatus.set(inputValue, "processing");
+        setDfsState({
+          steps: dfsSteps,
+          currentStepIndex: 0,
+          nodeStatus: initNodeStatus, // Optionally initialize nodeStates based on the first step if needed
+          isVisualizationActive: true, // Ensure visualization is active to show new steps
+        });
+      }
     }
   };
 
@@ -246,11 +315,17 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
     if (algoTitle === "BFS") {
       goToNextStepBFS();
     }
+    if (algoTitle === "DFS") {
+      goToNextStepDFS();
+    }
   };
 
   const handlePreviousButtonClick = () => {
     if (algoTitle === "BFS") {
       goToPreviousStepBFS();
+    }
+    if (algoTitle === "DFS") {
+      goToPreviousStepDFS();
     }
   };
 
@@ -266,11 +341,22 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
             handleNextButtonClick();
             break;
           case "Backspace":
+            atStart = true;
+            atEnd = false;
             setMovieTime(false);
             setIsGraphEditable(true);
+
             if (algoTitle === "BFS") {
               setBfsState({
                 steps: bfsSteps,
+                currentStepIndex: 0,
+                nodeStatus: new Map(), // Optionally initialize nodeStates based on the first step if needed
+                isVisualizationActive: false, // Ensure visualization is active to show new steps
+              });
+            }
+            if (algoTitle === "DFS") {
+              setDfsState({
+                steps: dfsSteps,
                 currentStepIndex: 0,
                 nodeStatus: new Map(), // Optionally initialize nodeStates based on the first step if needed
                 isVisualizationActive: false, // Ensure visualization is active to show new steps
@@ -298,30 +384,9 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
     };
   }, [handlePreviousButtonClick, handleNextButtonClick, algoTitle, movieTime]);
 
-  // Logic and constants for handling L/R buttons
-  const [LeftIsHovered, setLeftIsHovered] = useState(false);
-  const [isLeftClicked, setIsLeftClicked] = useState(false);
-
-  const [RightIsHovered, setRightIsHovered] = useState(false);
-  const [isRightClicked, setIsRightClicked] = useState(false);
-
-  let atStart = true;
-  let atEnd = false;
-
-  if (algoTitle === "BFS" && bfsState) {
-    // at start
-    if (bfsState.currentStepIndex === 0) {
-      atStart = true;
-    } else {
-      atStart = false;
-    }
-    // at end
-    if (bfsState.isCompleted) {
-      atEnd = true;
-    } else {
-      atEnd = false;
-    }
-  }
+  // useEffect(() => {
+  //   console.log(dfsState.steps[dfsState.currentStepIndex].stack);
+  // }, [dfsState]);
 
   return (
     <Fade in={true} timeout={500}>

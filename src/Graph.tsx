@@ -1,12 +1,21 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
+import styles from "./Graph.module.css";
+
+// basics
 import Node from "./GraphNode";
 import Edge from "./GraphEdge";
+
+// material
 import Switch from "@mui/material/Switch";
 import { styled } from "@mui/material/styles";
-import { useBFS } from "./bfsContext.js";
+
+// antd
 import { Watermark } from "antd";
 import type { ColorPickerProps, GetProp, WatermarkProps } from "antd";
-import styles from "./Graph.module.css";
+
+// algorithms
+import { useBFS } from "./bfsContext.js";
+import { useDFS } from "./dfsContext";
 
 const CustomSwitch = styled(Switch)(({ theme }) => ({
   "& .MuiSwitch-switchBase": {
@@ -55,7 +64,6 @@ const Graph: React.FC<GraphProps> = ({
   // Mine
   const currentNodeRef = useRef<SVGCircleElement | null>(null);
   const clickStartTime = useRef<number | null>(null);
-  const switchContainerRef = useRef(null);
 
   const [tempEdge, setTempEdge] = useState<Edge | null>(null);
   const [isMouseDown, setIsMouseDown] = useState(false);
@@ -197,11 +205,11 @@ const Graph: React.FC<GraphProps> = ({
   };
 
   const handleNodeCreation = (e: React.MouseEvent) => {
-    if (e.target instanceof Element && e.target.closest("#mySwitchContainer")) {
+    if (e.target instanceof Element && e.target.closest("#deadZone")) {
       return; // Do nothing if the click is on or within the switch
     }
 
-    if (e.target instanceof Element && e.target.closest("#deadZone")) {
+    if (e.target instanceof Element && e.target.closest("#mySwitchContainer")) {
       return; // Do nothing if the click is on or within the switch
     }
 
@@ -241,13 +249,6 @@ const Graph: React.FC<GraphProps> = ({
         clearTimeout(hoverTimerRef.current);
       }
       setHoveredNode(null);
-      // Check if the click is inside the switch container
-      // if (
-      //   e.target instanceof Element &&
-      //   e.target.closest("#mySwitchContainer")
-      // ) {
-      //   return; // Do nothing if the click is on or within the switch
-      // }
 
       clickStartTime.current = new Date().getTime();
       if (e.target && (e.target as Element).classList.contains("graph-node")) {
@@ -269,12 +270,6 @@ const Graph: React.FC<GraphProps> = ({
   const handleMouseUp = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.button === 0) {
       setIsMouseDown(false);
-      if (
-        e.target instanceof Element &&
-        e.target.closest("#mySwitchContainer")
-      ) {
-        return; // Do nothing if the click is on or within the switch
-      }
 
       currentNodeRef.current = null;
       const clickDuration =
@@ -469,7 +464,7 @@ const Graph: React.FC<GraphProps> = ({
     gap: [number, number];
     offset?: [number, number];
   }
-  const [config, setConfig] = useState<WatermarkConfig>({
+  const [config] = useState<WatermarkConfig>({
     content: "Click Me",
     color: "rgba(0, 0, 0, 0.2)",
     fontSize: 16,
@@ -495,9 +490,15 @@ const Graph: React.FC<GraphProps> = ({
   // bfs
   const { bfsState, bfsSourceNode } = useBFS();
 
+  // dfs
+  const { dfsState, dfsSourceNode } = useDFS();
+
   const whiteCircleRadius = size === "small" ? 20 : 21;
   const whiteTextAlignment = size === "small" ? 30 : 31;
 
+  useEffect(() => {
+    console.log(bfsState.nodeStatus);
+  }, [bfsState]);
   return (
     <div
       className="container container-left"
@@ -533,6 +534,22 @@ const Graph: React.FC<GraphProps> = ({
                   color = "black";
                   break;
                 case "queue":
+                  color = " #DB380F";
+                  break;
+                case "processing":
+                  color = "#EFFAF5";
+                  break;
+              }
+            }
+
+            // dfs
+            if (dfsState.isVisualizationActive) {
+              let nodeStatus = dfsState.nodeStatus?.get(node.id);
+              switch (nodeStatus) {
+                case "visited":
+                  color = "black";
+                  break;
+                case "stack":
                   color = " #DB380F";
                   break;
                 case "processing":
@@ -596,7 +613,31 @@ const Graph: React.FC<GraphProps> = ({
                     break;
                 }
               }
+              // dfs
+              if (dfsState.isVisualizationActive) {
+                weightColor = "#E3C46E"; // blend weight color in with nodes, since it doesnt matter
+                const edgeStatus =
+                  dfsState.steps[dfsState.currentStepIndex].edgeStatus.get(
+                    edgeID
+                  );
+                switch (edgeStatus) {
+                  case "visited":
+                    color = "black";
+                    weightColor = "black";
+                    break;
+                  case "queued":
+                    color = "#DB380F";
+                    weightColor = "#DB380F";
 
+                    break;
+                  case "useless":
+                    opacity = 0.2;
+                    arrowOpacity = 0.3;
+
+                    weightColor = "transparent";
+                    break;
+                }
+              }
               return (
                 <Edge
                   key={edgeID}
@@ -615,21 +656,33 @@ const Graph: React.FC<GraphProps> = ({
               );
             })}
 
-          {/* overlay for bfs. needs to be done seperately */}
+          {/* overlay for bfs/dfs. needs to be done seperately from above */}
           <svg>
-            {bfsState.isVisualizationActive &&
+            {(bfsState.isVisualizationActive ||
+              dfsState.isVisualizationActive) &&
               nodes.map((node) => {
                 let textColor = "transparent";
-                if (bfsState.isVisualizationActive) {
-                  let currentNodeStatus =
-                    bfsState.nodeStatus.get(node.id) || "default";
+                let currentNodeStatus = "default";
 
+                // bfs node state update
+                if (bfsState.isVisualizationActive) {
+                  currentNodeStatus = bfsState.nodeStatus.get(node.id);
                   if (currentNodeStatus === "processing") {
                     textColor = "#EFFAF5";
                   } else if (currentNodeStatus === "queue") {
                     textColor = "#DB380F";
                   }
                 }
+                //dfs node statu update
+                else if (dfsState.isVisualizationActive) {
+                  currentNodeStatus = dfsState.nodeStatus.get(node.id);
+                  if (currentNodeStatus === "processing") {
+                    textColor = "#EFFAF5";
+                  } else if (currentNodeStatus === "stack") {
+                    textColor = "#DB380F";
+                  }
+                }
+
                 return (
                   <g key={node.id}>
                     {" "}
@@ -646,53 +699,57 @@ const Graph: React.FC<GraphProps> = ({
                       {node.id}
                     </text>
                     {/* logic for white circle to appear at end of bfs */}
-                    {node.id === bfsSourceNode && bfsState.isCompleted && (
-                      <>
-                        <circle
-                          cx={node.x}
-                          cy={node.y}
-                          r={whiteCircleRadius}
-                          fill="none"
-                          stroke="white"
-                          strokeWidth="2"
-                          opacity=".3"
-                        />
-                        <text
-                          x={node.x}
-                          y={node.y - whiteTextAlignment}
-                          fill="white"
-                          fontSize="12"
-                          textAnchor="middle"
-                          pointerEvents="none"
-                          style={{
-                            userSelect: "none",
-                            WebkitUserSelect: "none",
-                          }}
-                        >
-                          Source
-                        </text>
-                      </>
-                    )}
+                    {(node.id === bfsSourceNode && bfsState.isCompleted) ||
+                      (node.id === dfsSourceNode && dfsState.isCompleted && (
+                        <>
+                          <circle
+                            cx={node.x}
+                            cy={node.y}
+                            r={whiteCircleRadius}
+                            fill="none"
+                            stroke="white"
+                            strokeWidth="2"
+                            opacity=".3"
+                          />
+                          <text
+                            x={node.x}
+                            y={node.y - whiteTextAlignment}
+                            fill="white"
+                            fontSize="12"
+                            textAnchor="middle"
+                            pointerEvents="none"
+                            style={{
+                              userSelect: "none",
+                              WebkitUserSelect: "none",
+                            }}
+                          >
+                            Source
+                          </text>
+                        </>
+                      ))}
                   </g>
                 );
               })}
           </svg>
 
           {/* logic for text to appear at end of bfs */}
-          {hoveredNode && !bfsState.isVisualizationActive && (
-            <text
-              x={hoveredNode.x + 5}
-              y={hoveredNode.y - 15} // Adjust position as needed
-              fill={"white"}
-              fontSize="14"
-              textAnchor="middle"
-              style={{ userSelect: "none", WebkitUserSelect: "none" }}
-            >
-              {hoveredNode.id}
-            </text>
-          )}
+          {hoveredNode &&
+            (!bfsState.isVisualizationActive ||
+              !dfsState.isVisualizationActive) && (
+              <text
+                x={hoveredNode.x + 5}
+                y={hoveredNode.y - 15} // Adjust position as needed
+                fill={"white"}
+                fontSize="14"
+                textAnchor="middle"
+                style={{ userSelect: "none", WebkitUserSelect: "none" }}
+              >
+                {hoveredNode.id}
+              </text>
+            )}
         </svg>
       </div>
+      {/* a deadzone for tolerance for misclicks around the switch */}
       <div
         style={{
           position: "absolute",
@@ -704,8 +761,11 @@ const Graph: React.FC<GraphProps> = ({
           backgroundColor: "transparent",
           opacity: ".35",
         }}
-        id="deadZone" // Optional: For identifying this element, if needed
+        id="deadZone"
       />
+      {/* pay attention to the z-index of the deadzone and the switch */}
+      {/* we want the switch in front so that the switching doesnt get disabled */}
+      {/* however, that also means we need to repeat the logic to stop node creation */}
       {!showWatermark && (
         <div
           id="mySwitchContainer"
@@ -713,11 +773,10 @@ const Graph: React.FC<GraphProps> = ({
             position: "absolute",
             bottom: "2px",
             right: "10px",
-            zIndex: 5,
+            zIndex: 6,
           }}
         >
           <CustomSwitch
-            ref={switchContainerRef}
             checked={isOriented}
             onChange={handleOrientationChange}
             inputProps={{ "aria-label": "primary checkbox" }}
