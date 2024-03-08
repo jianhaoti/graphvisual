@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import "./App.css";
 import Graph from "./Graph";
-import ControlRoom from "./ControlRoom";
+import ControlRoom from "./controlRoom";
 import { Button, ButtonGroup } from "@mui/material";
 import { ReactComponent as AlgoIcon } from "./assets/algoIcon.svg";
 import { ReactComponent as DataIcon } from "./assets/dataIcon.svg";
