@@ -2,8 +2,8 @@ import React, { useState, useRef, useEffect, useCallback } from "react";
 import styles from "./Graph.module.css";
 
 // basics
-import Node from "./graphNode";
-import Edge from "./graphEdge";
+import Node from "./GraphNode";
+import Edge from "./GraphEdge";
 
 // material
 import Switch from "@mui/material/Switch";

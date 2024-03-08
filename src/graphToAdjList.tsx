@@ -1,5 +1,5 @@
-import Node from "./graphNode";
-import Edge from "./graphEdge";
+import Node from "./GraphNode";
+import Edge from "./GraphEdge";
 // Converts nodes and edges array to an adjacency list representation
 export const convertToAdjacencyList = (
   nodes: Node[],

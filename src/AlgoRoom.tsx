@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Box, ImageList, ImageListItem } from "@mui/material";
 import AlgoCard from "./algoCard";
 import AlgoDetails from "./algoDetails";
-import Node from "./graphNode";
-import Edge from "./graphEdge";
+import Node from "./GraphNode";
+import Edge from "./GraphEdge";
 
 interface AlgoRoomProps {
   nodes: Node[];

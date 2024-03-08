@@ -11,9 +11,9 @@ import {
   ListItem,
   TextField,
 } from "@mui/material";
-import Node from "./graphNode";
+import Node from "./GraphNode";
 import { convertToAdjacencyList } from "./graphToAdjList";
-import Edge from "./graphEdge";
+import Edge from "./GraphEdge";
 import { bfs, BFSStepType } from "./algos/bfs/bfs";
 import { useBFS } from "./algos/bfs/bfsContext.js";
 import BfsPseudocode from "./algos/bfs/bfsPseudocode";

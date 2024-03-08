@@ -8,8 +8,8 @@ import {
   Divider,
 } from "@mui/material";
 
-import Node from "./graphNode";
-import Edge from "./graphEdge";
+import Node from "./GraphNode";
+import Edge from "./GraphEdge";
 
 import { ReactComponent as OpenEye } from "./assets/openEye.svg";
 import { ReactComponent as ClosedEye } from "./assets/closedEye.svg";

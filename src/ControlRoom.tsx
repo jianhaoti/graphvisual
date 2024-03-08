@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import DataRoom from "./dataRoom";
-import Node from "./graphNode";
-import Edge from "./graphEdge";
+import Node from "./GraphNode";
+import Edge from "./GraphEdge";
 import AlgoRoom from "./algoRoom";
 import { useBFS } from "./algos/bfs/bfsContext";
 
