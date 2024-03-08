@@ -22,7 +22,6 @@ export const dfs = (
 
     while (stack.length > 0) {
       // orange node turns white
-      console.log("STACK IS:", stack);
       processing = stack.pop()!;
 
       visited.forEach((node) => {

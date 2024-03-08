@@ -32,6 +32,8 @@ import Julanite3 from "./Julanite3.jpeg";
 import Julanite4 from "./Julanite4.jpeg";
 import Julanite5 from "./Julanite5.jpeg";
 
+import { Carousel } from "antd";
+
 interface AlgoDetailsProps {
   algoTitle: string;
   onClose: () => void;
@@ -386,9 +388,12 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
     };
   }, [handlePreviousButtonClick, handleNextButtonClick, algoTitle, movieTime]);
 
-  useEffect(() => {
-    console.log(dfsState.steps[dfsState.currentStepIndex]?.stack);
-  }, [dfsState.steps[dfsState.currentStepIndex]]);
+  const handleCarouselClick = () => {
+    // Use a timeout to ensure the blur action takes place after the click event has been fully processed
+    setTimeout(() => {
+      (document.activeElement as HTMLElement)?.blur();
+    }, 0);
+  };
 
   return (
     <Fade in={true} timeout={500}>
@@ -442,16 +447,49 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
               }}
             >
               {/* overflow problem is somewhere here. if we comment this out, the scrollbar style is applied as expected */}
-              <div className="hideScrollbar">
-                <Typography component="div" variant="body2">
-                  {AlgoPseudocode ? (
-                    <AlgoPseudocode inputValue={inputValue} name={name} />
-                  ) : (
-                    <Typography sx={{ color: "white" }}>
-                      Coming soon.
+              <div
+                className="hideScrollbar"
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  // backgroundColor: "red",
+                }}
+                onClick={handleCarouselClick}
+              >
+                <Carousel dotPosition="bottom">
+                  <div>
+                    <Typography
+                      component="div"
+                      variant="body2"
+                      sx={{
+                        // backgroundColor: "blue",
+                        height: "40vh",
+                        width: "41vw",
+                      }}
+                    >
+                      {AlgoPseudocode ? (
+                        <AlgoPseudocode inputValue={inputValue} name={name} />
+                      ) : (
+                        <Typography sx={{ color: "white" }}>
+                          Coming soon.
+                        </Typography>
+                      )}
                     </Typography>
-                  )}
-                </Typography>
+                  </div>
+                  <div>
+                    <Typography
+                      variant="body1"
+                      sx={{
+                        color: "white",
+                        // backgroundColor: "blue",
+                        height: "40vh",
+                        width: "40vw",
+                      }}
+                    >
+                      Test
+                    </Typography>
+                  </div>
+                </Carousel>
               </div>
               <div style={{ display: "flex", justifyContent: "flex-end" }}>
                 <button

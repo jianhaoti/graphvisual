@@ -50,16 +50,16 @@ const AlgoRoom: React.FC<AlgoRoomProps> = ({
   };
 
   const cardData = [
-    { title: "BFS", grouping: "Search", description: "A Drop of Water" },
+    { title: "BFS", grouping: "Search", description: "Scan the Perimeter" },
     { title: "DFS", grouping: "Search", description: "Drill the Depths" },
     {
       title: "Dijkstra",
       grouping: "Shortest Path",
-      description: "Walk Radially",
+      description: "Minimize Distance",
     },
 
-    { title: "Prim", grouping: "MST", description: "Connect the Dots" },
-    { title: "Kruskal", grouping: "MST", description: "Thinnest Threads" },
+    { title: "Prim", grouping: "MST", description: "TBD" },
+    { title: "Kruskal", grouping: "MST", description: "TBD" },
 
     { title: "TBD", grouping: "TBD", description: "TBD" },
     { title: "TBD", grouping: "TBD", description: "TBD" },
