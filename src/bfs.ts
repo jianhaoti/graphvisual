@@ -25,7 +25,7 @@ export const bfs = (
 
   while (queue.length > 0) {
     let currentLayer: string[] = [];
-    let newQueue: string[] = [];
+    let newNeighbors: string[] = [];
 
     while (queue.length > 0) {
       // orange node turns white
@@ -50,7 +50,7 @@ export const bfs = (
       // black + white
       steps.push({
         visited: Array.from(visited),
-        queue: queue.concat(newQueue),
+        queue: [...queue],
         processing: processing,
         edgeStatus: new Map(edgeStatus),
       });
@@ -62,9 +62,9 @@ export const bfs = (
         if (
           !visited.has(neighbor) &&
           !queue.includes(neighbor) &&
-          !newQueue.includes(neighbor) // duplicates may not yet be pushed onto (the main) queue!
+          !newNeighbors.includes(neighbor) // duplicates may not yet be pushed onto (the main) queue!
         ) {
-          newQueue.push(neighbor); // newQueue contains unique neighbors!
+          newNeighbors.push(neighbor); // newQueue contains unique neighbors!
           currentLayer.push(neighbor);
           edgeStatus.set(`${processing}-${neighbor}`, "queued"); // white + orange
           if (!isOriented) {
@@ -83,10 +83,14 @@ export const bfs = (
         }
       }
 
+      // add the new neighbors to the discovered pile
+      queue = queue.concat(newNeighbors);
+      newNeighbors = [];
+
       // added in all the neighbors, if there are any. also adds new edge status
       steps.push({
         visited: Array.from(visited),
-        queue: queue.concat(newQueue),
+        queue: [...queue],
         processing: processing,
         edgeStatus: new Map(edgeStatus),
       });
@@ -97,7 +101,7 @@ export const bfs = (
       // white node turns black. no change in edge status
       steps.push({
         visited: Array.from(visited),
-        queue: queue.concat(newQueue),
+        queue: [...queue],
         processing: processing,
         edgeStatus: new Map(edgeStatus),
       });
@@ -106,8 +110,6 @@ export const bfs = (
     if (currentLayer.length > 0) {
       layers.push(currentLayer);
     }
-
-    queue = newQueue; // prepare for the next round
   }
 
   return { steps, layers };

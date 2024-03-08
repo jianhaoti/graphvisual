@@ -18,10 +18,11 @@ export const dfs = (
   let edgeStatus: Map<string, string> = new Map();
 
   while (stack.length > 0) {
-    let newStack: string[] = [];
+    let newNeighbors: string[] = [];
 
     while (stack.length > 0) {
       // orange node turns white
+      console.log("STACK IS:", stack);
       processing = stack.pop()!;
 
       visited.forEach((node) => {
@@ -43,7 +44,7 @@ export const dfs = (
       // black + white
       steps.push({
         visited: Array.from(visited),
-        stack: stack.concat(newStack),
+        stack: [...stack],
         processing: processing,
         edgeStatus: new Map(edgeStatus),
       });
@@ -55,9 +56,9 @@ export const dfs = (
         if (
           !visited.has(neighbor) &&
           !stack.includes(neighbor) &&
-          !newStack.includes(neighbor) // duplicates may not yet be pushed onto (the main) stack!
+          !newNeighbors.includes(neighbor) // duplicates may not yet be pushed onto (the main) stack!
         ) {
-          newStack.push(neighbor);
+          newNeighbors.push(neighbor);
           edgeStatus.set(`${processing}-${neighbor}`, "stacked"); // white + orange
           if (!isOriented) {
             edgeStatus.set(`${neighbor}-${processing}`, "stacked"); // white + orange
@@ -75,10 +76,13 @@ export const dfs = (
         }
       }
 
+      stack = stack.concat(newNeighbors); // prepare for the next round
+      newNeighbors = []; // prevents infinite loop
+
       // added in all the neighbors, if there are any. also adds new edge status
       steps.push({
         visited: Array.from(visited),
-        stack: stack.concat(newStack),
+        stack: [...stack],
         processing: processing,
         edgeStatus: new Map(edgeStatus),
       });
@@ -89,13 +93,11 @@ export const dfs = (
       // white node turns black. no change in edge status
       steps.push({
         visited: Array.from(visited),
-        stack: stack.concat(newStack),
+        stack: [...stack],
         processing: processing,
         edgeStatus: new Map(edgeStatus),
       });
     }
-
-    stack = newStack; // prepare for the next round
   }
 
   return { steps };
