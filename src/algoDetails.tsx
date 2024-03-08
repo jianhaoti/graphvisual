@@ -25,12 +25,12 @@ import DfsPseudocode from "./algos/dfs/dfsPseudocode";
 import { ReactComponent as RightArrow } from "./assets/rightArrow.svg";
 import { ReactComponent as LeftArrow } from "./assets/leftArrow.svg";
 
-import impressionSunrise from "./monet-impressionSunrise.jpeg";
-import sunflowers from "./vanGogh-sunflowers.jpeg";
-import Julanite1 from "./Julanite1.jpeg";
-import Julanite3 from "./Julanite3.jpeg";
-import Julanite4 from "./Julanite4.jpeg";
-import Julanite5 from "./Julanite5.jpeg";
+import impressionSunrise from "./assets/monet-impressionSunrise.jpeg";
+import sunflowers from "./assets/vanGogh-sunflowers.jpeg";
+import Julanite1 from "./assets/Julanite1.jpeg";
+import Julanite3 from "./assets/Julanite3.jpeg";
+import Julanite4 from "./assets/Julanite4.jpeg";
+import Julanite5 from "./assets/Julanite5.jpeg";
 
 import { Carousel, ConfigProvider } from "antd";
 
