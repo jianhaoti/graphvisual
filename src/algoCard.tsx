@@ -21,7 +21,6 @@ const AlgoCard: React.FC<AlgoCardProps> = ({
   backgroundColor,
   onClick,
 }) => {
-  console.log("test");
   return (
     <CardActionArea onClick={onClick}>
       <Box sx={{ minWidth: 275 }}>

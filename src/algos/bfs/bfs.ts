@@ -3,6 +3,7 @@ export type BFSStepType = {
   queue: string[];
   processing: string;
   edgeStatus: Map<string, string>;
+  newNeighbors: string[];
 };
 
 // works for both the oriented and unoriented case.
@@ -53,6 +54,7 @@ export const bfs = (
         queue: [...queue],
         processing: processing,
         edgeStatus: new Map(edgeStatus),
+        newNeighbors: [],
       });
 
       const neighbors = theNeighbors.get(processing) || [];
@@ -85,7 +87,6 @@ export const bfs = (
 
       // add the new neighbors to the discovered pile
       queue = queue.concat(newNeighbors);
-      newNeighbors = [];
 
       // added in all the neighbors, if there are any. also adds new edge status
       steps.push({
@@ -93,7 +94,10 @@ export const bfs = (
         queue: [...queue],
         processing: processing,
         edgeStatus: new Map(edgeStatus),
+        newNeighbors: newNeighbors,
       });
+
+      newNeighbors = [];
 
       visited.add(processing); // processing node turns black
       processing = "";
@@ -104,6 +108,7 @@ export const bfs = (
         queue: [...queue],
         processing: processing,
         edgeStatus: new Map(edgeStatus),
+        newNeighbors: [],
       });
     }
 

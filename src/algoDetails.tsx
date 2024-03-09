@@ -76,7 +76,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
     width: "30vw",
   };
 
-  // Artwork
+  /* #region Artwork */
   const titleToImage = {
     BFS: Julanite1,
     DFS: Julanite5,
@@ -95,12 +95,16 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
     Kruskal: ["Julanite", " by Brookfield"],
     TBD: ["Impression, Sunrise", " by Monet"],
   };
+  /* #endregion */
 
-  // State data
+  /* #region State data */
   const [visible, setVisible] = useState(true); // control background dim or not
   const [movieTime, setMovieTime] = useState<boolean>(false);
+  const [inputValue, setInputValue] = useState<string>("");
+  const [isInputValid, setIsInputValid] = useState<boolean>(true);
 
-  // Graph Data
+  /* #endregion */
+  /* #region Graph Data */
   const adjacencyList = convertToAdjacencyList(nodes, edges, isOriented);
   const algoParameters = {
     BFS: ["Source Node"],
@@ -113,30 +117,42 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
   const nodeIDs = nodes.map((node) => node.id);
   const edgeIDs = edges.map((edge) => `${edge.id1}-${edge.id2}`);
 
-  //Algorithm information
-  const [inputValue, setInputValue] = useState<string>("");
-  const [isInputValid, setIsInputValid] = useState<boolean>(true);
-
-  const algoComponentMap = {
-    BFS: BfsPseudocode,
-    DFS: DfsPseudocode,
-  };
-
-  const AlgoPseudocode =
-    algoComponentMap[algoTitle as keyof typeof algoComponentMap] || null; // Default to null or a fallback component
-
-  // BFS
+  /* #endregion */
+  /* #region BFS */
   const { steps: bfsSteps } = bfs(adjacencyList, inputValue, isOriented);
   const { bfsState, setBfsState, goToNextStepBFS, goToPreviousStepBFS } =
     useBFS();
 
-  // DFS
+  const {
+    queue: bfsQueue,
+    processing: bfsProcessing,
+    newNeighbors: bfsNewNeighbors,
+  } = bfsSteps[bfsState.currentStepIndex];
+
+  /* #endregion */
+  /* #region DFS */
   const { steps: dfsSteps } = dfs(adjacencyList, inputValue, isOriented);
 
   const { dfsState, setDfsState, goToNextStepDFS, goToPreviousStepDFS } =
     useDFS();
 
-  // Logic and constants for handling L/R buttons
+  /* #endregion */
+  /* #region Algo Info */
+  const algoPseudocodeMap = {
+    BFS: BfsPseudocode,
+    DFS: DfsPseudocode,
+  };
+
+  const AlgoPseudocode =
+    algoPseudocodeMap[algoTitle as keyof typeof algoPseudocodeMap] || null; // Default to null or a fallback component
+
+  const algoAuxillaryData = {
+    BFS: "bfss",
+    DFS: "test",
+  };
+
+  /* #endregion */
+  /* #region Left/Right Button  */
   const [LeftIsHovered, setLeftIsHovered] = useState(false);
   const [isLeftClicked, setIsLeftClicked] = useState(false);
 
@@ -175,7 +191,8 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
       atEnd = false;
     }
   }
-  // Rest of code
+  /* #endregion */
+  /* #region Main Logic */
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
     setIsInputValid(true); // This resets the state so we can jiggle in sucession.
@@ -401,6 +418,12 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
     }, 0);
   };
 
+  /* #endregion */
+
+  // useEffect(() => {
+  //   console.log(bfsState.steps[bfsState.currentStepIndex]?.newNeighbors);
+  // }, [bfsState]);
+
   return (
     <Fade in={true} timeout={500}>
       <div
@@ -420,8 +443,6 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
       >
         <Card
           sx={{
-            // height: "55vh",
-            // width: "60vh",
             backgroundColor: movieTime === false ? "#424541" : "#1E1E1E",
             position: "relative",
             overflow: "auto", // this does NOT control the overflow in the pseudococde
