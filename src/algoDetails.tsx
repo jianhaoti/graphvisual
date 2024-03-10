@@ -519,7 +519,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                       </div>
                       <div>
                         {" "}
-                        <CustomPagination bfsQueue={bfsQueue} />
+                        <CustomPagination arr={bfsQueue} />
                       </div>
                     </Carousel>
                   </ConfigProvider>

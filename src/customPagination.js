@@ -23,25 +23,6 @@ const Ellipsis = styled("div")({
   fontSize: "0.75rem", // Matching font size
   userSelect: "none",
 });
-const CustomButton = styled(Button)({
-  borderRadius: "50%", // Keep it circular
-  minWidth: "30px",
-  height: "30px",
-  padding: "0",
-  margin: "4px",
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
-  border: "1.5px solid", // Added a border here. Adjust color and width as needed.
-  borderColor: "#DB380F",
-  color: "white",
-  "&:hover": {
-    backgroundColor: "rgba(255, 255, 255, 0.08)",
-  },
-  fontSize: "0.65rem",
-  textTransform: "none",
-});
-
 const CustomArrowButtons = styled(Button)({
   borderRadius: "50%", // for hover
   minWidth: "30px",
@@ -58,14 +39,35 @@ const CustomArrowButtons = styled(Button)({
     opacity: ".15", // Yellow background when disabled
   },
 });
+const CustomButton = styled(Button)(() => ({
+  borderRadius: "50%", // Keep it circular
+  minWidth: "30px",
+  height: "30px",
+  padding: "0",
+  margin: "4px",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  border: "1.5px solid #DB380F", // Conditional border color
+  "&:hover": {
+    backgroundColor: "rgba(255, 255, 255, 0.08)",
+  },
+  color: "white",
+  "&:hover": {
+    backgroundColor: "rgba(255, 255, 255, 0.08)",
+  },
+  fontSize: "0.65rem",
+  textTransform: "none",
+}));
 
 // Custom Pagination Component
-const CustomPagination = ({ bfsQueue }) => {
+const CustomPagination = ({ arr }) => {
   const { items } = usePagination({
-    count: bfsQueue.length,
+    count: arr.length,
     boundaryCount: 1, // Number of always visible pages at the beginning and end
     siblingCount: 1, // Number of pages to display on each side of the current page
   });
+
   return (
     <nav>
       <List>
@@ -79,8 +81,8 @@ const CustomPagination = ({ bfsQueue }) => {
 
           // node
           else if (type === "page") {
-            // Use page index to access bfsQueue for label
-            const nodeId = bfsQueue[page - 1];
+            // Use page index to access arr for label
+            const nodeId = arr[page - 1];
             const label =
               nodeId.length > 3 ? nodeId.substr(nodeId.length - 3) : nodeId;
             children = (
