@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import styles from "./algoDetails.module.css";
 import { Carousel, ConfigProvider } from "antd";
 import CustomPagination from "./customPagination.js";
 import {
@@ -489,7 +488,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                           colorBgContainer: "white",
                           // dotHeight: 5,
                           // dotWidth: 20,
-                          // dotActiveWidth: 40,
+                          // dotActiveWidth: 30,
                         },
                       },
                     }}
@@ -517,7 +516,6 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                         </Typography>
                       </div>
                       <div>
-                        {" "}
                         <CustomPagination arr={bfsQueue} />
                       </div>
                     </Carousel>

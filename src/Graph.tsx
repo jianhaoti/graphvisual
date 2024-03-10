@@ -349,13 +349,17 @@ const Graph: React.FC<GraphProps> = ({
   };
 
   const handleNodeClick = (nodeId: string) => {
-    setSelectedNode(nodeId);
-    setSelectedEdge(null);
+    if (isGraphEditable) {
+      setSelectedNode(nodeId);
+      setSelectedEdge(null);
+    }
   };
 
   const handleEdgeClick = (edgeId: string) => {
-    setSelectedNode(null);
-    setSelectedEdge(edgeId);
+    if (isGraphEditable) {
+      setSelectedNode(null);
+      setSelectedEdge(edgeId);
+    }
   };
 
   const handleNodeContextMenu = (e: React.MouseEvent, nodeId: string) => {
@@ -733,20 +737,18 @@ const Graph: React.FC<GraphProps> = ({
           </svg>
 
           {/* logic for text to appear at end of bfs */}
-          {hoveredNode &&
-            (!bfsState.isVisualizationActive ||
-              !dfsState.isVisualizationActive) && (
-              <text
-                x={hoveredNode.x + 5}
-                y={hoveredNode.y - 15} // Adjust position as needed
-                fill={"white"}
-                fontSize="14"
-                textAnchor="middle"
-                style={{ userSelect: "none", WebkitUserSelect: "none" }}
-              >
-                {hoveredNode.id}
-              </text>
-            )}
+          {hoveredNode && isGraphEditable && (
+            <text
+              x={hoveredNode.x + 5}
+              y={hoveredNode.y - 15} // Adjust position as needed
+              fill={"white"}
+              fontSize="14"
+              textAnchor="middle"
+              style={{ userSelect: "none", WebkitUserSelect: "none" }}
+            >
+              {hoveredNode.id}
+            </text>
+          )}
         </svg>
       </div>
       {/* a deadzone for tolerance for misclicks around the switch */}
