@@ -32,14 +32,31 @@ const CustomButton = styled(Button)({
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
-  border: "2px solid", // Added a border here. Adjust color and width as needed.
-  borderColor: "#DB380F", // Example border color
+  border: "1.5px solid", // Added a border here. Adjust color and width as needed.
+  borderColor: "#DB380F",
   color: "white",
   "&:hover": {
     backgroundColor: "rgba(255, 255, 255, 0.08)",
   },
-  fontSize: "0.65rem", // Adjust font size for smaller buttons
+  fontSize: "0.65rem",
   textTransform: "none",
+});
+
+const CustomArrowButtons = styled(Button)({
+  borderRadius: "50%", // for hover
+  minWidth: "30px",
+  height: "30px",
+  padding: "0",
+  margin: "4px",
+  display: "flex",
+  color: "white",
+  "&:hover": {
+    backgroundColor: "rgba(255, 255, 255, 0.08)",
+  },
+  "&.Mui-disabled": {
+    color: "white", // Keep text color white when disabled
+    opacity: ".15", // Yellow background when disabled
+  },
 });
 
 // Custom Pagination Component
@@ -80,13 +97,13 @@ const CustomPagination = ({ bfsQueue }) => {
             );
           } else if (type === "previous" || type === "next") {
             children = (
-              <CustomButton type="button" {...item}>
+              <CustomArrowButtons type="button" {...item}>
                 {type === "previous" ? (
                   <KeyboardArrowLeft />
                 ) : (
                   <KeyboardArrowRight />
                 )}
-              </CustomButton>
+              </CustomArrowButtons>
             );
           }
 
