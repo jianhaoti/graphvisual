@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Carousel, ConfigProvider } from "antd";
 import {
   Card,
   CardMedia,
@@ -10,7 +11,10 @@ import {
   List,
   ListItem,
   TextField,
+  Pagination,
+  PaginationItem,
 } from "@mui/material";
+
 import Node from "./graphNode";
 import { convertToAdjacencyList } from "./graphToAdjList";
 import Edge from "./graphEdge";
@@ -31,8 +35,6 @@ import Julanite1 from "./assets/Julanite1.jpeg";
 import Julanite3 from "./assets/Julanite3.jpeg";
 import Julanite4 from "./assets/Julanite4.jpeg";
 import Julanite5 from "./assets/Julanite5.jpeg";
-
-import { Carousel, ConfigProvider } from "antd";
 
 interface AlgoDetailsProps {
   algoTitle: string;
@@ -517,16 +519,30 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                         </Typography>
                       </div>
                       <div>
-                        <Typography
-                          variant="body1"
-                          sx={{
-                            color: "white",
-                            height: "40vh",
-                            width: "40vw",
+                        <Pagination
+                          count={bfsQueue.length} // Set the total number of pagination items to the length of the bfsQueue
+                          renderItem={(item) => {
+                            // Ensure we are rendering a page and the page number is defined
+                            if (item.type === "page" && item.page) {
+                              // Get the node ID for the current item
+                              const queueItem = bfsQueue[item.page - 1]; // Adjust for zero-based indexing
+
+                              return (
+                                <PaginationItem
+                                  sx={{ color: "white" }}
+                                  {...item}
+                                  // Use the nodeId as the label for this pagination item
+                                >
+                                  children=
+                                  {<span>{queueItem}</span>}
+                                </PaginationItem>
+                              );
+                            }
+
+                            // For non-page items (prev, next, jump-ellipsis), render the default item
+                            return <PaginationItem {...item} />;
                           }}
-                        >
-                          Test
-                        </Typography>
+                        />
                       </div>
                     </Carousel>
                   </ConfigProvider>
