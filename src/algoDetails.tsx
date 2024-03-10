@@ -648,15 +648,25 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                     variant="h5"
                     component="div"
                     color="white"
+                    sx={{ userSelect: "none" }}
                   >
                     {algoTitle}
                   </Typography>
                 </div>
                 <div>
-                  <Typography variant="body2" color="white" fontSize="10px">
+                  <Typography
+                    variant="body2"
+                    color="white"
+                    fontSize="10px"
+                    sx={{ userSelect: "none" }}
+                  >
                     Parameters
                   </Typography>
-                  <Typography variant="caption" color="white">
+                  <Typography
+                    variant="caption"
+                    color="white"
+                    sx={{ userSelect: "none" }}
+                  >
                     <List>
                       {(
                         algoParameters[
