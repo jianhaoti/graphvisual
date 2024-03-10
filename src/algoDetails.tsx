@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Carousel, ConfigProvider } from "antd";
+import CustomPagination from "./customPagination.js";
 import {
   Card,
   CardMedia,
@@ -11,8 +12,6 @@ import {
   List,
   ListItem,
   TextField,
-  Pagination,
-  PaginationItem,
 } from "@mui/material";
 
 import Node from "./graphNode";
@@ -129,7 +128,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
     queue: bfsQueue,
     processing: bfsProcessing,
     newNeighbors: bfsNewNeighbors,
-  } = bfsSteps[bfsState.currentStepIndex];
+  } = bfsSteps[bfsState.currentStepIndex] || { queue: [] };
 
   /* #endregion */
   /* #region DFS */
@@ -519,30 +518,8 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                         </Typography>
                       </div>
                       <div>
-                        <Pagination
-                          count={bfsQueue.length} // Set the total number of pagination items to the length of the bfsQueue
-                          renderItem={(item) => {
-                            // Ensure we are rendering a page and the page number is defined
-                            if (item.type === "page" && item.page) {
-                              // Get the node ID for the current item
-                              const queueItem = bfsQueue[item.page - 1]; // Adjust for zero-based indexing
-
-                              return (
-                                <PaginationItem
-                                  sx={{ color: "white" }}
-                                  {...item}
-                                  // Use the nodeId as the label for this pagination item
-                                >
-                                  children=
-                                  {<span>{queueItem}</span>}
-                                </PaginationItem>
-                              );
-                            }
-
-                            // For non-page items (prev, next, jump-ellipsis), render the default item
-                            return <PaginationItem {...item} />;
-                          }}
-                        />
+                        {" "}
+                        <CustomPagination bfsQueue={bfsQueue} />
                       </div>
                     </Carousel>
                   </ConfigProvider>
