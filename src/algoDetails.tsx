@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import styles from "./algoDetails.module.css";
 import { Carousel, ConfigProvider } from "antd";
 import CustomPagination from "./customPagination.js";
 import {
@@ -413,17 +414,13 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
   }, [handlePreviousButtonClick, handleNextButtonClick, algoTitle, movieTime]);
 
   const handleCarouselClick = () => {
-    // Use a timeout to ensure the blur action takes place after the click event has been fully processed
+    // * Use a timeout to ensure the blur action takes place after the click event has been fully processed
     setTimeout(() => {
       (document.activeElement as HTMLElement)?.blur();
     }, 0);
   };
 
   /* #endregion */
-
-  // useEffect(() => {
-  //   console.log(bfsState.steps[bfsState.currentStepIndex]?.newNeighbors);
-  // }, [bfsState]);
 
   return (
     <Fade in={true} timeout={500}>
@@ -475,6 +472,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                   position: "relative", // Needed for absolute positioning of children
                 }}
               >
+                {/* carousel */}
                 <div
                   style={{
                     width: "100%",
@@ -488,13 +486,14 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                     theme={{
                       components: {
                         Carousel: {
-                          dotHeight: 3,
+                          colorBgContainer: "red",
+                          dotHeight: 5,
+                          dotWidth: 20,
+                          dotActiveWidth: 40,
                         },
                       },
                     }}
                   >
-                    {/* putting the fade animation makes resizing not bug out */}
-                    {/* otherwise, multiple contents are shown at once for a bit as you go from sm to big */}
                     <Carousel dotPosition="bottom" effect="fade">
                       <div>
                         <Typography
@@ -524,6 +523,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                     </Carousel>
                   </ConfigProvider>
                 </div>
+
                 {/* buttons */}
                 <div
                   style={{

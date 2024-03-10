@@ -4,7 +4,6 @@ import AlgoDetails from "./algoDetails";
 import Node from "./graphNode";
 import Edge from "./graphEdge";
 import AlgoCard from "./algoCard";
-
 interface AlgoRoomProps {
   nodes: Node[];
   edges: Edge[];
