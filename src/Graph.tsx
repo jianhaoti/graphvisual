@@ -349,17 +349,13 @@ const Graph: React.FC<GraphProps> = ({
   };
 
   const handleNodeClick = (nodeId: string) => {
-    if (isGraphEditable) {
-      setSelectedNode(nodeId);
-      setSelectedEdge(null);
-    }
+    setSelectedNode(nodeId);
+    setSelectedEdge(null);
   };
 
   const handleEdgeClick = (edgeId: string) => {
-    if (isGraphEditable) {
-      setSelectedNode(null);
-      setSelectedEdge(edgeId);
-    }
+    setSelectedNode(null);
+    setSelectedEdge(edgeId);
   };
 
   const handleNodeContextMenu = (e: React.MouseEvent, nodeId: string) => {
@@ -525,7 +521,7 @@ const Graph: React.FC<GraphProps> = ({
             const nodeIsSelected = node.id === selectedNode;
 
             // default value
-            let color = nodeIsSelected ? "white" : "#E3C46E";
+            let color = nodeIsSelected && isGraphEditable ? "white" : "#E3C46E";
 
             // bfs
             if (bfsState.isVisualizationActive) {
