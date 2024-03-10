@@ -486,10 +486,10 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                     theme={{
                       components: {
                         Carousel: {
-                          colorBgContainer: "red",
-                          dotHeight: 5,
-                          dotWidth: 20,
-                          dotActiveWidth: 40,
+                          colorBgContainer: "white",
+                          // dotHeight: 5,
+                          // dotWidth: 20,
+                          // dotActiveWidth: 40,
                         },
                       },
                     }}
