@@ -166,7 +166,7 @@ main {
   }
 }
 
-@media screen and (max-height: 1075px) {
+@media screen and (max-height: 500px) {
   .title-container,
   .button-group-container {
     display: none;
