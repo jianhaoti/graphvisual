@@ -662,7 +662,10 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
             <div style={cardSizing}>
               <div
                 className="artwork-container"
-                style={{ position: "relative", height: "230px" }}
+                style={{
+                  position: "relative",
+                  height: "230px",
+                }}
               >
                 <CardMedia
                   component="img"
@@ -671,6 +674,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                   sx={{
                     height: 230, // This is how much of the image you can see
                     objectFit: "cover",
+                    userSelect: "none",
                   }}
                 />{" "}
                 <Typography
