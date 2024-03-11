@@ -519,66 +519,69 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                           )}
                         </Typography>
                       </div>
-                      <div>
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "column",
+                          gap: "10px",
+                        }}
+                      >
                         <div
                           style={{
-                            display: "flex", // Make this a flex container
-                            flexDirection: "row", // Default to row, but this will be overridden by media query if needed
-                            justifyContent: "center", // Center horizontally
-                            alignItems: "center", // Center vertically
-                            height: "100%", // Take up full container height
-                            width: "100%", // Take up full container width
-                            backgroundColor: "transparent",
+                            display: "flex",
+                            alignItems: "center",
+                            marginTop: "3vh",
+                            marginLeft: "3vh",
                           }}
                         >
-                          <Typography
-                            component="div"
-                            variant="body2"
-                            sx={{
-                              color: "white",
-                              userSelect: "none",
-                              fontSize: ".9em",
-                              lineHeight: "10vh", // Adjust this value to match the height of CustomPagination or as needed for alignment
-                            }}
-                          >
-                            Queue:
-                          </Typography>
+                          <div style={{ minWidth: "100px", textAlign: "left" }}>
+                            <Typography
+                              component="div"
+                              variant="body2"
+                              sx={{
+                                color: "white",
+                                userSelect: "none",
+                                fontSize: ".9em",
+                              }}
+                            >
+                              Queue:
+                            </Typography>
+                          </div>
                           <CustomPagination
                             arr={bfsQueue}
                             borderColor="#DB380F"
                             textColor="#DB380F"
                             selectedFontWeight="bold"
-                            arrowsOn={true}
+                            showArrows={true}
                           />
                         </div>
                         <div
                           style={{
-                            display: "flex", // Make this a flex container
-                            justifyContent: "center", // Center horizontally
-                            alignItems: "center", // Center vertically
-                            height: "100%", // Take up full container height
-                            width: "100%", // Take up full container width
-                            backgroundColor: "transparent",
-                            paddingTop: "2vh",
+                            display: "flex",
+                            alignItems: "center",
+                            marginTop: "1vh",
+                            marginLeft: "3vh",
                           }}
                         >
-                          <Typography
-                            component="div"
-                            variant="body2"
-                            sx={{
-                              color: "white",
-                              userSelect: "none",
-                              fontSize: ".9em",
-                            }}
-                          >
-                            Processing:
-                          </Typography>
+                          <div style={{ minWidth: "100px", textAlign: "left" }}>
+                            <Typography
+                              component="div"
+                              variant="body2"
+                              sx={{
+                                color: "white",
+                                userSelect: "none",
+                                fontSize: ".9em",
+                              }}
+                            >
+                              Processing:
+                            </Typography>
+                          </div>
                           <CustomPagination
                             arr={[bfsProcessing]}
                             borderColor="white"
                             textColor="white"
                             selectedFontWeight="normal"
-                            arrowsOn={false}
+                            showArrows={false}
                           />
                         </div>
                       </div>

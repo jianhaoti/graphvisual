@@ -23,44 +23,38 @@ const Ellipsis = styled("div")({
   fontSize: "0.75rem", // Matching font size
   userSelect: "none",
 });
-const CustomArrowButtons = styled(Button)({
-  borderRadius: "50%", // for hover
-  minWidth: "3.86vh",
-  height: "3.86vh",
+const CustomArrowButtons = styled(Button)(({ theme, showArrows }) => ({
+  borderRadius: "50%",
+  minWidth: "3.5vh",
+  height: "3.5vh",
   padding: "0",
   margin: "4px",
   display: "flex",
   color: "white",
+  backgroundColor: "transparent",
+  opacity: showArrows ? "1" : "0", // Control opacity based on showArrows prop
   "&:hover": {
-    backgroundColor: "rgba(255, 255, 255, 0.08)",
+    backgroundColor: showArrows ? "rgba(255, 255, 255, 0.08)" : "transparent",
   },
   "&.Mui-disabled": {
-    color: "white", // Keep text color white when disabled
-    opacity: ".15", // Yellow background when disabled
+    color: "white",
+    opacity: showArrows ? ".15" : "0", // Adjust disabled state opacity
   },
-  backgroundColor: "transparent",
-});
-
-const ArrowPlaceholder = styled("div")({
-  minWidth: "1vh",
-  height: "3.86vh",
-  padding: "0",
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
-  backgroundColor: "transparent",
-  borderRadius: "50%", // for hover
-});
+}));
 
 const CustomButton = styled(
-  ({ borderColor, textColor, selectedFontWeight, arrowsOn, ...otherProps }) => (
-    <Button {...otherProps} />
-  )
+  ({
+    borderColor,
+    textColor,
+    selectedFontWeight,
+    showArrows,
+    ...otherProps
+  }) => <Button {...otherProps} />
 )(({ borderColor }) => ({
   // Your styles using borderColor and other props
   borderRadius: "50%",
-  minWidth: "4vh",
-  minHeight: "4vh",
+  minWidth: "3.5vh",
+  minHeight: "3.5vh",
   padding: "0",
   margin: ".5vh",
   display: "flex",
@@ -70,7 +64,7 @@ const CustomButton = styled(
   "&:hover": {
     backgroundColor: "rgba(255, 255, 255, 0.08)",
   },
-  fontSize: "1.34vh",
+  fontSize: "1.2vh",
   textTransform: "none",
 }));
 
@@ -80,7 +74,7 @@ const CustomPagination = ({
   borderColor,
   textColor,
   selectedFontWeight,
-  arrowsOn,
+  showArrows,
 }) => {
   const { items } = usePagination({
     count: arr.length,
@@ -121,18 +115,19 @@ const CustomPagination = ({
               );
             }
           } else if (type === "previous" || type === "next") {
-            children =
-              arrowsOn && arr.length > 1 ? (
-                <CustomArrowButtons type="button" {...item}>
-                  {type === "previous" ? (
-                    <KeyboardArrowLeft />
-                  ) : (
-                    <KeyboardArrowRight />
-                  )}
-                </CustomArrowButtons>
-              ) : (
-                <ArrowPlaceholder />
-              );
+            children = (
+              <CustomArrowButtons
+                type="button"
+                {...item}
+                showArrows={showArrows && arr.length > 1}
+              >
+                {type === "previous" ? (
+                  <KeyboardArrowLeft />
+                ) : (
+                  <KeyboardArrowRight />
+                )}
+              </CustomArrowButtons>
+            );
           }
 
           return <li key={index}>{children}</li>;
