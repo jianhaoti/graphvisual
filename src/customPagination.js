@@ -15,7 +15,7 @@ const List = styled("ul")({
 const Ellipsis = styled("div")({
   color: "white", // Ensure the ellipses are white
   minWidth: "30px", // Keep consistent sizing with buttons
-  height: "30px",
+  height: "27px",
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
@@ -76,10 +76,19 @@ const CustomPagination = ({
   selectedFontWeight,
   showArrows,
 }) => {
+  // Adjust these values as needed based on your specific requirements
+  const totalItems = arr.length;
+  let siblingCount = 2;
+
+  // Example adjustment: If total number of items exceeds a certain threshold, reduce siblingCount to adjust the layout
+  if (totalItems > 6) {
+    siblingCount = 0; // This will show 2 nodes in the center for large counts
+  }
+
   const { items } = usePagination({
     count: arr.length,
-    boundaryCount: 1, // Number of always visible pages at the beginning and end
-    siblingCount: 1, // Number of pages to display on each side of the current page
+    boundaryCount: 1,
+    siblingCount: siblingCount, // Use the dynamically determined siblingCount here
   });
 
   return (
