@@ -25,8 +25,8 @@ const Ellipsis = styled("div")({
 });
 const CustomArrowButtons = styled(Button)({
   borderRadius: "50%", // for hover
-  minWidth: "30px",
-  height: "30px",
+  minWidth: "3.86vh",
+  height: "3.86vh",
   padding: "0",
   margin: "4px",
   display: "flex",
@@ -38,30 +38,50 @@ const CustomArrowButtons = styled(Button)({
     color: "white", // Keep text color white when disabled
     opacity: ".15", // Yellow background when disabled
   },
+  backgroundColor: "transparent",
 });
-const CustomButton = styled(Button)(() => ({
-  borderRadius: "50%", // Keep it circular
-  minWidth: "30px",
-  height: "30px",
+
+const ArrowPlaceholder = styled("div")({
+  minWidth: "1vh",
+  height: "3.86vh",
   padding: "0",
-  margin: "4px",
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
-  border: "1.5px solid #DB380F", // Conditional border color
+  backgroundColor: "transparent",
+  borderRadius: "50%", // for hover
+});
+
+const CustomButton = styled(
+  ({ borderColor, textColor, selectedFontWeight, arrowsOn, ...otherProps }) => (
+    <Button {...otherProps} />
+  )
+)(({ borderColor }) => ({
+  // Your styles using borderColor and other props
+  borderRadius: "50%",
+  minWidth: "4vh",
+  minHeight: "4vh",
+  padding: "0",
+  margin: ".5vh",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  border: `.25vh solid ${borderColor}`, // Use borderColor for the border color
   "&:hover": {
     backgroundColor: "rgba(255, 255, 255, 0.08)",
   },
-  color: "white",
-  "&:hover": {
-    backgroundColor: "rgba(255, 255, 255, 0.08)",
-  },
-  fontSize: "0.65rem",
+  fontSize: "1.34vh",
   textTransform: "none",
 }));
 
 // Custom Pagination Component
-const CustomPagination = ({ arr }) => {
+const CustomPagination = ({
+  arr,
+  borderColor,
+  textColor,
+  selectedFontWeight,
+  arrowsOn,
+}) => {
   const { items } = usePagination({
     count: arr.length,
     boundaryCount: 1, // Number of always visible pages at the beginning and end
@@ -85,28 +105,34 @@ const CustomPagination = ({ arr }) => {
             const nodeId = arr[page - 1];
             const label =
               nodeId.length > 3 ? nodeId.substr(nodeId.length - 3) : nodeId;
-            children = (
-              <CustomButton
-                type="button"
-                style={{
-                  fontWeight: selected ? "bold" : "normal",
-                  color: selected ? "#DB380F" : "white", // Styling button text in white
-                }}
-                {...item}
-              >
-                {label} {/* Displaying custom label */}
-              </CustomButton>
-            );
+            if (nodeId !== "") {
+              children = (
+                <CustomButton
+                  borderColor={borderColor}
+                  type="button"
+                  style={{
+                    fontWeight: selected ? selectedFontWeight : "normal",
+                    color: selected ? `${textColor}` : "white", // Styling button text in white
+                  }}
+                  {...item}
+                >
+                  {label} {/* Displaying custom label */}
+                </CustomButton>
+              );
+            }
           } else if (type === "previous" || type === "next") {
-            children = (
-              <CustomArrowButtons type="button" {...item}>
-                {type === "previous" ? (
-                  <KeyboardArrowLeft />
-                ) : (
-                  <KeyboardArrowRight />
-                )}
-              </CustomArrowButtons>
-            );
+            children =
+              arrowsOn && arr.length > 1 ? (
+                <CustomArrowButtons type="button" {...item}>
+                  {type === "previous" ? (
+                    <KeyboardArrowLeft />
+                  ) : (
+                    <KeyboardArrowRight />
+                  )}
+                </CustomArrowButtons>
+              ) : (
+                <ArrowPlaceholder />
+              );
           }
 
           return <li key={index}>{children}</li>;

@@ -421,6 +421,10 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
 
   /* #endregion */
 
+  /* #region Debugging */
+  // useEffect(() => console.log(bfsProcessing), [bfsState]);
+
+  /* #endregion */
   return (
     <Fade in={true} timeout={500}>
       <div
@@ -516,7 +520,67 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                         </Typography>
                       </div>
                       <div>
-                        <CustomPagination arr={bfsQueue} />
+                        <div
+                          style={{
+                            display: "flex", // Make this a flex container
+                            flexDirection: "row", // Default to row, but this will be overridden by media query if needed
+                            justifyContent: "center", // Center horizontally
+                            alignItems: "center", // Center vertically
+                            height: "100%", // Take up full container height
+                            width: "100%", // Take up full container width
+                            backgroundColor: "transparent",
+                          }}
+                        >
+                          <Typography
+                            component="div"
+                            variant="body2"
+                            sx={{
+                              color: "white",
+                              userSelect: "none",
+                              fontSize: ".9em",
+                              lineHeight: "10vh", // Adjust this value to match the height of CustomPagination or as needed for alignment
+                            }}
+                          >
+                            Queue:
+                          </Typography>
+                          <CustomPagination
+                            arr={bfsQueue}
+                            borderColor="#DB380F"
+                            textColor="#DB380F"
+                            selectedFontWeight="bold"
+                            arrowsOn={true}
+                          />
+                        </div>
+                        <div
+                          style={{
+                            display: "flex", // Make this a flex container
+                            justifyContent: "center", // Center horizontally
+                            alignItems: "center", // Center vertically
+                            height: "100%", // Take up full container height
+                            width: "100%", // Take up full container width
+                            backgroundColor: "transparent",
+                            paddingTop: "2vh",
+                          }}
+                        >
+                          <Typography
+                            component="div"
+                            variant="body2"
+                            sx={{
+                              color: "white",
+                              userSelect: "none",
+                              fontSize: ".9em",
+                            }}
+                          >
+                            Processing:
+                          </Typography>
+                          <CustomPagination
+                            arr={[bfsProcessing]}
+                            borderColor="white"
+                            textColor="white"
+                            selectedFontWeight="normal"
+                            arrowsOn={false}
+                          />
+                        </div>
                       </div>
                     </Carousel>
                   </ConfigProvider>

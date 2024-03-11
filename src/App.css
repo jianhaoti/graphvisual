@@ -155,7 +155,7 @@ main {
 }
 
 /* Hide rightside when too skinny */
-@media screen and (max-width: 800px) {
+@media screen and (max-width: 1075px) {
   .container-right,
   .button-group-container {
     display: none;
@@ -166,7 +166,7 @@ main {
   }
 }
 
-@media screen and (max-height: 550px) {
+@media screen and (max-height: 1075px) {
   .title-container,
   .button-group-container {
     display: none;

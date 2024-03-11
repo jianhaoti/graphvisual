@@ -61,7 +61,10 @@ const Graph: React.FC<GraphProps> = ({
   isGraphEditable,
   size,
 }) => {
-  // Mine
+  /* #region Graph logic */
+  const whiteCircleRadius = size === "small" ? 20 : 21;
+  const whiteTextAlignment = size === "small" ? 30 : 31;
+
   const currentNodeRef = useRef<SVGCircleElement | null>(null);
   const clickStartTime = useRef<number | null>(null);
 
@@ -452,7 +455,8 @@ const Graph: React.FC<GraphProps> = ({
       }
     };
   }, []);
-  // Watermark
+  /* #endregion */
+  /* #region Watermark */
   const [showWatermark, setShowWatermark] = useState(true);
   type Color = GetProp<ColorPickerProps, "color">;
   interface WatermarkConfig {
@@ -486,16 +490,15 @@ const Graph: React.FC<GraphProps> = ({
       fontSize,
     },
   };
-
+  /* #endregion */
+  /* #region Algorithms */
   // bfs
   const { bfsState, bfsSourceNode } = useBFS();
 
   // dfs
   const { dfsState, dfsSourceNode } = useDFS();
 
-  const whiteCircleRadius = size === "small" ? 20 : 21;
-  const whiteTextAlignment = size === "small" ? 30 : 31;
-
+  /* #endregion */
   return (
     <div
       className="container container-left"
