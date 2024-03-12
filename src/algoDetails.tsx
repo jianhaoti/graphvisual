@@ -97,7 +97,6 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
     TBD: ["Impression, Sunrise", " by Monet"],
   };
   /* #endregion */
-
   /* #region State data */
   const [visible, setVisible] = useState(true); // control background dim or not
   const [movieTime, setMovieTime] = useState<boolean>(false);
@@ -124,11 +123,9 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
   const { bfsState, setBfsState, goToNextStepBFS, goToPreviousStepBFS } =
     useBFS();
 
-  const {
-    queue: bfsQueue,
-    processing: bfsProcessing,
-    newNeighbors: bfsNewNeighbors,
-  } = bfsSteps[bfsState.currentStepIndex] || { queue: [] };
+  const { queue: bfsQueue, processing: bfsProcessing } = bfsSteps[
+    bfsState.currentStepIndex
+  ] || { queue: [] };
 
   /* #endregion */
   /* #region DFS */
@@ -136,6 +133,9 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
 
   const { dfsState, setDfsState, goToNextStepDFS, goToPreviousStepDFS } =
     useDFS();
+  const { stack: dfsStack, processing: dfsProcessing } = dfsSteps[
+    dfsState.currentStepIndex
+  ] || { queue: [] };
 
   /* #endregion */
   /* #region Algo Info */
@@ -423,7 +423,6 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
 
   /* #region Debugging */
   // useEffect(() => console.log(bfsProcessing), [bfsState]);
-
   /* #endregion */
   return (
     <Fade in={true} timeout={500}>
@@ -519,72 +518,150 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                           )}
                         </Typography>
                       </div>
-                      <div
-                        style={{
-                          display: "flex",
-                          flexDirection: "column",
-                          gap: "10px",
-                        }}
-                      >
+                      {algoTitle === "BFS" && (
                         <div
                           style={{
                             display: "flex",
-                            alignItems: "center",
-                            marginTop: "3vh",
-                            marginLeft: "3vh",
+                            flexDirection: "column",
+                            gap: "10px",
                           }}
                         >
-                          <div style={{ minWidth: "100px", textAlign: "left" }}>
-                            <Typography
-                              component="div"
-                              variant="body2"
-                              sx={{
-                                color: "white",
-                                userSelect: "none",
-                                fontSize: ".9em",
-                              }}
+                          <div
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              marginTop: "3vh",
+                              marginLeft: "3vh",
+                            }}
+                          >
+                            <div
+                              style={{ minWidth: "100px", textAlign: "left" }}
                             >
-                              Queue:
-                            </Typography>
+                              <Typography
+                                component="div"
+                                variant="body2"
+                                sx={{
+                                  color: "white",
+                                  userSelect: "none",
+                                  fontSize: ".9em",
+                                }}
+                              >
+                                Queue:
+                              </Typography>
+                            </div>
+                            <CustomPagination
+                              arr={bfsQueue}
+                              borderColor="#DB380F"
+                              textColor="#DB380F"
+                              selectedFontWeight="bold"
+                              showArrows={true}
+                            />
                           </div>
-                          <CustomPagination
-                            arr={bfsQueue}
-                            borderColor="#DB380F"
-                            textColor="#DB380F"
-                            selectedFontWeight="bold"
-                            showArrows={true}
-                          />
+                          <div
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              marginTop: "1vh",
+                              marginLeft: "3vh",
+                            }}
+                          >
+                            <div
+                              style={{ minWidth: "100px", textAlign: "left" }}
+                            >
+                              <Typography
+                                component="div"
+                                variant="body2"
+                                sx={{
+                                  color: "white",
+                                  userSelect: "none",
+                                  fontSize: ".9em",
+                                }}
+                              >
+                                Processing:
+                              </Typography>
+                            </div>
+                            <CustomPagination
+                              arr={[bfsProcessing]}
+                              borderColor="white"
+                              textColor="white"
+                              selectedFontWeight="normal"
+                              showArrows={false}
+                            />
+                          </div>
                         </div>
+                      )}
+                      {algoTitle === "DFS" && (
                         <div
                           style={{
                             display: "flex",
-                            alignItems: "center",
-                            marginTop: "1vh",
-                            marginLeft: "3vh",
+                            flexDirection: "column",
+                            gap: "10px",
                           }}
                         >
-                          <div style={{ minWidth: "100px", textAlign: "left" }}>
-                            <Typography
-                              component="div"
-                              variant="body2"
-                              sx={{
-                                color: "white",
-                                userSelect: "none",
-                                fontSize: ".9em",
-                              }}
+                          <div
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              marginTop: "3vh",
+                              marginLeft: "3vh",
+                            }}
+                          >
+                            <div
+                              style={{ minWidth: "100px", textAlign: "left" }}
                             >
-                              Processing:
-                            </Typography>
+                              <Typography
+                                component="div"
+                                variant="body2"
+                                sx={{
+                                  color: "white",
+                                  userSelect: "none",
+                                  fontSize: ".9em",
+                                }}
+                              >
+                                Stack:
+                              </Typography>
+                            </div>
+                            <CustomPagination
+                              arr={dfsStack}
+                              borderColor="#DB380F"
+                              textColor="#DB380F"
+                              selectedFontWeight="bold"
+                              showArrows={true}
+                            />
                           </div>
-                          <CustomPagination
-                            arr={[bfsProcessing]}
-                            borderColor="white"
-                            textColor="white"
-                            selectedFontWeight="normal"
-                            showArrows={false}
-                          />
+                          <div
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              marginTop: "1vh",
+                              marginLeft: "3vh",
+                            }}
+                          >
+                            <div
+                              style={{ minWidth: "100px", textAlign: "left" }}
+                            >
+                              <Typography
+                                component="div"
+                                variant="body2"
+                                sx={{
+                                  color: "white",
+                                  userSelect: "none",
+                                  fontSize: ".9em",
+                                }}
+                              >
+                                Processing:
+                              </Typography>
+                            </div>
+                            <CustomPagination
+                              arr={[dfsProcessing]}
+                              borderColor="white"
+                              textColor="white"
+                              selectedFontWeight="normal"
+                              showArrows={false}
+                            />
+                          </div>
                         </div>
-                      </div>
+                      )}
                     </Carousel>
                   </ConfigProvider>
                 </div>
