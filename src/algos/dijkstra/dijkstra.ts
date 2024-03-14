@@ -14,10 +14,10 @@ export const dijkstra = (
   let steps: DijkstraStepType[] = [];
 
   let visited: Set<string> = new Set(); // we'll force an array structure in the return
-  let processing: string = source;
+  let queue: string[] = [source];
+  let processing: string = "";
   let edgeStatus: Map<string, string> = new Map();
   let currentShortest: Map<string, number> = new Map();
-  let pathLength = 0;
 
   // init all nodes not source to infinty
   theNeighbors.forEach((_value, key) => {
@@ -29,23 +29,34 @@ export const dijkstra = (
   // init the source to distnace 0
   currentShortest.set(source, 0);
 
-  // initializing the while loop
-  let processingNeighbors = theNeighbors.get(source) || [];
-
   // end condition is when all nodes have been visisted
-  while (processingNeighbors.some((neighbor) => !visited.has(neighbor))) {
+  while (queue.length > 0) {
+    processing = queue.shift()!;
     // filter in all unvisited neighbors
-    const unvisitedNeighbors = processingNeighbors.filter(
+    let neighbors = theNeighbors.get(processing) || [];
+
+    const unvisitedNeighbors = neighbors.filter(
       (neighbor) => !visited.has(neighbor)
     );
 
-    // update the shortest if needed
-    unvisitedNeighbors.forEach((neighbor) => {
-      const currentDistance = currentShortest.get(neighbor);
-      const competitor = pathLength + edgeWeights.get(neighbor)!;
-    });
+    // for processing useless edges
+    const uselessTargets = neighbors.filter((neighbor) =>
+      visited.has(neighbor)
+    );
 
     visited.add(processing);
+    processing = "";
+
+    // update the shortest if needed
+    unvisitedNeighbors.forEach((neighbor) => {
+      const currentDistance = currentShortest.get(neighbor)!;
+      const competitor =
+        currentShortest.get(processing)! +
+        edgeWeights.get(`${processing}-${neighbor}`)!; // source -> processing -> neighbor
+      currentShortest.set(neighbor, Math.min(currentDistance, competitor));
+    });
+
+    // update processing node to
   }
   return { steps };
 };

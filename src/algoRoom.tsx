@@ -54,7 +54,7 @@ const AlgoRoom: React.FC<AlgoRoomProps> = ({
     {
       title: "Dijkstra",
       grouping: "Shortest Path",
-      description: "Minimize Distance",
+      description: "Gone Fishin'",
     },
 
     { title: "Prim", grouping: "MST", description: "TBD" },

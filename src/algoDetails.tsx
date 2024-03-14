@@ -105,7 +105,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
 
   /* #endregion */
   /* #region Graph Data */
-  const adjacencyList = convertToAdjacencyList(nodes, edges, isOriented);
+  const graphAdjacencyList = convertToAdjacencyList(nodes, edges, isOriented);
   const algoParameters = {
     BFS: ["Source Node"],
     DFS: ["Source Node"],
@@ -119,7 +119,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
 
   /* #endregion */
   /* #region BFS */
-  const { steps: bfsSteps } = bfs(adjacencyList, inputValue, isOriented);
+  const { steps: bfsSteps } = bfs(graphAdjacencyList, inputValue, isOriented);
   const { bfsState, setBfsState, goToNextStepBFS, goToPreviousStepBFS } =
     useBFS();
 
@@ -129,7 +129,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
 
   /* #endregion */
   /* #region DFS */
-  const { steps: dfsSteps } = dfs(adjacencyList, inputValue, isOriented);
+  const { steps: dfsSteps } = dfs(graphAdjacencyList, inputValue, isOriented);
 
   const { dfsState, setDfsState, goToNextStepDFS, goToPreviousStepDFS } =
     useDFS();
@@ -146,11 +146,6 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
 
   const AlgoPseudocode =
     algoPseudocodeMap[algoTitle as keyof typeof algoPseudocodeMap] || null; // Default to null or a fallback component
-
-  const algoAuxillaryData = {
-    BFS: "bfss",
-    DFS: "test",
-  };
 
   /* #endregion */
   /* #region Left/Right Button  */
@@ -298,7 +293,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
 
   const [buttonColor, setButtonColor] = useState<string>("default");
   // what happens when you click "run"
-  const handleRunClick = () => {
+  const handleRunClick = async () => {
     // we need this second conditional or else get jiggle/free run bug
     if (!isInputValid || inputValue === "") {
       setButtonColor("error");
@@ -312,29 +307,64 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
       setIsGraphEditable(false);
       setMovieTime(true);
 
-      if (algoTitle === "BFS") {
-        // initalize the statuses
-        const initNodeStatus = new Map();
-        initNodeStatus.set(inputValue, "processing");
+      const initNodeStatus = new Map();
+      initNodeStatus.set(inputValue, "processing");
 
-        // Run the algo
-        setBfsState({
-          steps: bfsSteps,
-          currentStepIndex: 0,
-          nodeStatus: initNodeStatus, // Optionally initialize nodeStates based on the first step if needed
-          isVisualizationActive: true, // Ensure visualization is active to show new steps
-        });
-      }
+      switch (algoTitle) {
+        case "BFS":
+          setBfsState({
+            steps: bfsSteps,
+            currentStepIndex: 0,
+            nodeStatus: initNodeStatus,
+            isVisualizationActive: true,
+          });
+          break;
 
-      if (algoTitle === "DFS") {
-        const initNodeStatus = new Map();
-        initNodeStatus.set(inputValue, "processing");
-        setDfsState({
-          steps: dfsSteps,
-          currentStepIndex: 0,
-          nodeStatus: initNodeStatus, // Optionally initialize nodeStates based on the first step if needed
-          isVisualizationActive: true, // Ensure visualization is active to show new steps
-        });
+        case "DFS":
+          setDfsState({
+            steps: dfsSteps,
+            currentStepIndex: 0,
+            nodeStatus: initNodeStatus,
+            isVisualizationActive: true,
+          });
+          break;
+
+        case "Dijkstra":
+          // Prepare the data you need to send
+          const requestData = {
+            graphAdjacencyList,
+            isOriented,
+            inputValue,
+          };
+
+          try {
+            const response = await fetch("http://localhost:3001/run-dijkstra", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(requestData),
+            });
+
+            if (!response.ok) {
+              throw new Error("Network response was not ok");
+            }
+
+            const dijkstraResult = await response.json();
+            console.log(dijkstraResult);
+            // Handle Dijkstra's algorithm result here
+            // For example, updating state to reflect the computed shortest paths
+          } catch (error) {
+            console.error(
+              "There was a problem with your fetch operation:",
+              error
+            );
+          }
+          break;
+
+        default:
+          console.error("Unsupported algorithm");
+          break;
       }
     }
   };
