@@ -34,6 +34,7 @@ import Julanite1 from "./assets/Julanite1.jpeg";
 import Julanite3 from "./assets/Julanite3.jpeg";
 import Julanite4 from "./assets/Julanite4.jpeg";
 import Julanite5 from "./assets/Julanite5.jpeg";
+import fish from "./assets/goya-GoldenBream.jpg";
 
 interface AlgoDetailsProps {
   algoTitle: string;
@@ -81,20 +82,20 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
   const titleToImage = {
     BFS: Julanite1,
     DFS: Julanite5,
-    Dijkstra: sunflowers,
+    Dijkstra: fish,
     Prim: Julanite4,
-    Kruskal: Julanite3,
-    TBD: impressionSunrise,
+    Kruskal: impressionSunrise,
+    TBD: sunflowers,
   };
   const image = titleToImage[algoTitle as keyof typeof titleToImage];
 
   const artWork = {
     BFS: ["Julanite", " by Brookfield"],
     DFS: ["Julanite", " by Brookfield"],
-    Dijkstra: ["Sunflower", " by van Gogh"],
+    Dijkstra: ["Golden Bream", " by Goya"],
     Prim: ["Julanite", " by Brookfield"],
-    Kruskal: ["Julanite", " by Brookfield"],
-    TBD: ["Impression, Sunrise", " by Monet"],
+    Kruskal: ["Impression, Sunrise", " by Monet"],
+    TBD: ["Sunflower", " by van Gogh"],
   };
   /* #endregion */
   /* #region State data */

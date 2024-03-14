@@ -17,7 +17,7 @@ const DfsPseudocode = ({ inputValue, name }) => {
   const renderLineWithSyntaxHighlighting = (line) => {
     // Update the regular expression to exclude 'enqueue' and 'dequeue'
     const regex =
-      /\b(init|queue|set|string|array|S|Visited|processing|Neighbors)\b/g;
+      /\b(init|stack|set|string|array|S|Visited|processing|Neighbors)\b/g;
 
     // Function to replace matched keywords with colored spans, excluding 'enqueue' and 'dequeue'
     const replaceFunc = (match) => {
