@@ -106,7 +106,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
 
   /* #endregion */
   /* #region Graph Data */
-  const graphAdjacencyList = convertToAdjacencyList(nodes, edges, isOriented);
+
   const algoParameters = {
     BFS: ["Source Node"],
     DFS: ["Source Node"],
@@ -115,8 +115,12 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
     Kruskal: ["TBD"],
     TBD: ["TBD"],
   };
+  const graphAdjacencyList = convertToAdjacencyList(nodes, edges, isOriented);
   const nodeIDs = nodes.map((node) => node.id);
-  const edgeIDs = edges.map((edge) => `${edge.id1}-${edge.id2}`);
+  const edgeWeightMap = new Map();
+  edges.forEach((edge) =>
+    edgeWeightMap.set(`${edge.id1}-${edge.id2}`, edge.weight)
+  );
 
   /* #endregion */
   /* #region BFS */
@@ -331,36 +335,41 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
           break;
 
         case "Dijkstra":
-          // Prepare the data you need to send
-          const requestData = {
-            graphAdjacencyList,
+          // prepping the data to send to backend
+          const edgeWeights = Array.from(edgeWeightMap.entries());
+          const theNeighbors = Object.fromEntries(graphAdjacencyList);
+
+          const source = inputValue;
+
+          // package it up
+          const requestData = JSON.stringify({
+            theNeighbors,
+            edgeWeightMap: edgeWeights,
             isOriented,
-            inputValue,
-          };
+            source,
+          });
 
-          try {
-            const response = await fetch("http://localhost:3001/run-dijkstra", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(requestData),
-            });
-
-            if (!response.ok) {
-              throw new Error("Network response was not ok");
-            }
-
-            const dijkstraResult = await response.json();
-            console.log(dijkstraResult);
-            // Handle Dijkstra's algorithm result here
-            // For example, updating state to reflect the computed shortest paths
-          } catch (error) {
-            console.error(
-              "There was a problem with your fetch operation:",
-              error
+          fetch("http://localhost:3001/dijkstra", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: requestData,
+          })
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error("Network response was not ok");
+              }
+              return response.json();
+            })
+            .then((data) => {
+              console.log("Dijkstra Steps:", data.steps);
+              // Here, you can now use the steps data to display results, create visualizations, etc.
+            })
+            .catch((error) =>
+              console.error(
+                "There was a problem with your fetch operation:",
+                error
+              )
             );
-          }
           break;
 
         default:
