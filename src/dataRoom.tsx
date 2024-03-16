@@ -108,7 +108,7 @@ const DataRoom: React.FC<DataRoomProps> = ({
 
   const renderEdgeItem = (edge: Edge) => {
     const edgeId = `${edge.id1}-${edge.id2}`;
-    const displayEdgeName = `${edge.id1} ${isOriented ? "→" : "-"} ${edge.id2}${showWeight ? `: ${edge.weight}` : ""}`;
+    const displayEdgeName = `${edge.id1} ${isOriented ? "→" : "-"} ${edge.id2}`;
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
       if (e.key === "Enter") {
@@ -129,56 +129,84 @@ const DataRoom: React.FC<DataRoomProps> = ({
       e: React.FocusEvent<HTMLInputElement>,
       edgeId: string
     ) => {
-      const newWeight = e.target.value;
-      const weight = parseInt(newWeight, 10);
+      if (showWeight) {
+        const newWeight = e.target.value;
+        const weight = parseInt(newWeight, 10);
 
-      // Check if the input is a valid integer (including 0 and negative numbers)
-      if (!isNaN(weight)) {
-        // Update the weight of the selected edge
-        setEdges(
-          edges.map((edge) => {
-            if (`${edge.id1}-${edge.id2}` === edgeId) {
-              return { ...edge, weight: weight };
-            }
-            return edge;
-          })
-        );
-        setSelectedEdge(null); // Exit editing mode
-      } else {
-        // Apply the jiggle animation for invalid input
-        e.target.classList.add("jiggle");
+        // Check if the input is a valid integer (including 0 and negative numbers)
+        if (!isNaN(weight)) {
+          // Update the weight of the selected edge
+          setEdges(
+            edges.map((edge) => {
+              if (`${edge.id1}-${edge.id2}` === edgeId) {
+                return { ...edge, weight: weight };
+              }
+              return edge;
+            })
+          );
+          setSelectedEdge(null); // Exit editing mode
+        } else {
+          // jiggle
+          e.target.classList.add("jiggle");
+          setTimeout(() => {
+            e.target.classList.remove("jiggle");
+          }, 500); // Match the duration of the jiggle animation
 
-        // Remove the jiggle class after the animation ends
-        setTimeout(() => {
-          e.target.classList.remove("jiggle");
-        }, 500); // Match the duration of the jiggle animation
-
-        // Keep the previous value (do not update to invalid input)
-        const currentEdge = edges.find(
-          (edge) => `${edge.id1}-${edge.id2}` === edgeId
-        );
-        e.target.value = currentEdge ? currentEdge.weight.toString() : "1"; // Fallback to '1' if edge not found
+          // Keep the previous value (do not update to invalid input)
+          const currentEdge = edges.find(
+            (edge) => `${edge.id1}-${edge.id2}` === edgeId
+          );
+          e.target.value = currentEdge ? currentEdge.weight.toString() : "1"; // Fallback to '1' if edge not found
+        }
       }
     };
 
     return (
       <div
         onClick={() => setSelectedEdge(edgeId)}
-        style={{ display: "flex", alignItems: "center" }}
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          width: "100%", // Ensure the div takes up full width of its container
+          cursor: "pointer",
+        }}
       >
-        {selectedEdge === edgeId ? (
-          <input
-            className="editableInput" // Use the className for styles
-            type="text"
-            defaultValue={edge.weight.toString()}
-            onBlur={(e) => handleEdgeWeightUpdate(e, edgeId)}
-            onKeyDown={handleKeyDown}
-            onFocus={handleFocus}
-            onClick={(e) => e.stopPropagation()}
-          />
-        ) : (
-          <span>{displayEdgeName}</span>
-        )}
+        <span
+          style={{
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+          }}
+        >
+          {displayEdgeName}
+        </span>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "flex-end",
+            minWidth: "50px",
+          }}
+        >
+          {selectedEdge === edgeId ? (
+            <input
+              className="editableInput"
+              type="text"
+              defaultValue={edge.weight.toString()}
+              onBlur={(e) => handleEdgeWeightUpdate(e, edgeId)}
+              onKeyDown={handleKeyDown}
+              onFocus={handleFocus}
+              onClick={(e) => e.stopPropagation()}
+              style={{
+                width: "35px", // Adjust based on expected input width
+                marginLeft: "5px",
+                textAlign: "right",
+              }}
+            />
+          ) : showWeight ? (
+            <span style={{ marginLeft: "5px" }}>{edge.weight}</span>
+          ) : null}
+        </div>
       </div>
     );
   };
@@ -188,7 +216,6 @@ const DataRoom: React.FC<DataRoomProps> = ({
   };
 
   return (
-    // This takes up whole right-container when no .control-room
     <div
       style={{ width: "100%", height: "100%", overflow: "hidden" }}
       onContextMenu={(e) => handleContextMenu(e)}

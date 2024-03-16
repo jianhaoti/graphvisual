@@ -2,7 +2,7 @@ import React from "react";
 import { HighlightInstructions } from "./bfsHighlightInstructions"; // Ensure this path matches your project structure
 import { useBFS } from "./bfsContext";
 
-const BfsPseudocode = ({ inputValue, name }) => {
+const BfsPseudocode = ({ source, name }) => {
   const { bfsState } = useBFS();
   const { currentStepIndex } = bfsState;
   const highlightInstructions = HighlightInstructions();
@@ -53,8 +53,8 @@ const BfsPseudocode = ({ inputValue, name }) => {
 
   // Pseudocode lines
   const pseudocodeLines = [
-    `BFS (${name}, ${inputValue}):`,
-    `  init queue Q = [${inputValue}]`,
+    `BFS (${name}, ${source}):`,
+    `  init queue Q = [${source}]`,
     `  init set Visited = {}`,
     `  init string processing = ""`,
     ``,

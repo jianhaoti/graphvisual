@@ -13,6 +13,7 @@ interface AlgoRoomProps {
   setIsGraphEditable: (editable: boolean) => void;
   isOriented: boolean;
   name: string;
+  showWeight: boolean;
 }
 
 const AlgoRoom: React.FC<AlgoRoomProps> = ({
@@ -24,6 +25,7 @@ const AlgoRoom: React.FC<AlgoRoomProps> = ({
   setSelectedEdge,
   setIsGraphEditable,
   name,
+  showWeight,
 }) => {
   const colors = ["#8693AB", "#BDD4E7", "#5d617c"];
   const [isFullTitle, setIsFullTitle] = useState(true);
@@ -129,6 +131,7 @@ const AlgoRoom: React.FC<AlgoRoomProps> = ({
           edges={edges}
           isOriented={isOriented}
           name={name}
+          showWeight={showWeight}
         />
       )}
     </Box>

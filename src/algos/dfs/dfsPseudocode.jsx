@@ -2,7 +2,7 @@ import React from "react";
 import { HighlightInstructions } from "../dfs/dfsHighlightInstructions"; // Ensure this path matches your project structure
 import { useDFS } from "./dfsContext";
 
-const DfsPseudocode = ({ inputValue, name }) => {
+const DfsPseudocode = ({ source, name }) => {
   const { dfsState } = useDFS();
   const { currentStepIndex } = dfsState;
   const highlightInstructions = HighlightInstructions();
@@ -53,8 +53,8 @@ const DfsPseudocode = ({ inputValue, name }) => {
 
   // Pseudocode lines
   const pseudocodeLines = [
-    `DFS (${name}, ${inputValue}):`,
-    `  init stack S = [${inputValue}]`,
+    `DFS (${name}, ${source}):`,
+    `  init stack S = [${source}]`,
     `  init set Visited = {}`,
     `  init string processing = ""`,
     ``,

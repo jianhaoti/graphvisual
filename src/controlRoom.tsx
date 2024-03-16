@@ -83,6 +83,7 @@ const ControlRoom: React.FC<ControlRoomProps> = ({
           setSelectedEdge={setSelectedEdge}
           setIsGraphEditable={setIsGraphEditable}
           name={name}
+          showWeight={showWeight}
         />
       )}
     </div>

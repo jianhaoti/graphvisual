@@ -31,7 +31,6 @@ import { ReactComponent as LeftArrow } from "./assets/leftArrow.svg";
 import impressionSunrise from "./assets/monet-impressionSunrise.jpeg";
 import sunflowers from "./assets/vanGogh-sunflowers.jpeg";
 import Julanite1 from "./assets/Julanite1.jpeg";
-import Julanite3 from "./assets/Julanite3.jpeg";
 import Julanite4 from "./assets/Julanite4.jpeg";
 import Julanite5 from "./assets/Julanite5.jpeg";
 import fish from "./assets/goya-GoldenBream.jpg";
@@ -46,6 +45,7 @@ interface AlgoDetailsProps {
   setSelectedEdge: (edgeId: string | null) => void;
   setIsGraphEditable: (editable: boolean) => void;
   name: string;
+  showWeight: boolean;
 }
 interface BFSStateType {
   steps: BFSStepType[];
@@ -71,6 +71,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
   setSelectedEdge,
   setIsGraphEditable,
   name,
+  showWeight,
 }) => {
   // Card sizing
   const cardSizing = {
@@ -99,10 +100,10 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
   };
   /* #endregion */
   /* #region State data */
-  const [visible, setVisible] = useState(true); // control background dim or not
-  const [movieTime, setMovieTime] = useState<boolean>(false);
-  const [inputValue, setInputValue] = useState<string>("");
-  const [isInputValid, setIsInputValid] = useState<boolean>(true);
+  const [backgroundDimmed, setBackgroundDimmed] = useState(false); // control background dim or not
+  const [isAlgoRunning, setIsAlgoRunning] = useState<boolean>(false);
+  const [source, setSource] = useState<string>("");
+  const [isSourceValid, setIsSourcevalid] = useState<boolean>(true);
 
   /* #endregion */
   /* #region Graph Data */
@@ -110,12 +111,12 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
   const algoParameters = {
     BFS: ["Source Node"],
     DFS: ["Source Node"],
-    Dijkstra: ["Source Node"],
+    Dijkstra: ["Source Node", "Show Edge Weights"],
     Prim: ["TBD"],
     Kruskal: ["TBD"],
     TBD: ["TBD"],
   };
-  const graphAdjacencyList = convertToAdjacencyList(nodes, edges, isOriented);
+  const theNeighbors = convertToAdjacencyList(nodes, edges, isOriented);
   const nodeIDs = nodes.map((node) => node.id);
   const edgeWeightMap = new Map();
   edges.forEach((edge) =>
@@ -124,7 +125,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
 
   /* #endregion */
   /* #region BFS */
-  const { steps: bfsSteps } = bfs(graphAdjacencyList, inputValue, isOriented);
+  const { steps: bfsSteps } = bfs(theNeighbors, source, isOriented);
   const { bfsState, setBfsState, goToNextStepBFS, goToPreviousStepBFS } =
     useBFS();
 
@@ -134,7 +135,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
 
   /* #endregion */
   /* #region DFS */
-  const { steps: dfsSteps } = dfs(graphAdjacencyList, inputValue, isOriented);
+  const { steps: dfsSteps } = dfs(theNeighbors, source, isOriented);
 
   const { dfsState, setDfsState, goToNextStepDFS, goToPreviousStepDFS } =
     useDFS();
@@ -194,9 +195,9 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
   }
   /* #endregion */
   /* #region Main Logic */
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(event.target.value);
-    setIsInputValid(true); // This resets the state so we can jiggle in sucession.
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSource(event.target.value);
+    setIsSourcevalid(true); // This resets the state so we can jiggle in sucession.
   };
 
   // right click is now ctrl + v
@@ -211,8 +212,8 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
         .readText()
         .then((text) => {
           // Attempt to read text from the clipboard
-          setInputValue(text); // Set the input value to the text from the clipboard
-          setIsInputValid(true); // Assuming the pasted input is valid
+          setSource(text); // Set the input value to the text from the clipboard
+          setIsSourcevalid(true); // Assuming the pasted input is valid
         })
         .catch((err) => {
           console.error("Failed to read clipboard contents: ", err);
@@ -230,10 +231,10 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
       const isInvalidName = !nodeIDs.includes(target.value);
 
       if (isInvalidName) {
-        setIsInputValid(false); // Indicate that input is invalid
-        setTimeout(() => setInputValue(""), 500);
+        setIsSourcevalid(false); // Indicate that input is invalid
+        setTimeout(() => setSource(""), 500);
       } else {
-        setIsInputValid(true);
+        setIsSourcevalid(true);
         target.blur();
       }
     }
@@ -246,7 +247,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
 
   // Transition fade-in
   const handleBackgroundClick = () => {
-    setVisible(false); // Trigger fade-out
+    setBackgroundDimmed(true); // Trigger fade-out
     setIsGraphEditable(true);
     setSelectedEdge(null);
     setSelectedNode(null);
@@ -270,12 +271,12 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
 
   // timer for delayed clearing
   useEffect(() => {
-    if (!visible) {
+    if (backgroundDimmed) {
       // After setting visibility to false, wait for animation to complete before closing
       const timer = setTimeout(() => onClose(), 500); // Match this with your transition duration
       return () => clearTimeout(timer);
     }
-  }, [visible, onClose]);
+  }, [backgroundDimmed, onClose]);
 
   // handles jiggle and blur
   const handleBlur = (
@@ -286,12 +287,12 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
 
     if (isInvalidName) {
       // don't jiggle if it's a space. run will handle that separately
-      if (inputValue !== "") {
-        setIsInputValid(false); // Indicate that input is invalid
-        setTimeout(() => setInputValue(""), 500);
+      if (source !== "") {
+        setIsSourcevalid(false); // Indicate that input is invalid
+        setTimeout(() => setSource(""), 500);
       }
     } else {
-      setIsInputValid(true);
+      setIsSourcevalid(true);
       target.blur();
     }
   };
@@ -299,21 +300,25 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
   const [buttonColor, setButtonColor] = useState<string>("default");
   // what happens when you click "run"
   const handleRunClick = async () => {
-    // we need this second conditional or else get jiggle/free run bug
-    if (!isInputValid || inputValue === "") {
-      setButtonColor("error");
+    // failure in BFS/DFS
+    if (!isSourceValid || source === "") {
+      if (algoTitle === "BFS" || "DFS") {
+        setButtonColor("error");
 
-      // After 1 second, revert button color to default
-      setTimeout(() => {
-        setButtonColor("default");
-      }, 1000);
+        // After 1 second, revert button color to default
+        setTimeout(() => {
+          setButtonColor("default");
+        }, 1000);
+      }
+    } else if (algoTitle === "Dijkstra") {
+      console.log(source);
     } else {
       setSelectedNode(null);
       setIsGraphEditable(false);
-      setMovieTime(true);
+      setIsAlgoRunning(true);
 
       const initNodeStatus = new Map();
-      initNodeStatus.set(inputValue, "processing");
+      initNodeStatus.set(source, "processing");
 
       switch (algoTitle) {
         case "BFS":
@@ -337,13 +342,11 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
         case "Dijkstra":
           // prepping the data to send to backend
           const edgeWeights = Array.from(edgeWeightMap.entries());
-          const theNeighbors = Object.fromEntries(graphAdjacencyList);
-
-          const source = inputValue;
+          const graphAdjacencyList = Object.fromEntries(theNeighbors);
 
           // package it up
           const requestData = JSON.stringify({
-            theNeighbors,
+            graphAdjacencyList,
             edgeWeightMap: edgeWeights,
             isOriented,
             source,
@@ -356,7 +359,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
           })
             .then((response) => {
               if (!response.ok) {
-                throw new Error("Network response was not ok");
+                throw new Error(`HTTP error! status: ${response.status}`);
               }
               return response.json();
             })
@@ -400,7 +403,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
   // Keyboard navigation handler
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (movieTime) {
+      if (isAlgoRunning) {
         switch (e.key) {
           case "ArrowLeft":
             handlePreviousButtonClick();
@@ -411,7 +414,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
           case "Backspace":
             atStart = true;
             atEnd = false;
-            setMovieTime(false);
+            setIsAlgoRunning(false);
             setIsGraphEditable(true);
 
             if (algoTitle === "BFS") {
@@ -450,7 +453,12 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [handlePreviousButtonClick, handleNextButtonClick, algoTitle, movieTime]);
+  }, [
+    handlePreviousButtonClick,
+    handleNextButtonClick,
+    algoTitle,
+    isAlgoRunning,
+  ]);
 
   const handleCarouselClick = () => {
     // * Use a timeout to ensure the blur action takes place after the click event has been fully processed
@@ -476,18 +484,20 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          backgroundColor: `rgba(0, 0, 0, ${visible ? 0.5 : 0})`, // Control the background opacity based on the state
+          backgroundColor: `rgba(0, 0, 0, ${!backgroundDimmed ? 0.5 : 0})`, // Control the background opacity based on the state
           transition: "background-color 2s",
         }}
         onClick={handleBackgroundClick}
       >
         <Card
           sx={{
-            backgroundColor: movieTime === false ? "#424541" : "#1E1E1E",
+            backgroundColor: isAlgoRunning === false ? "#424541" : "#1E1E1E",
             position: "relative",
             overflow: "auto", // this does NOT control the overflow in the pseudococde
-            opacity: visible ? 1 : 0,
-            transform: visible ? "translateY(0)" : "translateY(-20px)",
+            opacity: !backgroundDimmed ? 1 : 0,
+            transform: !backgroundDimmed
+              ? "translateY(0)"
+              : "translateY(-20px)",
             transition: "opacity 500ms, transform 500ms",
             // hide the scrollbar
             "&::-webkit-scrollbar": {
@@ -500,7 +510,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
           }}
           onClick={(e) => e.stopPropagation()} // Prevent background click inside the card
         >
-          {movieTime ? (
+          {isAlgoRunning ? (
             <div style={cardSizing} className="hideScrollbar">
               <CardContent
                 sx={{
@@ -547,10 +557,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                           }}
                         >
                           {AlgoPseudocode ? (
-                            <AlgoPseudocode
-                              inputValue={inputValue}
-                              name={name}
-                            />
+                            <AlgoPseudocode source={source} name={name} />
                           ) : (
                             <Typography sx={{ color: "white" }}>
                               Coming soon.
@@ -862,13 +869,13 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                         <ListItem key={index}>
                           {param}:
                           <TextField
-                            className={isInputValid ? "" : "jiggle"}
+                            className={isSourceValid ? "" : "jiggle"}
                             variant="standard"
                             autoComplete="off"
                             size="small"
-                            value={inputValue}
+                            value={source}
                             onKeyDown={handleKeyDown}
-                            onChange={handleChange}
+                            onChange={handleInputChange}
                             onContextMenu={handleRightClick}
                             onBlur={handleBlur}
                             InputProps={{
