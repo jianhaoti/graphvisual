@@ -786,7 +786,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
               </CardContent>
             </div>
           ) : (
-            <div style={cardSizing}>
+            <div style={cardSizing} className="hideScrollbar">
               <div
                 className="artwork-container"
                 style={{
