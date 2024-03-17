@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Carousel, ConfigProvider } from "antd";
+import { Carousel, ConfigProvider, Checkbox } from "antd";
 import CustomPagination from "./customPagination.js";
 import {
   Card,
@@ -34,6 +34,7 @@ import Julanite1 from "./assets/Julanite1.jpeg";
 import Julanite4 from "./assets/Julanite4.jpeg";
 import Julanite5 from "./assets/Julanite5.jpeg";
 import fish from "./assets/goya-GoldenBream.jpg";
+import { Check } from "@mui/icons-material";
 
 interface AlgoDetailsProps {
   algoTitle: string;
@@ -111,7 +112,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
   const algoParameters = {
     BFS: ["Source Node"],
     DFS: ["Source Node"],
-    Dijkstra: ["Source Node", "Show Edge Weights"],
+    Dijkstra: ["Source Node", "Show Weights"],
     Prim: ["TBD"],
     Kruskal: ["TBD"],
     TBD: ["TBD"],
@@ -300,19 +301,19 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
   const [buttonColor, setButtonColor] = useState<string>("default");
   // what happens when you click "run"
   const handleRunClick = async () => {
-    // failure in BFS/DFS
+    //! failure becuase of source node
     if (!isSourceValid || source === "") {
-      if (algoTitle === "BFS" || "DFS") {
-        setButtonColor("error");
+      console.log(`Source node is invalid for ${algoTitle}.`);
+      setButtonColor("error");
 
-        // After 1 second, revert button color to default
-        setTimeout(() => {
-          setButtonColor("default");
-        }, 1000);
-      }
-    } else if (algoTitle === "Dijkstra") {
-      console.log(source);
-    } else {
+      // After 1 second, revert button color to default
+      setTimeout(() => {
+        setButtonColor("default");
+      }, 1000);
+    }
+
+    //* SUCCESS
+    else {
       setSelectedNode(null);
       setIsGraphEditable(false);
       setIsAlgoRunning(true);
@@ -499,14 +500,6 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
               ? "translateY(0)"
               : "translateY(-20px)",
             transition: "opacity 500ms, transform 500ms",
-            // hide the scrollbar
-            "&::-webkit-scrollbar": {
-              width: "0px",
-              background: "transparent", // Makes scrollbar transparent
-            },
-            "&::-webkit-scrollbar-thumb": {
-              background: "transparent", // Makes scrollbar thumb transparent
-            },
           }}
           onClick={(e) => e.stopPropagation()} // Prevent background click inside the card
         >
@@ -868,35 +861,53 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                       ).map((param, index) => (
                         <ListItem key={index}>
                           {param}:
-                          <TextField
-                            className={isSourceValid ? "" : "jiggle"}
-                            variant="standard"
-                            autoComplete="off"
-                            size="small"
-                            value={source}
-                            onKeyDown={handleKeyDown}
-                            onChange={handleInputChange}
-                            onContextMenu={handleRightClick}
-                            onBlur={handleBlur}
-                            InputProps={{
-                              style: { color: "white" }, // Change input text color
-                              inputProps: {
-                                style: { fontSize: "10px" }, // Set font size for the input
-                              },
-                              sx: {
-                                "&:before": {
-                                  borderBottom: "1px solid lightgray", // Set underline to light gray when not focused
+                          {param === "Source Node" && (
+                            <TextField
+                              className={isSourceValid ? "" : "jiggle"}
+                              variant="standard"
+                              autoComplete="off"
+                              size="small"
+                              value={source}
+                              onKeyDown={handleKeyDown}
+                              onChange={handleInputChange}
+                              onContextMenu={handleRightClick}
+                              onBlur={handleBlur}
+                              InputProps={{
+                                style: { color: "white" }, // Change input text color
+                                inputProps: {
+                                  style: { fontSize: "10px" }, // Set font size for the input
                                 },
-                                "&:hover:not(.Mui-disabled):before": {
-                                  borderBottom: "1px solid white", // Keep consistent with your focused state if needed
+                                sx: {
+                                  "&:before": {
+                                    borderBottom: "1px solid lightgray", // Set underline to light gray when not focused
+                                  },
+                                  "&:hover:not(.Mui-disabled):before": {
+                                    borderBottom: "1px solid white", // Keep consistent with your focused state if needed
+                                  },
+                                  "&:after": {
+                                    borderBottom: "1.5px solid white", // Ensure this matches the default state or focused state
+                                  },
                                 },
-                                "&:after": {
-                                  borderBottom: "1.5px solid white", // Ensure this matches the default state or focused state
+                              }}
+                              sx={{ marginLeft: 1.5, width: "auto" }} // Adjust spacing and width as needed
+                            />
+                          )}
+                          {param === "Show Weights" && (
+                            <ConfigProvider
+                              theme={{
+                                token: {
+                                  colorBgContainer: "#B2BEB5",
+                                  colorBorder: "dark gray",
+                                  colorPrimary: "black",
                                 },
-                              },
-                            }}
-                            sx={{ marginLeft: 1.5, width: "auto" }} // Adjust spacing and width as needed
-                          />
+                              }}
+                            >
+                              <Checkbox
+                                checked={showWeight}
+                                style={{ paddingLeft: ".5vw" }}
+                              />
+                            </ConfigProvider>
+                          )}
                         </ListItem>
                       ))}
                     </List>
@@ -910,7 +921,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                   padding: "0.5rem 1rem",
                 }}
               >
-                <Typography variant="body2" color="white"></Typography>
+                <div></div>
                 <Button
                   onClick={handleRunClick}
                   style={{
@@ -922,6 +933,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                         : "1px solid white", // Ensure border is visible
                     padding: "6px 10px", // Reduce padding
                     fontSize: "0.65rem", // Reduce font size
+                    position: "relative", // Keeps the button fixed during scrolling
                   }}
                 >
                   Run
