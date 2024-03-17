@@ -112,7 +112,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
   const algoParameters = {
     BFS: ["Source Node"],
     DFS: ["Source Node"],
-    Dijkstra: ["Source Node", "Show Weights"],
+    Dijkstra: ["Source Node", "Show Weights", "Weights ≥ 0"],
     Prim: ["TBD"],
     Kruskal: ["TBD"],
     TBD: ["TBD"],
@@ -123,6 +123,8 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
   edges.forEach((edge) =>
     edgeWeightMap.set(`${edge.id1}-${edge.id2}`, edge.weight)
   );
+
+  const hasNegativeWeight = edges.some((edge) => edge.weight < 0);
 
   /* #endregion */
   /* #region BFS */
@@ -299,17 +301,26 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
   };
 
   const [buttonColor, setButtonColor] = useState<string>("default");
+  const handleRunClickError = () => {
+    console.log(`Source node is invalid for ${algoTitle}.`);
+    setButtonColor("error");
+
+    // After 1 second, revert button color to default
+    setTimeout(() => {
+      setButtonColor("default");
+    }, 1000);
+  };
+
   // what happens when you click "run"
   const handleRunClick = async () => {
-    //! failure becuase of source node
+    //! GENERAL: failure becuase of source node
     if (!isSourceValid || source === "") {
-      console.log(`Source node is invalid for ${algoTitle}.`);
-      setButtonColor("error");
+      handleRunClickError();
+    }
 
-      // After 1 second, revert button color to default
-      setTimeout(() => {
-        setButtonColor("default");
-      }, 1000);
+    //! DIJKSTRAS: check if edge weights are shown/nonnegative
+    if (algoTitle === "Dijkstra" && (hasNegativeWeight || !showWeight)) {
+      handleRunClickError();
     }
 
     //* SUCCESS
@@ -904,6 +915,22 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                             >
                               <Checkbox
                                 checked={showWeight}
+                                style={{ paddingLeft: ".5vw" }}
+                              />
+                            </ConfigProvider>
+                          )}
+                          {param === "Weights ≥ 0" && (
+                            <ConfigProvider
+                              theme={{
+                                token: {
+                                  colorBgContainer: "#B2BEB5",
+                                  colorBorder: "dark gray",
+                                  colorPrimary: "black",
+                                },
+                              }}
+                            >
+                              <Checkbox
+                                checked={!hasNegativeWeight}
                                 style={{ paddingLeft: ".5vw" }}
                               />
                             </ConfigProvider>
