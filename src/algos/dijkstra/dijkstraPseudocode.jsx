@@ -1,5 +1,5 @@
 import React from "react";
-import { HighlightInstructions } from "../dfs/HighlightInstructions"; // Ensure this path matches your project structure
+import { HighlightInstructions } from "../dijkstra/dijkstraHighlightInstructions"; // Ensure this path matches your project structure
 import { useDijkstra } from "./dijkstraContext.js";
 
 const DijkstraPseudocode = ({ source, name }) => {

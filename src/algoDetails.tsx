@@ -25,6 +25,9 @@ import { dfs, DFSStepType } from "./algos/dfs/dfs";
 import { useDFS } from "./algos/dfs/dfsContext";
 import DfsPseudocode from "./algos/dfs/dfsPseudocode";
 
+import { useDijkstra } from "./algos/dijkstra/dijkstraContext.js";
+import DijkstraPseudocode from "./algos/dijkstra/dijkstraPseudocode.jsx";
+
 import { ReactComponent as RightArrow } from "./assets/rightArrow.svg";
 import { ReactComponent as LeftArrow } from "./assets/leftArrow.svg";
 
@@ -58,6 +61,12 @@ interface DFSStateType {
   steps: DFSStepType[];
   currentStepIndex: number;
   nodeStatus: Map<string, string>;
+  isVisualizationActive: boolean;
+}
+
+interface DijkstraStateType {
+  currentStepIndex: number;
+  isCompleted: boolean;
   isVisualizationActive: boolean;
 }
 
@@ -99,15 +108,15 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
     TBD: ["Sunflower", " by van Gogh"],
   };
   /* #endregion */
+
   /* #region State data */
   const [backgroundDimmed, setBackgroundDimmed] = useState(false); // control background dim or not
   const [isAlgoRunning, setIsAlgoRunning] = useState<boolean>(false);
   const [source, setSource] = useState<string>("");
   const [isSourceValid, setIsSourcevalid] = useState<boolean>(true);
-
   /* #endregion */
-  /* #region Graph Data */
 
+  /* #region Graph Data */
   const algoParameters = {
     BFS: ["Source Node"],
     DFS: ["Source Node"],
@@ -124,8 +133,8 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
   );
 
   const hasNegativeWeight = edges.some((edge) => edge.weight < 0);
-
   /* #endregion */
+
   /* #region BFS */
   const { steps: bfsSteps } = bfs(theNeighbors, source, isOriented);
   const { bfsState, setBfsState, goToNextStepBFS, goToPreviousStepBFS } =
@@ -134,8 +143,8 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
   const { queue: bfsQueue, processing: bfsProcessing } = bfsSteps[
     bfsState.currentStepIndex
   ] || { queue: [] };
-
   /* #endregion */
+
   /* #region DFS */
   const { steps: dfsSteps } = dfs(theNeighbors, source, isOriented);
 
@@ -144,12 +153,23 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
   const { stack: dfsStack, processing: dfsProcessing } = dfsSteps[
     dfsState.currentStepIndex
   ] || { queue: [] };
-
   /* #endregion */
+
+  /* #region Dijkstra */
+  const {
+    dijkstraState,
+    setDijkstraState,
+    goToNextStepDijkstra,
+    goToPreviousStepDijkstra,
+    dijkstraSourceNode,
+  } = useDijkstra();
+  /* #endregion */
+
   /* #region Algo Info */
   const algoPseudocodeMap = {
     BFS: BfsPseudocode,
     DFS: DfsPseudocode,
+    Dijkstra: DijkstraPseudocode,
   };
 
   const AlgoPseudocode =
@@ -268,6 +288,12 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
         isVisualizationActive: false,
       }));
     }
+    if (algoTitle === "Dijkstra") {
+      setDijkstraState((prevState: DijkstraStateType) => ({
+        ...prevState,
+        isVisualizationActive: false,
+      }));
+    }
     setTimeout(onClose, 500); // Delay the onClose callback until after the fade-out animation completes
   };
 
@@ -300,18 +326,18 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
   };
 
   const [buttonColor, setButtonColor] = useState<string>("default");
-  const handleRunClickError = () => {
-    console.log(`Source node is invalid for ${algoTitle}.`);
-    setButtonColor("error");
-
-    // After 1 second, revert button color to default
-    setTimeout(() => {
-      setButtonColor("default");
-    }, 1000);
-  };
-
   // what happens when you click "run"
   const handleRunClick = async () => {
+    const handleRunClickError = () => {
+      console.log(`Source node is invalid for ${algoTitle}.`);
+      setButtonColor("error");
+
+      // After 1 second, revert button color to default
+      setTimeout(() => {
+        setButtonColor("default");
+      }, 1000);
+    };
+
     //! GENERAL: failure becuase of source node
     if (!isSourceValid || source === "") {
       handleRunClickError();
@@ -363,9 +389,9 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
             source,
           });
 
-          fetch("http://localhost:3001/dijkstra", {
+          fetch("http://:3001/dijkstra", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: { "Contentlocalhost-Type": "application/json" },
             body: requestData,
           })
             .then((response) => {
@@ -376,7 +402,6 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
             })
             .then((data) => {
               console.log("Dijkstra Steps:", data.steps);
-              // Here, you can now use the steps data to display results, create visualizations, etc.
             })
             .catch((error) =>
               console.error(

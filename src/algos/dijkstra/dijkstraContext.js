@@ -4,10 +4,9 @@ const dijkstraContext = createContext();
 
 export const DijkstraProvider = ({ children }) => {
   const [dijkstraState, setDijkstraState] = useState({
+    steps: [],
     currentStepIndex: 0,
     isCompleted: false,
-    steps: [],
-
     isVisualizationActive: false,
   });
 
