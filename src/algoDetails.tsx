@@ -653,7 +653,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                                 sx={{
                                   color: "white",
                                   userSelect: "none",
-                                  fontSize: ".9em",
+                                  fontSize: "1.5vh",
                                 }}
                               >
                                 Queue:
@@ -684,7 +684,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                                 sx={{
                                   color: "white",
                                   userSelect: "none",
-                                  fontSize: ".9em",
+                                  fontSize: "1.5vh",
                                 }}
                               >
                                 Processing:
@@ -725,7 +725,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                                 sx={{
                                   color: "white",
                                   userSelect: "none",
-                                  fontSize: ".9em",
+                                  fontSize: "1.3vh",
                                 }}
                               >
                                 Stack:
@@ -756,7 +756,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                                 sx={{
                                   color: "white",
                                   userSelect: "none",
-                                  fontSize: ".9em",
+                                  fontSize: "1.3vh",
                                 }}
                               >
                                 Processing:
@@ -886,7 +886,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                 className="artwork-container"
                 style={{
                   position: "relative",
-                  height: "230px",
+                  height: "30vh",
                 }}
               >
                 <CardMedia
@@ -894,7 +894,8 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                   height="200"
                   image={image}
                   sx={{
-                    height: 230, // This is how much of the image you can see
+                    position: "relative",
+                    height: "30vh", // This is how much of the image you can see
                     objectFit: "cover",
                     userSelect: "none",
                   }}
@@ -903,8 +904,8 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                   variant="caption"
                   sx={{
                     position: "absolute", // absolute relative to artwork
-                    top: 200,
-                    right: 10,
+                    bottom: "1vh",
+                    right: "1vh",
                     color: "white",
                     backgroundColor: "rgba(0, 0, 0, 0.5)",
                     padding: "2px 5px",
@@ -936,6 +937,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                     variant="h5"
                     component="div"
                     color="white"
+                    fontSize="1.5em"
                     sx={{ userSelect: "none" }}
                   >
                     {algoTitle}
@@ -945,7 +947,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                   <Typography
                     variant="body2"
                     color="white"
-                    fontSize="10px"
+                    fontSize=".75em"
                     sx={{ userSelect: "none" }}
                   >
                     Parameters
@@ -953,6 +955,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                   <Typography
                     variant="caption"
                     color="white"
+                    fontSize=".7em"
                     sx={{ userSelect: "none" }}
                   >
                     <List>
@@ -977,7 +980,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                               InputProps={{
                                 style: { color: "white" }, // Change input text color
                                 inputProps: {
-                                  style: { fontSize: "10px" }, // Set font size for the input
+                                  style: { fontSize: ".7em" }, // Set font size for the input
                                 },
                                 sx: {
                                   "&:before": {
@@ -1039,19 +1042,20 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                   padding: "0.5rem 1rem",
                 }}
               >
-                <div></div>
                 <Button
                   onClick={handleRunClick}
                   style={{
-                    color: buttonColor === "error" ? "#BA2D0B" : "white", // Change text color based on error state
-                    borderColor: buttonColor === "error" ? "#BA2D0B" : "white", // Optional: change border color for outlined buttons
+                    color: buttonColor === "error" ? "#BA2D0B" : "white",
+                    borderColor: buttonColor === "error" ? "#BA2D0B" : "white",
                     border:
                       buttonColor === "error"
                         ? "1px solid #BA2D0B"
-                        : "1px solid white", // Ensure border is visible
-                    padding: "6px 10px", // Reduce padding
-                    fontSize: "0.65rem", // Reduce font size
-                    position: "relative", // Keeps the button fixed during scrolling
+                        : "1px solid white",
+                    padding: "6px 10px",
+                    fontSize: "0.65rem",
+                    position: "fixed", // Use fixed positioning
+                    bottom: "2vh", // Distance from the bottom of the viewport
+                    right: "1vw", // Distance from the right of the viewport
                   }}
                 >
                   Run

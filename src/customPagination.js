@@ -60,11 +60,11 @@ const CustomButton = styled(
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
-  border: `.25vh solid ${borderColor}`, // Use borderColor for the border color
+  border: `.125vh solid ${borderColor}`, // Use borderColor for the border color
   "&:hover": {
     backgroundColor: "rgba(255, 255, 255, 0.08)",
   },
-  fontSize: "1.2vh",
+  fontSize: "1.25vh",
   textTransform: "none",
 }));
 

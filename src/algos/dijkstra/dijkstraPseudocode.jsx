@@ -108,6 +108,7 @@ const DijkstraPseudocode = ({ source, name }) => {
               flexDirection: "row", // Ensures line number and code are in the same row
               alignItems: "flex-start", // Aligns items to the start, respecting top alignment
               opacity,
+              fontSize: "1.1em",
             }}
           >
             <span
