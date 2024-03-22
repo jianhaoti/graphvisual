@@ -26,19 +26,19 @@ export const DFSProvider = ({ children }) => {
   };
 
   const goToNextStepDFS = () => {
-    setDfsState((prevState) => {
-      if (prevState.currentStepIndex < prevState.steps.length - 1) {
-        const nextIndex = prevState.currentStepIndex + 1;
+    setDfsState((nextState) => {
+      if (nextState.currentStepIndex < nextState.steps.length - 1) {
+        const nextIndex = nextState.currentStepIndex + 1;
         const nodeStatus = updateNodeStatus(nextIndex);
 
         return {
-          ...prevState,
+          ...nextState,
           currentStepIndex: nextIndex,
           nodeStatus,
-          isCompleted: nextIndex === prevState.steps.length - 1,
+          isCompleted: nextIndex === nextState.steps.length - 1,
         };
       }
-      return prevState;
+      return nextState;
     });
   };
 

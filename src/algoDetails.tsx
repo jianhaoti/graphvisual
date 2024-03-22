@@ -34,7 +34,6 @@ import Julanite1 from "./assets/Julanite1.jpeg";
 import Julanite4 from "./assets/Julanite4.jpeg";
 import Julanite5 from "./assets/Julanite5.jpeg";
 import fish from "./assets/goya-GoldenBream.jpg";
-import { Check } from "@mui/icons-material";
 
 interface AlgoDetailsProps {
   algoTitle: string;

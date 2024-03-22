@@ -26,19 +26,19 @@ export const BFSProvider = ({ children }) => {
   };
 
   const goToNextStepBFS = () => {
-    setBfsState((prevState) => {
-      if (prevState.currentStepIndex < prevState.steps.length - 1) {
-        const nextIndex = prevState.currentStepIndex + 1;
+    setBfsState((nextState) => {
+      if (nextState.currentStepIndex < nextState.steps.length - 1) {
+        const nextIndex = nextState.currentStepIndex + 1;
         const nodeStatus = updateNodeStatus(nextIndex);
 
         return {
-          ...prevState,
+          ...nextState,
           currentStepIndex: nextIndex,
           nodeStatus,
-          isCompleted: nextIndex === prevState.steps.length - 1,
+          isCompleted: nextIndex === nextState.steps.length - 1,
         };
       }
-      return prevState;
+      return nextState;
     });
   };
 

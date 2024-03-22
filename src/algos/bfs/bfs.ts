@@ -3,7 +3,6 @@ export type BFSStepType = {
   queue: string[];
   processing: string;
   edgeStatus: Map<string, string>;
-  newNeighbors: string[];
 };
 
 // works for both the oriented and unoriented case.
@@ -54,7 +53,6 @@ export const bfs = (
         queue: [...queue],
         processing: processing,
         edgeStatus: new Map(edgeStatus),
-        newNeighbors: [],
       });
 
       const neighbors = theNeighbors.get(processing) || [];
@@ -94,7 +92,6 @@ export const bfs = (
         queue: [...queue],
         processing: processing,
         edgeStatus: new Map(edgeStatus),
-        newNeighbors: newNeighbors,
       });
 
       newNeighbors = [];
@@ -108,7 +105,6 @@ export const bfs = (
         queue: [...queue],
         processing: processing,
         edgeStatus: new Map(edgeStatus),
-        newNeighbors: [],
       });
     }
 

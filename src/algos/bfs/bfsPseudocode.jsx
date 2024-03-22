@@ -60,7 +60,7 @@ const BfsPseudocode = ({ source, name }) => {
     ``,
     `  while (Q is nonempty)`,
     `    processing = Q.dequeue()`,
-    `    init array Neighbors of q`,
+    `    init array Neighbors of processing`,
     `    for n in Neighbors:`,
     `      if (n is not in Visited nor in Q):`,
     `        Q.enqueue(n)`,

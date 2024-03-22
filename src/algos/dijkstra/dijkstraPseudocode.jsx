@@ -1,10 +1,10 @@
 import React from "react";
-import { HighlightInstructions } from "../dfs/dfsHighlightInstructions"; // Ensure this path matches your project structure
-import { useDFS } from "./dfsContext";
+import { HighlightInstructions } from "../dfs/HighlightInstructions"; // Ensure this path matches your project structure
+import { useDijkstra } from "./dijkstraContext.js";
 
-const DfsPseudocode = ({ source, name }) => {
-  const { dfsState } = useDFS();
-  const { currentStepIndex } = dfsState;
+const DijkstraPseudocode = ({ source, name }) => {
+  const { dijkstraState } = useDijkstra();
+  const { currentStepIndex } = dijkstraState;
   const highlightInstructions = HighlightInstructions();
 
   // Define colors and styles
@@ -17,7 +17,7 @@ const DfsPseudocode = ({ source, name }) => {
   const renderLineWithSyntaxHighlighting = (line) => {
     // Update the regular expression to exclude 'enqueue' and 'dequeue'
     const regex =
-      /\b(init|stack|set|string|array|S|Visited|processing|Neighbors)\b/g;
+      /\b(init|minHeap|set|hashmap|string|array|currentDistance|H|Visited|processing|Neighbors)\b/g;
 
     // Function to replace matched keywords with colored spans, excluding 'enqueue' and 'dequeue'
     const replaceFunc = (match) => {
@@ -26,13 +26,15 @@ const DfsPseudocode = ({ source, name }) => {
         case "init":
           color = initializeColor;
           break;
-        case "stack":
+        case "hashMap":
+        case "minHeap":
         case "set":
         case "string":
         case "array":
           color = typeColor;
           break;
-        case "S":
+        case "currentDistance":
+        case "H":
         case "Visited":
         case "processing":
         case "Neighbors":
@@ -53,17 +55,26 @@ const DfsPseudocode = ({ source, name }) => {
 
   // Pseudocode lines
   const pseudocodeLines = [
-    `DFS (${name}, ${source}):`,
-    `  init stack S = [${source}]`,
-    `  init set Visited = {}`,
-    `  init string processing = ""`,
+    `Dijkstra (${name}, ${source}, edgeWeights):`,
+    `  init minHeap H = [${source}]`,
+    `  init hashMap currentDistance`,
+    `  init set Visisted`,
+    `  forEach node:`,
+    `    if node != ${source}:`,
+    `      currentDistance[node] = ∞`,
+    `    else:`,
+    `      currentDistance[node] = 0`,
     ``,
-    `  while (S is nonempty)`,
-    `    processing = S.destack()`,
-    `    init array Neighbors of processing`,
+    `  while (H is nonempty)`,
+    `    processing = H.heapRemove()`,
+    `    init array Neighbors = adjacencyList[processing]`,
     `    for n in Neighbors:`,
-    `      if (n is not in Visited nor in S):`,
-    `        S.enstack(n)`,
+    `      edge = (processing, n)`,
+    `      if n is not in Visited:`,
+    `      newDist = currentDistance[processing] + edgeWeights[edge]`,
+    `      if newDist < currentDistance[n]:`,
+    `        H.heapPush(newDist, n)`,
+    `        currentDistance[n] = newDist`,
     `    Visited.add(processing)`,
   ];
 
@@ -119,4 +130,4 @@ const DfsPseudocode = ({ source, name }) => {
   );
 };
 
-export default DfsPseudocode;
+export default DijkstraPseudocode;
