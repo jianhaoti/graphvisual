@@ -13,7 +13,7 @@ export const DijkstraProvider = ({ children }) => {
   const dijkstraSourceNode = React.useMemo(() => {
     const nodeStatusMap = dijkstraState.steps[0]?.nodeStatus;
     if (nodeStatusMap) {
-      for (let [nodeId, status] of nodeStatusMap.entries()) {
+      for (let [nodeId, status] of Object.entries(nodeStatusMap)) {
         if (status === "processing") {
           return nodeId; // Return the first nodeId found with status "processing"
         }

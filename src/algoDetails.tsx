@@ -169,7 +169,6 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
   const algoPseudocodeMap = {
     BFS: BfsPseudocode,
     DFS: DfsPseudocode,
-    Dijkstra: DijkstraPseudocode,
   };
 
   const AlgoPseudocode =
@@ -215,6 +214,22 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
       atEnd = false;
     }
   }
+
+  if (algoTitle === "Dijkstra" && dijkstraState) {
+    // at start
+    if (dijkstraState.currentStepIndex === 0) {
+      atStart = true;
+    } else {
+      atStart = false;
+    }
+    // at end
+    if (dijkstraState.isCompleted) {
+      atEnd = true;
+    } else {
+      atEnd = false;
+    }
+  }
+
   /* #endregion */
   /* #region Main Logic */
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -389,9 +404,9 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
             source,
           });
 
-          fetch("http://:3001/dijkstra", {
+          fetch("http://localhost:3001/dijkstra", {
             method: "POST",
-            headers: { "Contentlocalhost-Type": "application/json" },
+            headers: { "Content-Type": "application/json" },
             body: requestData,
           })
             .then((response) => {
@@ -400,8 +415,14 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
               }
               return response.json();
             })
-            .then((data) => {
-              console.log("Dijkstra Steps:", data.steps);
+            .then((dijkstraReturn) => {
+              console.log("Dijkstra Steps:", dijkstraReturn.steps);
+              setDijkstraState({
+                steps: dijkstraReturn.steps,
+                currentStepIndex: 0,
+                isCompleted: false,
+                isVisualizationActive: true,
+              });
             })
             .catch((error) =>
               console.error(
@@ -425,6 +446,9 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
     if (algoTitle === "DFS") {
       goToNextStepDFS();
     }
+    if (algoTitle === "Dijkstra") {
+      goToNextStepDijkstra();
+    }
   };
 
   const handlePreviousButtonClick = () => {
@@ -433,6 +457,9 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
     }
     if (algoTitle === "DFS") {
       goToPreviousStepDFS();
+    }
+    if (algoTitle === "Dijkstra") {
+      goToPreviousStepDijkstra();
     }
   };
 
@@ -455,18 +482,26 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
 
             if (algoTitle === "BFS") {
               setBfsState({
-                steps: bfsSteps,
+                steps: [],
                 currentStepIndex: 0,
-                nodeStatus: new Map(), // Optionally initialize nodeStates based on the first step if needed
+                nodeStatus: new Map(),
                 isVisualizationActive: false, // Ensure visualization is active to show new steps
               });
             }
             if (algoTitle === "DFS") {
               setDfsState({
-                steps: dfsSteps,
+                steps: [],
                 currentStepIndex: 0,
-                nodeStatus: new Map(), // Optionally initialize nodeStates based on the first step if needed
+                nodeStatus: new Map(),
                 isVisualizationActive: false, // Ensure visualization is active to show new steps
+              });
+            }
+            if (algoTitle === "Dijkstra") {
+              setDijkstraState({
+                steps: [],
+                currentStepIndex: 0,
+                isCompleted: false,
+                isVisualizationActive: false,
               });
             }
 
@@ -734,6 +769,38 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                               selectedFontWeight="normal"
                               showArrows={false}
                             />
+                          </div>
+                        </div>
+                      )}
+                      {algoTitle === "Dijkstra" && (
+                        <div style={{ minWidth: "100px", textAlign: "left" }}>
+                          <Typography
+                            component="div"
+                            variant="body2"
+                            sx={{
+                              color: "white",
+                              userSelect: "none",
+                              fontSize: ".9em",
+                            }}
+                          >
+                            Current Step:
+                          </Typography>
+                          <div>
+                            {dijkstraState.steps[
+                              dijkstraState.currentStepIndex
+                            ] ? (
+                              <pre style={{ color: "white" }}>
+                                {JSON.stringify(
+                                  dijkstraState.steps[
+                                    dijkstraState.currentStepIndex
+                                  ],
+                                  null,
+                                  2
+                                )}
+                              </pre>
+                            ) : (
+                              "No steps available"
+                            )}
                           </div>
                         </div>
                       )}
