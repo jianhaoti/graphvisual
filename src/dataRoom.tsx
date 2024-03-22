@@ -204,7 +204,9 @@ const DataRoom: React.FC<DataRoomProps> = ({
               }}
             />
           ) : showWeight ? (
-            <span style={{ marginLeft: "5px" }}>{edge.weight}</span>
+            <span style={{ marginLeft: "5px", color: "#E3C46E" }}>
+              {edge.weight}
+            </span>
           ) : null}
         </div>
       </div>

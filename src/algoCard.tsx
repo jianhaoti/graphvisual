@@ -23,8 +23,8 @@ const AlgoCard: React.FC<AlgoCardProps> = ({
 }) => {
   return (
     <CardActionArea onClick={onClick}>
-      <Box sx={{ minWidth: 275 }}>
-        <Card variant="outlined" sx={{ backgroundColor }}>
+      <Box sx={{ width: "50vw" }}>
+        <Card variant="outlined" sx={{ backgroundColor, height: "17vh" }}>
           <CardContent>
             <Typography variant="h5" component="div">
               {title}
