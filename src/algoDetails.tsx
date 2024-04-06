@@ -70,6 +70,11 @@ interface DijkstraStateType {
   isVisualizationActive: boolean;
 }
 
+interface DijkstraStep {
+  nodeStatus: Map<string, string>;
+  edgeStatus: Map<string, string>;
+}
+
 const AlgoDetails: React.FC<AlgoDetailsProps> = ({
   algoTitle,
   onClose,
@@ -356,11 +361,13 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
     //! GENERAL: failure becuase of source node
     if (!isSourceValid || source === "") {
       handleRunClickError();
+      return;
     }
 
     //! DIJKSTRAS: check if edge weights are shown/nonnegative
     if (algoTitle === "Dijkstra" && (hasNegativeWeight || !showWeight)) {
       handleRunClickError();
+      return;
     }
 
     //* SUCCESS
@@ -415,14 +422,45 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
               }
               return response.json();
             })
+            // if sucessful, we need to cast the return data (the node/edge Status) into a Map
             .then((dijkstraReturn) => {
+              const convertedSteps = dijkstraReturn.steps.map(
+                (step: DijkstraStep) => {
+                  // Initialize newStep as a shallow copy of step. This forces react to rerender, as opposed to direct modification/
+                  let newStep = { ...step };
+
+                  // Convert nodeStatus to a Map
+                  if (
+                    newStep.nodeStatus &&
+                    typeof newStep.nodeStatus === "object"
+                  ) {
+                    newStep.nodeStatus = new Map(
+                      Object.entries(newStep.nodeStatus)
+                    );
+                  }
+
+                  // Convert edgeStatus to a Map
+                  if (
+                    newStep.edgeStatus &&
+                    typeof newStep.edgeStatus === "object"
+                  ) {
+                    newStep.edgeStatus = new Map(
+                      Object.entries(newStep.edgeStatus)
+                    );
+                  }
+
+                  return newStep;
+                }
+              );
+
               setDijkstraState({
-                steps: dijkstraReturn.steps,
+                steps: convertedSteps,
                 currentStepIndex: 0,
                 isCompleted: false,
                 isVisualizationActive: true,
               });
-              console.log("Dijkstra Steps:", dijkstraReturn.steps);
+
+              // console.log("Dijkstra Steps:", dijkstraReturn.steps);
             })
             .catch((error) =>
               console.error(
@@ -541,7 +579,16 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
   /* #endregion */
 
   /* #region Debugging */
-  // useEffect(() => console.log(bfsProcessing), [bfsState]);
+  useEffect(
+    () =>
+      console.log(
+        "state:",
+        dijkstraState.steps[dijkstraState.currentStepIndex],
+        "index:",
+        dijkstraState.currentStepIndex
+      ),
+    [dijkstraState]
+  );
   /* #endregion */
   return (
     <Fade in={true} timeout={500}>

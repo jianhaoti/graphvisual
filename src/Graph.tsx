@@ -560,11 +560,9 @@ const Graph: React.FC<GraphProps> = ({
             // dijkstra
             if (dijkstraState.isVisualizationActive) {
               const currIndex = dijkstraState.currentStepIndex;
-              console.log(
-                dijkstraState.steps[currIndex].nodeStatus instanceof Map
+              let nodeStatus = dijkstraState.steps[currIndex].nodeStatus.get(
+                node.id
               );
-
-              let nodeStatus = dijkstraState.steps[currIndex].nodeStatus;
               switch (nodeStatus) {
                 case "visited":
                   color = "black";
@@ -658,6 +656,33 @@ const Graph: React.FC<GraphProps> = ({
                     break;
                 }
               }
+
+              // dijkstra
+              if (dijkstraState.isVisualizationActive) {
+                weightColor = "#E3C46E"; // blend weight color in with nodes, since it doesnt matter
+                const edgeStatus =
+                  dijkstraState.steps[
+                    dijkstraState.currentStepIndex
+                  ].edgeStatus.get(edgeID);
+                switch (edgeStatus) {
+                  case "visited":
+                    color = "black";
+                    weightColor = "black";
+                    break;
+                  case "stacked":
+                    color = "#DB380F";
+                    weightColor = "#DB380F";
+
+                    break;
+                  case "useless":
+                    opacity = 0.2;
+                    arrowOpacity = 0.3;
+
+                    weightColor = "transparent";
+                    break;
+                }
+              }
+
               return (
                 <Edge
                   key={edgeID}
