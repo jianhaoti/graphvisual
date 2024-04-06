@@ -1,5 +1,6 @@
 import Node from "./graphNode";
 import Edge from "./graphEdge";
+
 // Converts nodes and edges array to an adjacency list representation
 export const convertToAdjacencyList = (
   nodes: Node[],
@@ -13,12 +14,8 @@ export const convertToAdjacencyList = (
     adjacencyList.set(node.id, []);
   });
 
-  // Filter out temporary edges where id2 is null
-  const completeEdges = edges.filter((edge) => edge.id2 !== null);
-
   // Populate the adjacency list with complete edges
-  completeEdges.forEach((edge) => {
-    // Since we've filtered out temporary edges, we can assert that id2 is not null here
+  edges.forEach((edge) => {
     let id2 = edge.id2 as string;
 
     adjacencyList.get(edge.id1)?.push(id2);

@@ -132,11 +132,6 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
   };
   const theNeighbors = convertToAdjacencyList(nodes, edges, isOriented);
   const nodeIDs = nodes.map((node) => node.id);
-  const edgeWeightMap = new Map();
-  edges.forEach((edge) =>
-    edgeWeightMap.set(`${edge.id1}-${edge.id2}`, edge.weight)
-  );
-
   const hasNegativeWeight = edges.some((edge) => edge.weight < 0);
   /* #endregion */
 
@@ -372,6 +367,14 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
 
     //* SUCCESS
     else {
+      const edgeWeightMap = new Map();
+      edges.forEach((edge) => {
+        edgeWeightMap.set(`${edge.id1}-${edge.id2}`, edge.weight);
+        if (!isOriented) {
+          edgeWeightMap.set(`${edge.id2}-${edge.id1}`, edge.weight);
+        }
+      });
+
       setSelectedNode(null);
       setIsGraphEditable(false);
       setIsAlgoRunning(true);
@@ -460,7 +463,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                 isVisualizationActive: true,
               });
 
-              // console.log("Dijkstra Steps:", dijkstraReturn.steps);
+              console.log("Dijkstra Steps:", dijkstraReturn.steps);
             })
             .catch((error) =>
               console.error(
@@ -579,16 +582,16 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
   /* #endregion */
 
   /* #region Debugging */
-  useEffect(
-    () =>
-      console.log(
-        "state:",
-        dijkstraState.steps[dijkstraState.currentStepIndex],
-        "index:",
-        dijkstraState.currentStepIndex
-      ),
-    [dijkstraState]
-  );
+  // useEffect(
+  //   () =>
+  //     console.log(
+  //       "state:",
+  //       dijkstraState.steps[dijkstraState.currentStepIndex],
+  //       "index:",
+  //       dijkstraState.currentStepIndex
+  //     ),
+  //   [dijkstraState]
+  // );
   /* #endregion */
   return (
     <Fade in={true} timeout={500}>
