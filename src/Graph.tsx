@@ -16,6 +16,7 @@ import type { ColorPickerProps, GetProp, WatermarkProps } from "antd";
 // algorithms
 import { useBFS } from "./algos/bfs/bfsContext.js";
 import { useDFS } from "./algos/dfs/dfsContext";
+import { useDijkstra } from "./algos/dijkstra/dijkstraContext";
 
 const CustomSwitch = styled(Switch)(({ theme }) => ({
   "& .MuiSwitch-switchBase": {
@@ -61,7 +62,7 @@ const Graph: React.FC<GraphProps> = ({
   isGraphEditable,
   size,
 }) => {
-  /* #region Graph logic */
+  /* #region Graph Logic */
   const whiteCircleRadius = size === "small" ? 20 : 21;
   const whiteTextAlignment = size === "small" ? 30 : 31;
 
@@ -492,14 +493,11 @@ const Graph: React.FC<GraphProps> = ({
   };
   /* #endregion */
   /* #region Algorithms */
-
-  // bfs
   const { bfsState, bfsSourceNode } = useBFS();
-
-  // dfs
   const { dfsState, dfsSourceNode } = useDFS();
-
+  const { dijkstraState, dijkstraSourceNode } = useDijkstra();
   /* #endregion */
+
   return (
     <div
       className="container container-left"
@@ -552,6 +550,27 @@ const Graph: React.FC<GraphProps> = ({
                   break;
                 case "stack":
                   color = " #DB380F";
+                  break;
+                case "processing":
+                  color = "#EFFAF5";
+                  break;
+              }
+            }
+
+            // dijkstra
+            if (dijkstraState.isVisualizationActive) {
+              const currIndex = dijkstraState.currentStepIndex;
+              console.log(
+                dijkstraState.steps[currIndex].nodeStatus instanceof Map
+              );
+
+              let nodeStatus = dijkstraState.steps[currIndex].nodeStatus;
+              switch (nodeStatus) {
+                case "visited":
+                  color = "black";
+                  break;
+                case "unvisited":
+                  color = "#DB380F";
                   break;
                 case "processing":
                   color = "#EFFAF5";

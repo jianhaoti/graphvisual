@@ -416,13 +416,13 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
               return response.json();
             })
             .then((dijkstraReturn) => {
-              console.log("Dijkstra Steps:", dijkstraReturn.steps);
               setDijkstraState({
                 steps: dijkstraReturn.steps,
                 currentStepIndex: 0,
                 isCompleted: false,
                 isVisualizationActive: true,
               });
+              console.log("Dijkstra Steps:", dijkstraReturn.steps);
             })
             .catch((error) =>
               console.error(
