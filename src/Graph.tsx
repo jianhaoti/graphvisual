@@ -567,7 +567,7 @@ const Graph: React.FC<GraphProps> = ({
                 case "visited":
                   color = "black";
                   break;
-                case "unvisited":
+                case "queued":
                   color = "#DB380F";
                   break;
                 case "processing":
@@ -669,7 +669,7 @@ const Graph: React.FC<GraphProps> = ({
                     color = "black";
                     weightColor = "black";
                     break;
-                  case "stacked":
+                  case "queued":
                     color = "#DB380F";
                     weightColor = "#DB380F";
 
