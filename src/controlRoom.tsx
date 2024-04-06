@@ -4,7 +4,8 @@ import Node from "./graphNode";
 import Edge from "./graphEdge";
 import AlgoRoom from "./algoRoom";
 import { useBFS } from "./algos/bfs/bfsContext";
-
+import { useDFS } from "./algos/dfs/dfsContext";
+import { useDijkstra } from "./algos/dijkstra/dijkstraContext";
 interface ControlRoomProps {
   mode: string;
   nodes: Node[];
@@ -41,6 +42,8 @@ const ControlRoom: React.FC<ControlRoomProps> = ({
   name,
 }) => {
   const { setBfsState } = useBFS();
+  const { setDfsState } = useDFS();
+  const { setDijkstraState } = useDijkstra();
 
   // stop visualization when click out of algo mode.
   // can't do this at top level
@@ -50,7 +53,16 @@ const ControlRoom: React.FC<ControlRoomProps> = ({
         ...prevState,
         isVisualizationActive: false,
       }));
+      setDfsState((prevState: any) => ({
+        ...prevState,
+        isVisualizationActive: false,
+      }));
+      setDijkstraState((prevState: any) => ({
+        ...prevState,
+        isVisualizationActive: false,
+      }));
     }
+    console.log("Non-algo mode resets the state. Code in controlRoom.tsx.");
   }, [mode, setBfsState]);
 
   return (
