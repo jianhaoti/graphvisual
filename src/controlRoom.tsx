@@ -62,8 +62,7 @@ const ControlRoom: React.FC<ControlRoomProps> = ({
         isVisualizationActive: false,
       }));
     }
-    console.log("Non-algo mode resets the state. Code in controlRoom.tsx.");
-  }, [mode, setBfsState]);
+  }, [mode, setBfsState, setDfsState, setDijkstraState]);
 
   return (
     <div

@@ -704,7 +704,8 @@ const Graph: React.FC<GraphProps> = ({
           {/* overlay for bfs/dfs. needs to be done seperately from above */}
           <svg>
             {(bfsState.isVisualizationActive ||
-              dfsState.isVisualizationActive) &&
+              dfsState.isVisualizationActive ||
+              dijkstraState.isVisualizationActive) &&
               nodes.map((node) => {
                 let textColor = "transparent";
                 let currentNodeStatus = "default";
@@ -718,12 +719,24 @@ const Graph: React.FC<GraphProps> = ({
                     textColor = "#DB380F";
                   }
                 }
-                //dfs node statu update
+                //dfs node state update
                 else if (dfsState.isVisualizationActive) {
                   currentNodeStatus = dfsState.nodeStatus.get(node.id);
                   if (currentNodeStatus === "processing") {
                     textColor = "#EFFAF5";
                   } else if (currentNodeStatus === "stack") {
+                    textColor = "#DB380F";
+                  }
+                }
+
+                //dijkstra node state update
+                else if (dijkstraState.isVisualizationActive) {
+                  currentNodeStatus = dijkstraState.steps[
+                    dijkstraState.currentStepIndex
+                  ].nodeStatus.get(node.id);
+                  if (currentNodeStatus === "processing") {
+                    textColor = "#EFFAF5";
+                  } else if (currentNodeStatus === "queued") {
                     textColor = "#DB380F";
                   }
                 }
@@ -740,7 +753,7 @@ const Graph: React.FC<GraphProps> = ({
                       pointerEvents="none"
                       style={{ userSelect: "none", WebkitUserSelect: "none" }}
                     >
-                      {node.id}
+                      {node.id.length > 4 ? node.id.slice(-3) : node.id}
                     </text>
                     {/* logic for white circle to appear at end of bfs */}
                     {((node.id === bfsSourceNode &&
@@ -748,7 +761,10 @@ const Graph: React.FC<GraphProps> = ({
                       bfsState.isVisualizationActive) ||
                       (node.id === dfsSourceNode &&
                         dfsState.isCompleted &&
-                        dfsState.isVisualizationActive)) && (
+                        dfsState.isVisualizationActive) ||
+                      (node.id === dijkstraSourceNode &&
+                        dijkstraState.isCompleted &&
+                        dijkstraState.isVisualizationActive)) && (
                       <>
                         <circle
                           cx={node.x}

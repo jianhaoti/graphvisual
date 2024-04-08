@@ -463,7 +463,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                 isVisualizationActive: true,
               });
 
-              console.log("Dijkstra Steps:", dijkstraReturn.steps);
+              // console.log("Dijkstra Steps:", dijkstraReturn.steps);
             })
             .catch((error) =>
               console.error(
@@ -582,16 +582,18 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
   /* #endregion */
 
   /* #region Debugging */
-  // useEffect(
-  //   () =>
-  //     console.log(
-  //       "state:",
-  //       dijkstraState.steps[dijkstraState.currentStepIndex],
-  //       "index:",
-  //       dijkstraState.currentStepIndex
-  //     ),
-  //   [dijkstraState]
-  // );
+  useEffect(
+    () =>
+      console.log(
+        "currentShortest:",
+        dijkstraState.steps[dijkstraState.currentStepIndex]?.currentShortest,
+        "edgeStatus:",
+        dijkstraState.steps[dijkstraState.currentStepIndex]?.edgeStatus,
+        "index:",
+        dijkstraState.currentStepIndex
+      ),
+    [dijkstraState]
+  );
   /* #endregion */
   return (
     <Fade in={true} timeout={500}>
