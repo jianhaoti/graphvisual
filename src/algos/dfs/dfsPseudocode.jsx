@@ -13,6 +13,7 @@ const DfsPseudocode = ({ source, name }) => {
   const objectColor = "#FFD866";
   const textColor = "#ABB2BF";
   const backgroundColor = "#1E1E1E";
+  const modifiedSource = source.length > 4 ? source.slice(-3) : source;
 
   const renderLineWithSyntaxHighlighting = (line) => {
     // Update the regular expression to exclude 'enqueue' and 'dequeue'
@@ -53,8 +54,8 @@ const DfsPseudocode = ({ source, name }) => {
 
   // Pseudocode lines
   const pseudocodeLines = [
-    `DFS (${name}, ${source}):`,
-    `  init stack S = [${source}]`,
+    `DFS (${name}, ${modifiedSource}):`,
+    `  init stack S = [${modifiedSource}]`,
     `  init set Visited = {}`,
     `  init string processing = ""`,
     ``,

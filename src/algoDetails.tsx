@@ -169,6 +169,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
   const algoPseudocodeMap = {
     BFS: BfsPseudocode,
     DFS: DfsPseudocode,
+    Dijkstra: DijkstraPseudocode,
   };
 
   const AlgoPseudocode =
@@ -582,18 +583,18 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
   /* #endregion */
 
   /* #region Debugging */
-  useEffect(
-    () =>
-      console.log(
-        "currentShortest:",
-        dijkstraState.steps[dijkstraState.currentStepIndex]?.currentShortest,
-        "edgeStatus:",
-        dijkstraState.steps[dijkstraState.currentStepIndex]?.edgeStatus,
-        "index:",
-        dijkstraState.currentStepIndex
-      ),
-    [dijkstraState]
-  );
+  // useEffect(
+  //   () =>
+  //     console.log(
+  //       "currentShortest:",
+  //       dijkstraState.steps[dijkstraState.currentStepIndex]?.currentShortest,
+  //       "edgeStatus:",
+  //       dijkstraState.steps[dijkstraState.currentStepIndex]?.edgeStatus,
+  //       "index:",
+  //       dijkstraState.currentStepIndex
+  //     ),
+  //   [dijkstraState]
+  // );
   /* #endregion */
   return (
     <Fade in={true} timeout={500}>

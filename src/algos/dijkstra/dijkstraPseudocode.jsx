@@ -14,10 +14,12 @@ const DijkstraPseudocode = ({ source, name }) => {
   const textColor = "#ABB2BF";
   const backgroundColor = "#1E1E1E";
 
+  const modifiedSource = source.length > 4 ? +source.slice(-3) : source;
+
   const renderLineWithSyntaxHighlighting = (line) => {
     // Update the regular expression to exclude 'enqueue' and 'dequeue'
     const regex =
-      /\b(init|minHeap|set|hashmap|string|array|currentDistance|H|Visited|processing|Neighbors)\b/g;
+      /\b(init|minHeap|set|hashMap|string|array|currDist|H|Visited|processing|Neighbors)\b/g;
 
     // Function to replace matched keywords with colored spans, excluding 'enqueue' and 'dequeue'
     const replaceFunc = (match) => {
@@ -33,7 +35,7 @@ const DijkstraPseudocode = ({ source, name }) => {
         case "array":
           color = typeColor;
           break;
-        case "currentDistance":
+        case "currDist":
         case "H":
         case "Visited":
         case "processing":
@@ -55,26 +57,26 @@ const DijkstraPseudocode = ({ source, name }) => {
 
   // Pseudocode lines
   const pseudocodeLines = [
-    `Dijkstra (${name}, ${source}, edgeWeights):`,
-    `  init minHeap H = [${source}]`,
-    `  init hashMap currentDistance`,
-    `  init set Visisted`,
-    `  forEach node:`,
-    `    if node != ${source}:`,
-    `      currentDistance[node] = ∞`,
-    `    else:`,
-    `      currentDistance[node] = 0`,
+    `Dijkstra (${name}, ${modifiedSource}):`,
+    `  init minHeap H = [${modifiedSource}]`,
+    `  init hashMap currDist`,
+    `  currDist[${modifiedSource}] = 0`,
+    `  for node != ${modifiedSource}`,
+    `    currDist[node] = ∞`,
+    `  init set Visited`,
     ``,
     `  while (H is nonempty)`,
     `    processing = H.heapRemove()`,
-    `    init array Neighbors = adjacencyList[processing]`,
+    `    if processing in Visited`,
+    `      continue`,
+    `    init array Neighbors of processing`,
     `    for n in Neighbors:`,
     `      edge = (processing, n)`,
-    `      if n is not in Visited:`,
+    `      if (n is not in Visited):`,
     `      newDist = currentDistance[processing] + edgeWeights[edge]`,
-    `      if newDist < currentDistance[n]:`,
+    `      if newDist < currDist[n]:`,
     `        H.heapPush(newDist, n)`,
-    `        currentDistance[n] = newDist`,
+    `        currDist[n] = newDist`,
     `    Visited.add(processing)`,
   ];
 
@@ -92,8 +94,10 @@ const DijkstraPseudocode = ({ source, name }) => {
     >
       {pseudocodeLines.map((line, index) => {
         // Determine the opacity based on the highlightInstructions for this line
-        const shouldHighlight =
-          highlightInstructions[currentStepIndex].includes(index);
+        const currentInstructions = highlightInstructions[currentStepIndex];
+        const shouldHighlight = currentInstructions
+          ? currentInstructions.includes(index)
+          : false;
         let opacity = shouldHighlight ? 1 : 0.2;
         // Adjust opacity for lines 1-5
         if (index >= 0 && index <= 5) {

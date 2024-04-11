@@ -13,6 +13,7 @@ const BfsPseudocode = ({ source, name }) => {
   const objectColor = "#FFD866";
   const textColor = "#ABB2BF";
   const backgroundColor = "#1E1E1E";
+  const modifiedSource = source.length > 4 ? +source.slice(-3) : source;
 
   const renderLineWithSyntaxHighlighting = (line) => {
     // Update the regular expression to exclude 'enqueue' and 'dequeue'
@@ -53,8 +54,8 @@ const BfsPseudocode = ({ source, name }) => {
 
   // Pseudocode lines
   const pseudocodeLines = [
-    `BFS (${name}, ${source}):`,
-    `  init queue Q = [${source}]`,
+    `BFS (${name}, ${modifiedSource}):`,
+    `  init queue Q = [${modifiedSource}]`,
     `  init set Visited = {}`,
     `  init string processing = ""`,
     ``,
