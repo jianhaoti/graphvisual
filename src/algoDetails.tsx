@@ -73,6 +73,7 @@ interface DijkstraStateType {
 interface DijkstraStep {
   nodeStatus: Map<string, string>;
   edgeStatus: Map<string, string>;
+  currentShortest: Map<String, string>;
 }
 
 const AlgoDetails: React.FC<AlgoDetailsProps> = ({
@@ -453,6 +454,16 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                     );
                   }
 
+                  // Convert currentShortest to a Map
+                  if (
+                    newStep.currentShortest &&
+                    typeof newStep.currentShortest === "object"
+                  ) {
+                    newStep.currentShortest = new Map(
+                      Object.entries(newStep.currentShortest)
+                    );
+                  }
+
                   return newStep;
                 }
               );
@@ -583,18 +594,16 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
   /* #endregion */
 
   /* #region Debugging */
-  // useEffect(
-  //   () =>
-  //     console.log(
-  //       "currentShortest:",
-  //       dijkstraState.steps[dijkstraState.currentStepIndex]?.currentShortest,
-  //       "edgeStatus:",
-  //       dijkstraState.steps[dijkstraState.currentStepIndex]?.edgeStatus,
-  //       "index:",
-  //       dijkstraState.currentStepIndex
-  //     ),
-  //   [dijkstraState]
-  // );
+  useEffect(
+    () =>
+      console.log(
+        "currentShortest:",
+        dijkstraState.steps[dijkstraState.currentStepIndex]?.currentShortest,
+        "index:",
+        dijkstraState.currentStepIndex
+      ),
+    [dijkstraState]
+  );
   /* #endregion */
   return (
     <Fade in={true} timeout={500}>

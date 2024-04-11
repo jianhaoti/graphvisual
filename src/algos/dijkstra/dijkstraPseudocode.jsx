@@ -68,7 +68,8 @@ const DijkstraPseudocode = ({ source, name }) => {
     `  while (H is nonempty)`,
     `    processing = H.heapRemove()`,
     `    if processing in Visited`,
-    `      continue`,
+    `      skip this iteration`,
+    ``,
     `    init array Neighbors of processing`,
     `    for n in Neighbors:`,
     `      edge = (processing, n)`,
@@ -100,7 +101,7 @@ const DijkstraPseudocode = ({ source, name }) => {
           : false;
         let opacity = shouldHighlight ? 1 : 0.2;
         // Adjust opacity for lines 1-5
-        if (index >= 0 && index <= 5) {
+        if (index >= 0 && index <= 8) {
           opacity = 0.8;
         }
 

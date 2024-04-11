@@ -15,10 +15,10 @@ export const HighlightInstructions = () => {
       highlightInstructions[stepIndex] = [9, 10, 11];
     }
     if (stepIndex % 3 === 1) {
-      highlightInstructions[stepIndex] = [12, 13, 14, 15, 16, 17, 18, 19];
+      highlightInstructions[stepIndex] = [12, 13, 14, 15, 16, 17, 18, 19, 20];
     }
     if (stepIndex % 3 === 2) {
-      highlightInstructions[stepIndex] = [20];
+      highlightInstructions[stepIndex] = [21];
     }
   }
 
