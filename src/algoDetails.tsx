@@ -676,7 +676,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                       },
                     }}
                   >
-                    <Carousel dotPosition="bottom" effect="fade">
+                    <Carousel dotPosition="right" effect="fade">
                       <div>
                         <Typography
                           component="div"
@@ -847,7 +847,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                               <TableHead>
                                 <TableRow>
                                   <TableCell style={{ color: "white" }}>
-                                    Node ID
+                                    Node
                                   </TableCell>
                                   <TableCell style={{ color: "white" }}>
                                     Current Distance
