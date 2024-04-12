@@ -12,6 +12,11 @@ import {
   List,
   ListItem,
   TextField,
+  Table,
+  TableBody,
+  TableCell,
+  TableRow,
+  TableHead,
 } from "@mui/material";
 
 import Node from "./graphNode";
@@ -836,34 +841,48 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                       )}
                       {algoTitle === "Dijkstra" && (
                         <div style={{ minWidth: "100px", textAlign: "left" }}>
-                          <Typography
-                            component="div"
-                            variant="body2"
-                            sx={{
-                              color: "white",
-                              userSelect: "none",
-                              fontSize: ".9em",
-                            }}
-                          >
-                            Current Step:
-                          </Typography>
-                          <div>
-                            {dijkstraState.steps[
-                              dijkstraState.currentStepIndex
-                            ] ? (
-                              <pre style={{ color: "white" }}>
-                                {JSON.stringify(
+                          {dijkstraState.steps[dijkstraState.currentStepIndex]
+                            ?.currentShortest ? (
+                            <Table size="small">
+                              <TableHead>
+                                <TableRow>
+                                  <TableCell style={{ color: "white" }}>
+                                    Node ID
+                                  </TableCell>
+                                  <TableCell style={{ color: "white" }}>
+                                    Current Distance
+                                  </TableCell>
+                                </TableRow>
+                              </TableHead>
+                              <TableBody>
+                                {Array.from(
                                   dijkstraState.steps[
                                     dijkstraState.currentStepIndex
-                                  ],
-                                  null,
-                                  2
-                                )}
-                              </pre>
-                            ) : (
-                              "No steps available"
-                            )}
-                          </div>
+                                  ]?.currentShortest.entries() as Iterable<
+                                    [string, number]
+                                  >
+                                ).map(([nodeID, currentDistance]) => (
+                                  <TableRow key={nodeID}>
+                                    <TableCell style={{ color: "white" }}>
+                                      {nodeID.length < 4
+                                        ? nodeID
+                                        : nodeID.slice(-3)}
+                                    </TableCell>
+                                    <TableCell style={{ color: "white" }}>
+                                      {/* This is a bit hacky, but infinity is stored as a string for json reasons; therefore there's a type mismatch, thus the any */}
+                                      {(currentDistance as any) === "Infinity"
+                                        ? "∞"
+                                        : currentDistance}
+                                    </TableCell>
+                                  </TableRow>
+                                ))}
+                              </TableBody>
+                            </Table>
+                          ) : (
+                            <div style={{ color: "white" }}>
+                              Loading data...
+                            </div>
+                          )}
                         </div>
                       )}
                     </Carousel>
