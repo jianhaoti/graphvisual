@@ -59,7 +59,7 @@ const AlgoRoom: React.FC<AlgoRoomProps> = ({
       description: "Gone Fishin'",
     },
 
-    { title: "Prim", grouping: "MST", description: "TBD" },
+    { title: "Prim", grouping: "MST", description: "Greedy Expnasion" },
     { title: "Kruskal", grouping: "MST", description: "TBD" },
 
     { title: "TBD", grouping: "TBD", description: "TBD" },

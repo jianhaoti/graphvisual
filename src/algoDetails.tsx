@@ -132,7 +132,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
     BFS: ["Source Node"],
     DFS: ["Source Node"],
     Dijkstra: ["Source Node", "Show Weights", "Weights ≥ 0"],
-    Prim: ["TBD"],
+    Prim: ["Source Node"],
     Kruskal: ["TBD"],
     TBD: ["TBD"],
   };

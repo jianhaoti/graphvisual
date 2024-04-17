@@ -66,7 +66,10 @@ const DataRoom: React.FC<DataRoomProps> = ({
     const handleNodeNameUpdate = (e: React.FocusEvent<HTMLInputElement>) => {
       const newName = e.target.value;
       const isInvalidName =
-        !newName || nodes.some((n) => n.id === newName && n.id !== node.id);
+        !newName || // none
+        nodes.some((n) => n.id === newName && n.id !== node.id) || // already present
+        newName.startsWith(" ") || // starts with a space
+        newName.endsWith(" "); // ends with a space
 
       if (isInvalidName) {
         // Apply the jiggle animation
@@ -256,8 +259,8 @@ const DataRoom: React.FC<DataRoomProps> = ({
               height: "calc(100%)", // prevents it from covering up the title
               paddingTop: "1vh",
               "&::-webkit-scrollbar": { width: "0.5px" },
-              "&::-webkit-scrollbar-track": { backgroundColor: "#E3C46E" },
-              "&::-webkit-scrollbar-thumb": { backgroundColor: "#E3C46E" },
+              "&::-webkit-scrollbar-track": { backgroundColor: "transparent" },
+              "&::-webkit-scrollbar-thumb": { backgroundColor: "trasparent" },
               backgroundColor: "inherit",
               width: "85%",
             }}
@@ -307,8 +310,8 @@ const DataRoom: React.FC<DataRoomProps> = ({
               height: "calc(100%)", // prevents it from covering up the title
               paddingTop: "1vh",
               "&::-webkit-scrollbar": { width: "0.5px" },
-              "&::-webkit-scrollbar-track": { backgroundColor: "#E3C46E" },
-              "&::-webkit-scrollbar-thumb": { backgroundColor: "#E3C46E" },
+              "&::-webkit-scrollbar-track": { backgroundColor: "transparent" },
+              "&::-webkit-scrollbar-thumb": { backgroundColor: "transparent" },
               backgroundColor: "inherit",
               width: "94%",
             }}
