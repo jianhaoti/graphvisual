@@ -132,7 +132,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
     BFS: ["Source Node"],
     DFS: ["Source Node"],
     Dijkstra: ["Source Node", "Show Weights", "Weights ≥ 0"],
-    Prim: ["Source Node"],
+    Prim: ["Source Node", "Unoriented", "Show Weights"],
     Kruskal: ["TBD"],
     TBD: ["TBD"],
   };
@@ -1106,6 +1106,22 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                             >
                               <Checkbox
                                 checked={!hasNegativeWeight}
+                                style={{ paddingLeft: ".5vw" }}
+                              />
+                            </ConfigProvider>
+                          )}
+                          {param === "Unoriented" && (
+                            <ConfigProvider
+                              theme={{
+                                token: {
+                                  colorBgContainer: "#B2BEB5",
+                                  colorBorder: "dark gray",
+                                  colorPrimary: "black",
+                                },
+                              }}
+                            >
+                              <Checkbox
+                                checked={!isOriented}
                                 style={{ paddingLeft: ".5vw" }}
                               />
                             </ConfigProvider>
