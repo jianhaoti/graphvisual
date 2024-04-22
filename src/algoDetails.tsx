@@ -81,6 +81,12 @@ interface DijkstraStep {
   currentShortest: Map<String, string>;
 }
 
+interface PrimStep {
+  nodeStatus: Map<string, string>;
+  edgeStatus: Map<string, string>;
+  cost: number;
+}
+
 const AlgoDetails: React.FC<AlgoDetailsProps> = ({
   algoTitle,
   onClose,
@@ -490,6 +496,57 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
             );
           break;
 
+        case "Prim":
+          fetch("http://localhost:3001/prims", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: requestData,
+          })
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+              }
+              return response.json();
+            })
+            // if sucessful, we need to cast the return data (the node/edge Status) into a Map
+            .then((primReturn) => {
+              const convertedSteps = primReturn.steps.map((step: PrimStep) => {
+                // Initialize newStep as a shallow copy of step. This forces react to rerender, as opposed to direct modification/
+                let newStep = { ...step };
+
+                // Convert nodeStatus to a Map
+                if (
+                  newStep.nodeStatus &&
+                  typeof newStep.nodeStatus === "object"
+                ) {
+                  newStep.nodeStatus = new Map(
+                    Object.entries(newStep.nodeStatus)
+                  );
+                }
+
+                // Convert edgeStatus to a Map
+                if (
+                  newStep.edgeStatus &&
+                  typeof newStep.edgeStatus === "object"
+                ) {
+                  newStep.edgeStatus = new Map(
+                    Object.entries(newStep.edgeStatus)
+                  );
+                }
+
+                return newStep;
+              });
+
+              console.log("Prim Steps:", convertedSteps);
+            })
+            .catch((error) =>
+              console.error(
+                "There was a problem with your fetch operation:",
+                error
+              )
+            );
+          break;
+
         default:
           console.error("Unsupported algorithm");
           break;
@@ -599,16 +656,16 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
   /* #endregion */
 
   /* #region Debugging */
-  useEffect(
-    () =>
-      console.log(
-        "currentShortest:",
-        dijkstraState.steps[dijkstraState.currentStepIndex]?.currentShortest,
-        "index:",
-        dijkstraState.currentStepIndex
-      ),
-    [dijkstraState]
-  );
+  // useEffect(
+  //   () =>
+  //     console.log(
+  //       "currentShortest:",
+  //       dijkstraState.steps[dijkstraState.currentStepIndex]?.currentShortest,
+  //       "index:",
+  //       dijkstraState.currentStepIndex
+  //     ),
+  //   [dijkstraState]
+  // );
   /* #endregion */
   return (
     <Fade in={true} timeout={500}>
