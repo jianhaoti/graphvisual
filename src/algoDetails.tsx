@@ -389,6 +389,18 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
       const initNodeStatus = new Map();
       initNodeStatus.set(source, "processing");
 
+      // prepping the data to send to backend
+      const edgeWeights = Array.from(edgeWeightMap.entries());
+      const graphAdjacencyList = Object.fromEntries(theNeighbors);
+
+      // package it up
+      const requestData = JSON.stringify({
+        graphAdjacencyList,
+        edgeWeightMap: edgeWeights,
+        isOriented,
+        source,
+      });
+
       switch (algoTitle) {
         case "BFS":
           setBfsState({
@@ -409,18 +421,6 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
           break;
 
         case "Dijkstra":
-          // prepping the data to send to backend
-          const edgeWeights = Array.from(edgeWeightMap.entries());
-          const graphAdjacencyList = Object.fromEntries(theNeighbors);
-
-          // package it up
-          const requestData = JSON.stringify({
-            graphAdjacencyList,
-            edgeWeightMap: edgeWeights,
-            isOriented,
-            source,
-          });
-
           fetch("http://localhost:3001/dijkstra", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
