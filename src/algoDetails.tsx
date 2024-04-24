@@ -84,7 +84,7 @@ interface DijkstraStep {
 interface PrimStep {
   nodeStatus: Map<string, string>;
   edgeStatus: Map<string, string>;
-  cost: number;
+  runningCost: number;
 }
 
 const AlgoDetails: React.FC<AlgoDetailsProps> = ({
@@ -510,7 +510,8 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
             })
             // if sucessful, we need to cast the return data (the node/edge Status) into a Map
             .then((primReturn) => {
-              const convertedSteps = primReturn.steps.map((step: PrimStep) => {
+              console.log(primReturn);
+              const convertedSteps = primReturn.map((step: PrimStep) => {
                 // Initialize newStep as a shallow copy of step. This forces react to rerender, as opposed to direct modification/
                 let newStep = { ...step };
 
@@ -532,6 +533,14 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                   newStep.edgeStatus = new Map(
                     Object.entries(newStep.edgeStatus)
                   );
+                }
+
+                // Covert runningCost to a Number
+                if (
+                  newStep.runningCost &&
+                  typeof newStep.runningCost === "object"
+                ) {
+                  newStep.runningCost = Number(newStep.runningCost);
                 }
 
                 return newStep;
