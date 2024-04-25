@@ -17,6 +17,7 @@ import type { ColorPickerProps, GetProp, WatermarkProps } from "antd";
 import { useBFS } from "./algos/bfs/bfsContext.js";
 import { useDFS } from "./algos/dfs/dfsContext";
 import { useDijkstra } from "./algos/dijkstra/dijkstraContext";
+import { usePrim } from "./algos/prim/primContext";
 
 const CustomSwitch = styled(Switch)(({ theme }) => ({
   "& .MuiSwitch-switchBase": {
@@ -496,6 +497,7 @@ const Graph: React.FC<GraphProps> = ({
   const { bfsState, bfsSourceNode } = useBFS();
   const { dfsState, dfsSourceNode } = useDFS();
   const { dijkstraState, dijkstraSourceNode } = useDijkstra();
+  const { primState, primSourceNode } = usePrim();
   /* #endregion */
 
   return (
@@ -575,6 +577,25 @@ const Graph: React.FC<GraphProps> = ({
                   break;
               }
             }
+            // prims
+            if (primState.isVisualizationActive) {
+              const currIndex = primState.currentStepIndex;
+              let nodeStatus = primState.steps[currIndex].nodeStatus.get(
+                node.id
+              );
+              switch (nodeStatus) {
+                case "visited":
+                  color = "black";
+                  break;
+                case "queued":
+                  color = "#DB380F";
+                  break;
+                case "processing":
+                  color = "#EFFAF5";
+                  break;
+              }
+            }
+
             return (
               <Node
                 key={node.id}
@@ -705,7 +726,8 @@ const Graph: React.FC<GraphProps> = ({
           <svg>
             {(bfsState.isVisualizationActive ||
               dfsState.isVisualizationActive ||
-              dijkstraState.isVisualizationActive) &&
+              dijkstraState.isVisualizationActive ||
+              primState.isVisualizationActive) &&
               nodes.map((node) => {
                 let textColor = "transparent";
                 let currentNodeStatus = "default";
@@ -740,6 +762,17 @@ const Graph: React.FC<GraphProps> = ({
                     textColor = "#DB380F";
                   }
                 }
+                //dijkstra node state update
+                else if (primState.isVisualizationActive) {
+                  currentNodeStatus = primState.steps[
+                    primState.currentStepIndex
+                  ].nodeStatus.get(node.id);
+                  if (currentNodeStatus === "processing") {
+                    textColor = "#EFFAF5";
+                  } else if (currentNodeStatus === "queued") {
+                    textColor = "#DB380F";
+                  }
+                }
 
                 return (
                   <g key={node.id}>
@@ -755,7 +788,7 @@ const Graph: React.FC<GraphProps> = ({
                     >
                       {node.id.length > 4 ? node.id.slice(-3) : node.id}
                     </text>
-                    {/* logic for white circle to appear at end of bfs */}
+                    {/* logic for white circle to appear at end of algoithm */}
                     {((node.id === bfsSourceNode &&
                       bfsState.isCompleted &&
                       bfsState.isVisualizationActive) ||
@@ -764,7 +797,10 @@ const Graph: React.FC<GraphProps> = ({
                         dfsState.isVisualizationActive) ||
                       (node.id === dijkstraSourceNode &&
                         dijkstraState.isCompleted &&
-                        dijkstraState.isVisualizationActive)) && (
+                        dijkstraState.isVisualizationActive) ||
+                      (node.id === primSourceNode &&
+                        primState.isCompleted &&
+                        primState.isVisualizationActive)) && (
                       <>
                         <circle
                           cx={node.x}
@@ -796,7 +832,7 @@ const Graph: React.FC<GraphProps> = ({
               })}
           </svg>
 
-          {/* logic for text to appear at end of bfs */}
+          {/* logic for text to appear at end */}
           {hoveredNode && isGraphEditable && (
             <text
               x={hoveredNode.x + 5}

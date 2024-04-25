@@ -33,6 +33,8 @@ import DfsPseudocode from "./algos/dfs/dfsPseudocode";
 import { useDijkstra } from "./algos/dijkstra/dijkstraContext.js";
 import DijkstraPseudocode from "./algos/dijkstra/dijkstraPseudocode.jsx";
 
+import { usePrim } from "./algos/prim/primContext.js";
+
 import { ReactComponent as RightArrow } from "./assets/rightArrow.svg";
 import { ReactComponent as LeftArrow } from "./assets/leftArrow.svg";
 
@@ -79,6 +81,12 @@ interface DijkstraStep {
   nodeStatus: Map<string, string>;
   edgeStatus: Map<string, string>;
   currentShortest: Map<String, string>;
+}
+
+interface PrimStateType {
+  currentStepIndex: number;
+  isCompleted: boolean;
+  isVisualizationActive: boolean;
 }
 
 interface PrimStep {
@@ -177,6 +185,16 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
   } = useDijkstra();
   /* #endregion */
 
+  /* #region Dijkstra */
+  const {
+    primState,
+    setPrimState,
+    goToNextStepPrim,
+    goToPreviousStepPrim,
+    primSourceNode,
+  } = usePrim();
+  /* #endregion */
+
   /* #region Algo Info */
   const algoPseudocodeMap = {
     BFS: BfsPseudocode,
@@ -237,6 +255,21 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
     }
     // at end
     if (dijkstraState.isCompleted) {
+      atEnd = true;
+    } else {
+      atEnd = false;
+    }
+  }
+
+  if (algoTitle === "Prim" && primState) {
+    // at start
+    if (primState.currentStepIndex === 0) {
+      atStart = true;
+    } else {
+      atStart = false;
+    }
+    // at end
+    if (primState.isCompleted) {
       atEnd = true;
     } else {
       atEnd = false;
@@ -322,6 +355,13 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
         isVisualizationActive: false,
       }));
     }
+    if (algoTitle === "Prim") {
+      setPrimState((prevState: PrimStateType) => ({
+        ...prevState,
+        isVisualizationActive: false,
+      }));
+    }
+
     setTimeout(onClose, 500); // Delay the onClose callback until after the fade-out animation completes
   };
 
@@ -510,7 +550,6 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
             })
             // if sucessful, we need to cast the return data (the node/edge Status) into a Map
             .then((primReturn) => {
-              console.log(primReturn);
               const convertedSteps = primReturn.map((step: PrimStep) => {
                 // Initialize newStep as a shallow copy of step. This forces react to rerender, as opposed to direct modification/
                 let newStep = { ...step };
@@ -545,8 +584,12 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
 
                 return newStep;
               });
-
-              console.log("Prim Steps:", convertedSteps);
+              setPrimState({
+                steps: convertedSteps,
+                currentStepIndex: 0,
+                isCompleted: false,
+                isVisualizationActive: true,
+              });
             })
             .catch((error) =>
               console.error(
@@ -573,6 +616,9 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
     if (algoTitle === "Dijkstra") {
       goToNextStepDijkstra();
     }
+    if (algoTitle === "Prim") {
+      goToNextStepPrim();
+    }
   };
 
   const handlePreviousButtonClick = () => {
@@ -584,6 +630,9 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
     }
     if (algoTitle === "Dijkstra") {
       goToPreviousStepDijkstra();
+    }
+    if (algoTitle === "Prim") {
+      goToPreviousStepPrim();
     }
   };
 
@@ -628,6 +677,14 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                 isVisualizationActive: false,
               });
             }
+            if (algoTitle === "Prim") {
+              setPrimState({
+                steps: [],
+                currentStepIndex: 0,
+                isCompleted: false,
+                isVisualizationActive: false,
+              });
+            }
 
             break;
           case "Escape":
@@ -664,18 +721,16 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
 
   /* #endregion */
 
-  /* #region Debugging */
+  // /* #region Debugging */
   // useEffect(
   //   () =>
   //     console.log(
-  //       "currentShortest:",
-  //       dijkstraState.steps[dijkstraState.currentStepIndex]?.currentShortest,
-  //       "index:",
-  //       dijkstraState.currentStepIndex
+  //       primSourceNode,
+  //       primState.isCompleted && primState.isVisualizationActive
   //     ),
-  //   [dijkstraState]
+  //   [primState, primSourceNode]
   // );
-  /* #endregion */
+  // /* #endregion */
   return (
     <Fade in={true} timeout={500}>
       <div

@@ -6,6 +6,8 @@ import AlgoRoom from "./algoRoom";
 import { useBFS } from "./algos/bfs/bfsContext";
 import { useDFS } from "./algos/dfs/dfsContext";
 import { useDijkstra } from "./algos/dijkstra/dijkstraContext";
+import { usePrim } from "./algos/prim/primContext";
+
 interface ControlRoomProps {
   mode: string;
   nodes: Node[];
@@ -44,6 +46,7 @@ const ControlRoom: React.FC<ControlRoomProps> = ({
   const { setBfsState } = useBFS();
   const { setDfsState } = useDFS();
   const { setDijkstraState } = useDijkstra();
+  const { setPrimState } = usePrim();
 
   // stop visualization when click out of algo mode.
   // can't do this at top level
@@ -61,8 +64,12 @@ const ControlRoom: React.FC<ControlRoomProps> = ({
         ...prevState,
         isVisualizationActive: false,
       }));
+      setPrimState((prevState: any) => ({
+        ...prevState,
+        isVisualizationActive: false,
+      }));
     }
-  }, [mode, setBfsState, setDfsState, setDijkstraState]);
+  }, [mode, setBfsState, setDfsState, setDijkstraState, setPrimState]);
 
   return (
     <div
