@@ -11,12 +11,12 @@ export const HighlightInstructions = () => {
     const currentStepDFS = dfsSteps[stepIndex];
 
     if (currentStepDFS.processing === "") {
-      highlightInstructions[stepIndex] = [11]; //black
+      highlightInstructions[stepIndex] = [13]; //black
     } else if (
       stepIndex + 1 < dfsSteps.length &&
       dfsSteps[stepIndex + 1].processing !== ""
     ) {
-      highlightInstructions[stepIndex + 1] = [7, 8, 9, 10]; // orange
+      highlightInstructions[stepIndex + 1] = [8, 9, 10, 11]; // orange
       highlightInstructions[stepIndex] = [6]; // white
       stepIndex += 1;
     }

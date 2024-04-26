@@ -77,11 +77,13 @@ const DijkstraPseudocode = ({ source, name }) => {
     `      // distance from source`,
     `      dist = currDist[processing]`,
     ``,
+    `      // minimize distances`,
     `      if (n is not in Visited):`,
     `        newDist = dist + weight`,
-    `        if newDist < currDist[n]:`,
+    `        if (newDist < currDist[n]):`,
     `          H.heapPush(newDist, n)`,
     `          currDist[n] = newDist`,
+    ``,
     `    Visited.add(processing)`,
   ];
 

@@ -59,10 +59,12 @@ const DfsPseudocode = ({ source, name }) => {
     ``,
     `  while (S is nonempty)`,
     `    processing = S.destack()`,
+    ``,
     `    init array Neighbors of processing`,
     `    for n in Neighbors:`,
     `      if (n is not in Visited nor in S):`,
     `        S.enstack(n)`,
+    ``,
     `    Visited.add(processing)`,
   ];
 
