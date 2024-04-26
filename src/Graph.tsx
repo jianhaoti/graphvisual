@@ -704,6 +704,32 @@ const Graph: React.FC<GraphProps> = ({
                 }
               }
 
+              // prim
+              if (primState.isVisualizationActive) {
+                weightColor = "#E3C46E"; // blend weight color in with nodes, since it doesnt matter
+                const edgeStatus =
+                  primState.steps[primState.currentStepIndex].edgeStatus.get(
+                    edgeID
+                  );
+                switch (edgeStatus) {
+                  case "visited":
+                    color = "black";
+                    weightColor = "black";
+                    break;
+                  case "queued":
+                    color = "#DB380F";
+                    weightColor = "#DB380F";
+
+                    break;
+                  case "useless":
+                    opacity = 0.2;
+                    arrowOpacity = 0.3;
+
+                    weightColor = "transparent";
+                    break;
+                }
+              }
+
               return (
                 <Edge
                   key={edgeID}

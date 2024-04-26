@@ -722,14 +722,15 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
   /* #endregion */
 
   // /* #region Debugging */
-  // useEffect(
-  //   () =>
-  //     console.log(
-  //       primSourceNode,
-  //       primState.isCompleted && primState.isVisualizationActive
-  //     ),
-  //   [primState, primSourceNode]
-  // );
+  useEffect(
+    () =>
+      console.log(
+        primState.steps[primState.currentStepIndex]?.nodeStatus,
+        "Current Index:",
+        primState.currentStepIndex
+      ),
+    [primState]
+  );
   // /* #endregion */
   return (
     <Fade in={true} timeout={500}>
