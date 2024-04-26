@@ -733,558 +733,560 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
   );
   // /* #endregion */
   return (
-    <Fade in={true} timeout={500}>
-      <div
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100%",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          backgroundColor: `rgba(0, 0, 0, ${!backgroundDimmed ? 0.5 : 0})`, // Control the background opacity based on the state
-          transition: "background-color 2s",
-        }}
-        onClick={handleBackgroundClick}
-      >
-        <Card
-          sx={{
-            backgroundColor: isAlgoRunning === false ? "#424541" : "#1E1E1E",
-            position: "relative",
-            overflow: "auto", // this does NOT control the overflow in the pseudococde
-            opacity: !backgroundDimmed ? 1 : 0,
-            transform: !backgroundDimmed
-              ? "translateY(0)"
-              : "translateY(-20px)",
-            transition: "opacity 500ms, transform 500ms",
+    <div>
+      <Fade in={true} timeout={500}>
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: `rgba(0, 0, 0, ${!backgroundDimmed ? 0.5 : 0})`, // Control the background opacity based on the state
+            transition: "background-color 2s",
           }}
-          onClick={(e) => e.stopPropagation()} // Prevent background click inside the card
+          onClick={handleBackgroundClick}
         >
-          {isAlgoRunning ? (
-            <div style={cardSizing} className="hideScrollbar">
-              <CardContent
-                sx={{
-                  display: "flex", // Use flex layout
-                  flexDirection: "column", // Stack children vertically
-                  height: "50vh", // Fixed height for the container
-                  flexGrow: 1, // Allows content area to grow and fill available space
-                  backgroundColor: "#1E1E1E",
-                  justifyContent: "space-between", // Push content to start and buttons to end
-                  overflow: "hidden",
-                  position: "relative", // Needed for absolute positioning of children
-                }}
-              >
-                {/* carousel */}
-                <div
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    position: "relative", // Ensure positioning context is correct
-                    backgroundColor: "transparent",
+          <Card
+            sx={{
+              backgroundColor: isAlgoRunning === false ? "#424541" : "#1E1E1E",
+              position: "relative",
+              overflow: "auto", // this does NOT control the overflow in the pseudococde
+              opacity: !backgroundDimmed ? 1 : 0,
+              transform: !backgroundDimmed
+                ? "translateY(0)"
+                : "translateY(-20px)",
+              transition: "opacity 500ms, transform 500ms",
+            }}
+            onClick={(e) => e.stopPropagation()} // Prevent background click inside the card
+          >
+            {isAlgoRunning ? (
+              <div style={cardSizing} className="hideScrollbar">
+                <CardContent
+                  sx={{
+                    display: "flex", // Use flex layout
+                    flexDirection: "column", // Stack children vertically
+                    height: "50vh", // Fixed height for the container
+                    flexGrow: 1, // Allows content area to grow and fill available space
+                    backgroundColor: "#1E1E1E",
+                    justifyContent: "space-between", // Push content to start and buttons to end
+                    overflow: "hidden",
+                    position: "relative", // Needed for absolute positioning of children
                   }}
-                  onClick={handleCarouselClick}
                 >
-                  <ConfigProvider
-                    theme={{
-                      components: {
-                        Carousel: {
-                          colorBgContainer: "white",
-                          // dotHeight: 5,
-                          // dotWidth: 20,
-                          // dotActiveWidth: 30,
-                        },
-                      },
+                  {/* carousel */}
+                  <div
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      position: "relative", // Ensure positioning context is correct
+                      backgroundColor: "transparent",
                     }}
+                    onClick={handleCarouselClick}
                   >
-                    <Carousel dotPosition="right" effect="fade">
-                      <div>
-                        <Typography
-                          component="div"
-                          variant="body2"
-                          sx={{
-                            height: "40vh",
-                            width: "40vw",
-                          }}
-                        >
-                          {AlgoPseudocode ? (
-                            <AlgoPseudocode source={source} name={name} />
-                          ) : (
-                            <Typography sx={{ color: "white" }}>
-                              Coming soon.
-                            </Typography>
-                          )}
-                        </Typography>
-                      </div>
-                      {algoTitle === "BFS" && (
-                        <div
-                          style={{
-                            display: "flex",
-                            flexDirection: "column",
-                            gap: "10px",
-                          }}
-                        >
-                          <div
-                            style={{
-                              display: "flex",
-                              alignItems: "center",
-                              marginTop: "3vh",
-                              marginLeft: "3vh",
+                    <ConfigProvider
+                      theme={{
+                        components: {
+                          Carousel: {
+                            colorBgContainer: "white",
+                            // dotHeight: 5,
+                            // dotWidth: 20,
+                            // dotActiveWidth: 30,
+                          },
+                        },
+                      }}
+                    >
+                      <Carousel dotPosition="right" effect="fade">
+                        <div>
+                          <Typography
+                            component="div"
+                            variant="body2"
+                            sx={{
+                              height: "40vh",
+                              width: "40vw",
                             }}
                           >
-                            <div
-                              style={{ minWidth: "100px", textAlign: "left" }}
-                            >
-                              <Typography
-                                component="div"
-                                variant="body2"
-                                sx={{
-                                  color: "white",
-                                  userSelect: "none",
-                                  fontSize: "1.5vh",
-                                }}
-                              >
-                                Queue:
+                            {AlgoPseudocode ? (
+                              <AlgoPseudocode source={source} name={name} />
+                            ) : (
+                              <Typography sx={{ color: "white" }}>
+                                Coming soon.
                               </Typography>
-                            </div>
-                            <CustomPagination
-                              arr={bfsQueue}
-                              borderColor="#DB380F"
-                              textColor="#DB380F"
-                              selectedFontWeight="bold"
-                              showArrows={true}
-                            />
-                          </div>
-                          <div
-                            style={{
-                              display: "flex",
-                              alignItems: "center",
-                              marginTop: "1vh",
-                              marginLeft: "3vh",
-                            }}
-                          >
-                            <div
-                              style={{ minWidth: "100px", textAlign: "left" }}
-                            >
-                              <Typography
-                                component="div"
-                                variant="body2"
-                                sx={{
-                                  color: "white",
-                                  userSelect: "none",
-                                  fontSize: "1.5vh",
-                                }}
-                              >
-                                Processing:
-                              </Typography>
-                            </div>
-                            <CustomPagination
-                              arr={[bfsProcessing]}
-                              borderColor="white"
-                              textColor="white"
-                              selectedFontWeight="normal"
-                              showArrows={false}
-                            />
-                          </div>
+                            )}
+                          </Typography>
                         </div>
-                      )}
-                      {algoTitle === "DFS" && (
-                        <div
-                          style={{
-                            display: "flex",
-                            flexDirection: "column",
-                            gap: "10px",
-                          }}
-                        >
+                        {algoTitle === "BFS" && (
                           <div
                             style={{
                               display: "flex",
-                              alignItems: "center",
-                              marginTop: "3vh",
-                              marginLeft: "3vh",
+                              flexDirection: "column",
+                              gap: "10px",
                             }}
                           >
                             <div
-                              style={{ minWidth: "100px", textAlign: "left" }}
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                marginTop: "3vh",
+                                marginLeft: "3vh",
+                              }}
                             >
-                              <Typography
-                                component="div"
-                                variant="body2"
-                                sx={{
-                                  color: "white",
-                                  userSelect: "none",
-                                  fontSize: "1.3vh",
-                                }}
+                              <div
+                                style={{ minWidth: "100px", textAlign: "left" }}
                               >
-                                Stack:
-                              </Typography>
+                                <Typography
+                                  component="div"
+                                  variant="body2"
+                                  sx={{
+                                    color: "white",
+                                    userSelect: "none",
+                                    fontSize: "1.5vh",
+                                  }}
+                                >
+                                  Queue:
+                                </Typography>
+                              </div>
+                              <CustomPagination
+                                arr={bfsQueue}
+                                borderColor="#DB380F"
+                                textColor="#DB380F"
+                                selectedFontWeight="bold"
+                                showArrows={true}
+                              />
                             </div>
-                            <CustomPagination
-                              arr={dfsStack}
-                              borderColor="#DB380F"
-                              textColor="#DB380F"
-                              selectedFontWeight="bold"
-                              showArrows={true}
-                            />
+                            <div
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                marginTop: "1vh",
+                                marginLeft: "3vh",
+                              }}
+                            >
+                              <div
+                                style={{ minWidth: "100px", textAlign: "left" }}
+                              >
+                                <Typography
+                                  component="div"
+                                  variant="body2"
+                                  sx={{
+                                    color: "white",
+                                    userSelect: "none",
+                                    fontSize: "1.5vh",
+                                  }}
+                                >
+                                  Processing:
+                                </Typography>
+                              </div>
+                              <CustomPagination
+                                arr={[bfsProcessing]}
+                                borderColor="white"
+                                textColor="white"
+                                selectedFontWeight="normal"
+                                showArrows={false}
+                              />
+                            </div>
                           </div>
+                        )}
+                        {algoTitle === "DFS" && (
                           <div
                             style={{
                               display: "flex",
-                              alignItems: "center",
-                              marginTop: "1vh",
-                              marginLeft: "3vh",
+                              flexDirection: "column",
+                              gap: "10px",
                             }}
                           >
                             <div
-                              style={{ minWidth: "100px", textAlign: "left" }}
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                marginTop: "3vh",
+                                marginLeft: "3vh",
+                              }}
                             >
-                              <Typography
-                                component="div"
-                                variant="body2"
-                                sx={{
-                                  color: "white",
-                                  userSelect: "none",
-                                  fontSize: "1.3vh",
-                                }}
+                              <div
+                                style={{ minWidth: "100px", textAlign: "left" }}
                               >
-                                Processing:
-                              </Typography>
+                                <Typography
+                                  component="div"
+                                  variant="body2"
+                                  sx={{
+                                    color: "white",
+                                    userSelect: "none",
+                                    fontSize: "1.3vh",
+                                  }}
+                                >
+                                  Stack:
+                                </Typography>
+                              </div>
+                              <CustomPagination
+                                arr={dfsStack}
+                                borderColor="#DB380F"
+                                textColor="#DB380F"
+                                selectedFontWeight="bold"
+                                showArrows={true}
+                              />
                             </div>
-                            <CustomPagination
-                              arr={[dfsProcessing]}
-                              borderColor="white"
-                              textColor="white"
-                              selectedFontWeight="normal"
-                              showArrows={false}
-                            />
+                            <div
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                marginTop: "1vh",
+                                marginLeft: "3vh",
+                              }}
+                            >
+                              <div
+                                style={{ minWidth: "100px", textAlign: "left" }}
+                              >
+                                <Typography
+                                  component="div"
+                                  variant="body2"
+                                  sx={{
+                                    color: "white",
+                                    userSelect: "none",
+                                    fontSize: "1.3vh",
+                                  }}
+                                >
+                                  Processing:
+                                </Typography>
+                              </div>
+                              <CustomPagination
+                                arr={[dfsProcessing]}
+                                borderColor="white"
+                                textColor="white"
+                                selectedFontWeight="normal"
+                                showArrows={false}
+                              />
+                            </div>
                           </div>
-                        </div>
-                      )}
-                      {algoTitle === "Dijkstra" && (
-                        <div style={{ minWidth: "100px", textAlign: "left" }}>
-                          {dijkstraState.steps[dijkstraState.currentStepIndex]
-                            ?.currentShortest ? (
-                            <Table size="small">
-                              <TableHead>
-                                <TableRow>
-                                  <TableCell style={{ color: "white" }}>
-                                    Node
-                                  </TableCell>
-                                  <TableCell style={{ color: "white" }}>
-                                    Current Distance
-                                  </TableCell>
-                                </TableRow>
-                              </TableHead>
-                              <TableBody>
-                                {Array.from(
-                                  dijkstraState.steps[
-                                    dijkstraState.currentStepIndex
-                                  ]?.currentShortest.entries() as Iterable<
-                                    [string, number]
-                                  >
-                                ).map(([nodeID, currentDistance]) => (
-                                  <TableRow key={nodeID}>
+                        )}
+                        {algoTitle === "Dijkstra" && (
+                          <div style={{ minWidth: "100px", textAlign: "left" }}>
+                            {dijkstraState.steps[dijkstraState.currentStepIndex]
+                              ?.currentShortest ? (
+                              <Table size="small">
+                                <TableHead>
+                                  <TableRow>
                                     <TableCell style={{ color: "white" }}>
-                                      {nodeID.length < 4
-                                        ? nodeID
-                                        : nodeID.slice(-3)}
+                                      Node
                                     </TableCell>
                                     <TableCell style={{ color: "white" }}>
-                                      {/* This is a bit hacky, but infinity is stored as a string for json reasons; therefore there's a type mismatch, thus the any */}
-                                      {(currentDistance as any) === "Infinity"
-                                        ? "∞"
-                                        : currentDistance}
+                                      Current Distance
                                     </TableCell>
                                   </TableRow>
-                                ))}
-                              </TableBody>
-                            </Table>
-                          ) : (
-                            <div style={{ color: "white" }}>
-                              Loading data...
-                            </div>
-                          )}
-                        </div>
-                      )}
-                    </Carousel>
-                  </ConfigProvider>
-                </div>
-
-                {/* buttons */}
-                <div
-                  style={{
-                    backgroundColor: "transparent",
-                    position: "fixed",
-                    bottom: "2.5vh",
-                    right: "1vw",
-                    zIndex: "20",
-                    display: "flex",
-                    justifyContent: "flex-end",
-                  }}
-                >
-                  <button
-                    onMouseEnter={() => setLeftIsHovered(true)}
-                    onMouseLeave={() => setLeftIsHovered(false)}
-                    onMouseDown={() => setIsLeftClicked(true)}
-                    onMouseUp={() => setIsLeftClicked(false)}
-                    onClick={handlePreviousButtonClick}
-                    disabled={atStart}
+                                </TableHead>
+                                <TableBody>
+                                  {Array.from(
+                                    dijkstraState.steps[
+                                      dijkstraState.currentStepIndex
+                                    ]?.currentShortest.entries() as Iterable<
+                                      [string, number]
+                                    >
+                                  ).map(([nodeID, currentDistance]) => (
+                                    <TableRow key={nodeID}>
+                                      <TableCell style={{ color: "white" }}>
+                                        {nodeID.length < 4
+                                          ? nodeID
+                                          : nodeID.slice(-3)}
+                                      </TableCell>
+                                      <TableCell style={{ color: "white" }}>
+                                        {/* This is a bit hacky, but infinity is stored as a string for json reasons; therefore there's a type mismatch, thus the any */}
+                                        {(currentDistance as any) === "Infinity"
+                                          ? "∞"
+                                          : currentDistance}
+                                      </TableCell>
+                                    </TableRow>
+                                  ))}
+                                </TableBody>
+                              </Table>
+                            ) : (
+                              <div style={{ color: "white" }}>
+                                Loading data...
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </Carousel>
+                    </ConfigProvider>
+                  </div>
+                  {/* buttons */}
+                  <div
                     style={{
-                      userSelect: "none",
-                      cursor: "pointer",
-                      backgroundColor: "inherit",
-                      border: "none",
-                      outline: "none",
-                      overflow: "hidden",
-                      position: "relative",
+                      backgroundColor: "transparent",
+                      position: "fixed",
+                      bottom: "2.5vh",
+                      right: "1vw",
+                      zIndex: "20",
+                      display: "flex",
+                      justifyContent: "flex-end",
                     }}
                   >
-                    <LeftArrow
+                    <button
+                      onMouseEnter={() => setLeftIsHovered(true)}
+                      onMouseLeave={() => setLeftIsHovered(false)}
+                      onMouseDown={() => setIsLeftClicked(true)}
+                      onMouseUp={() => setIsLeftClicked(false)}
+                      onClick={handlePreviousButtonClick}
+                      disabled={atStart}
                       style={{
-                        filter: atStart
-                          ? "brightness(75%)"
-                          : isLeftClicked
-                            ? "brightness(200%)"
-                            : LeftIsHovered
-                              ? "brightness(130%)"
-                              : "none", // Increase brightness on hover and click
+                        userSelect: "none",
+                        cursor: "pointer",
+                        backgroundColor: "inherit",
+                        border: "none",
+                        outline: "none",
+                        overflow: "hidden",
+                        position: "relative",
                       }}
-                    />
-                  </button>
-                  <button
-                    onMouseEnter={() => setRightIsHovered(true)}
-                    onMouseLeave={() => setRightIsHovered(false)}
-                    onMouseDown={() => setIsRightClicked(true)}
-                    onMouseUp={() => setIsRightClicked(false)}
-                    onClick={handleNextButtonClick}
-                    disabled={atEnd}
-                    style={{
-                      userSelect: "none",
-                      cursor: "pointer",
-                      backgroundColor: "inherit",
-                      border: "none",
-                      outline: "none",
-                      overflow: "hidden",
-                    }}
-                  >
-                    <RightArrow
+                    >
+                      <LeftArrow
+                        style={{
+                          filter: atStart
+                            ? "brightness(75%)"
+                            : isLeftClicked
+                              ? "brightness(200%)"
+                              : LeftIsHovered
+                                ? "brightness(130%)"
+                                : "none", // Increase brightness on hover and click
+                        }}
+                      />
+                    </button>
+                    <button
+                      onMouseEnter={() => setRightIsHovered(true)}
+                      onMouseLeave={() => setRightIsHovered(false)}
+                      onMouseDown={() => setIsRightClicked(true)}
+                      onMouseUp={() => setIsRightClicked(false)}
+                      onClick={handleNextButtonClick}
+                      disabled={atEnd}
                       style={{
-                        filter: atEnd
-                          ? "brightness(75%)"
-                          : isRightClicked
-                            ? "brightness(200%)"
-                            : RightIsHovered
-                              ? "brightness(130%)"
-                              : "none", // Increase brightness on hover and click
+                        userSelect: "none",
+                        cursor: "pointer",
+                        backgroundColor: "inherit",
+                        border: "none",
+                        outline: "none",
+                        overflow: "hidden",
                       }}
-                    />
-                  </button>
-                </div>
-              </CardContent>
-            </div>
-          ) : (
-            <div style={cardSizing} className="hideScrollbar">
-              <div
-                className="artwork-container"
-                style={{
-                  position: "relative",
-                  height: "30vh",
-                }}
-              >
-                <CardMedia
-                  component="img"
-                  height="200"
-                  image={image}
-                  sx={{
-                    position: "relative",
-                    height: "30vh", // This is how much of the image you can see
-                    objectFit: "cover",
-                    userSelect: "none",
-                  }}
-                />{" "}
-                <Typography
-                  variant="caption"
-                  sx={{
-                    position: "absolute", // absolute relative to artwork
-                    bottom: "1vh",
-                    right: "1vh",
-                    color: "white",
-                    backgroundColor: "rgba(0, 0, 0, 0.5)",
-                    padding: "2px 5px",
-                    borderRadius: "4px",
-                    zIndex: 1000, // puts this above the artwork
-                  }}
-                >
-                  {artWork[algoTitle as keyof typeof titleToImage].map(
-                    (part, index) => (
-                      <span
-                        key={index}
-                        style={{ color: index === 0 ? "white" : "#FABD2F" }}
-                      >
-                        {part}
-                      </span>
-                    )
-                  )}
-                </Typography>
+                    >
+                      <RightArrow
+                        style={{
+                          filter: atEnd
+                            ? "brightness(75%)"
+                            : isRightClicked
+                              ? "brightness(200%)"
+                              : RightIsHovered
+                                ? "brightness(130%)"
+                                : "none", // Increase brightness on hover and click
+                        }}
+                      />
+                    </button>
+                  </div>
+                </CardContent>
               </div>
-              <CardContent
-                sx={{
-                  overflow: "hidden", // Allows content to scroll if it overflows
-                  flexGrow: 1, // Allows content area to grow and fill available space
-                }}
-              >
-                <div>
-                  <Typography
-                    gutterBottom
-                    variant="h5"
-                    component="div"
-                    color="white"
-                    fontSize="1.5em"
-                    sx={{ userSelect: "none" }}
-                  >
-                    {algoTitle}
-                  </Typography>
-                </div>
-                <div>
-                  <Typography
-                    variant="body2"
-                    color="white"
-                    fontSize=".75em"
-                    sx={{ userSelect: "none" }}
-                  >
-                    Parameters
-                  </Typography>
+            ) : (
+              <div style={cardSizing} className="hideScrollbar">
+                <div
+                  className="artwork-container"
+                  style={{
+                    position: "relative",
+                    height: "30vh",
+                  }}
+                >
+                  <CardMedia
+                    component="img"
+                    height="200"
+                    image={image}
+                    sx={{
+                      position: "relative",
+                      height: "30vh", // This is how much of the image you can see
+                      objectFit: "cover",
+                      userSelect: "none",
+                    }}
+                  />{" "}
                   <Typography
                     variant="caption"
-                    color="white"
-                    fontSize=".7em"
-                    sx={{ userSelect: "none" }}
+                    sx={{
+                      position: "absolute", // absolute relative to artwork
+                      bottom: "1vh",
+                      right: "1vh",
+                      color: "white",
+                      backgroundColor: "rgba(0, 0, 0, 0.5)",
+                      padding: "2px 5px",
+                      borderRadius: "4px",
+                      zIndex: 1000, // puts this above the artwork
+                    }}
                   >
-                    <List>
-                      {(
-                        algoParameters[
-                          algoTitle as keyof typeof algoParameters
-                        ] || []
-                      ).map((param, index) => (
-                        <ListItem key={index}>
-                          {param}:
-                          {param === "Source Node" && (
-                            <TextField
-                              className={isSourceValid ? "" : "jiggle"}
-                              variant="standard"
-                              autoComplete="off"
-                              size="small"
-                              value={source}
-                              onKeyDown={handleKeyDown}
-                              onChange={handleInputChange}
-                              onContextMenu={handleRightClick}
-                              onBlur={handleBlur}
-                              InputProps={{
-                                style: { color: "white" }, // Change input text color
-                                inputProps: {
-                                  style: { fontSize: ".7em" }, // Set font size for the input
-                                },
-                                sx: {
-                                  "&:before": {
-                                    borderBottom: "1px solid lightgray", // Set underline to light gray when not focused
-                                  },
-                                  "&:hover:not(.Mui-disabled):before": {
-                                    borderBottom: "1px solid white", // Keep consistent with your focused state if needed
-                                  },
-                                  "&:after": {
-                                    borderBottom: "1.5px solid white", // Ensure this matches the default state or focused state
-                                  },
-                                },
-                              }}
-                              sx={{ marginLeft: 1.5, width: "auto" }} // Adjust spacing and width as needed
-                            />
-                          )}
-                          {param === "Show Weights" && (
-                            <ConfigProvider
-                              theme={{
-                                token: {
-                                  colorBgContainer: "#B2BEB5",
-                                  colorBorder: "dark gray",
-                                  colorPrimary: "black",
-                                },
-                              }}
-                            >
-                              <Checkbox
-                                checked={showWeight}
-                                style={{ paddingLeft: ".5vw" }}
-                              />
-                            </ConfigProvider>
-                          )}
-                          {param === "Weights ≥ 0" && (
-                            <ConfigProvider
-                              theme={{
-                                token: {
-                                  colorBgContainer: "#B2BEB5",
-                                  colorBorder: "dark gray",
-                                  colorPrimary: "black",
-                                },
-                              }}
-                            >
-                              <Checkbox
-                                checked={!hasNegativeWeight}
-                                style={{ paddingLeft: ".5vw" }}
-                              />
-                            </ConfigProvider>
-                          )}
-                          {param === "Unoriented" && (
-                            <ConfigProvider
-                              theme={{
-                                token: {
-                                  colorBgContainer: "#B2BEB5",
-                                  colorBorder: "dark gray",
-                                  colorPrimary: "black",
-                                },
-                              }}
-                            >
-                              <Checkbox
-                                checked={!isOriented}
-                                style={{ paddingLeft: ".5vw" }}
-                              />
-                            </ConfigProvider>
-                          )}
-                        </ListItem>
-                      ))}
-                    </List>
+                    {artWork[algoTitle as keyof typeof titleToImage].map(
+                      (part, index) => (
+                        <span
+                          key={index}
+                          style={{ color: index === 0 ? "white" : "#FABD2F" }}
+                        >
+                          {part}
+                        </span>
+                      )
+                    )}
                   </Typography>
                 </div>
-              </CardContent>
-              <CardActions
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  padding: "0.5rem 1rem",
-                }}
-              >
-                <Button
-                  onClick={handleRunClick}
-                  style={{
-                    color: buttonColor === "error" ? "#BA2D0B" : "white",
-                    borderColor: buttonColor === "error" ? "#BA2D0B" : "white",
-                    border:
-                      buttonColor === "error"
-                        ? "1px solid #BA2D0B"
-                        : "1px solid white",
-                    padding: "6px 10px",
-                    fontSize: "0.65rem",
-                    position: "fixed", // Use fixed positioning
-                    bottom: "2vh", // Distance from the bottom of the viewport
-                    right: "1vw", // Distance from the right of the viewport
+                <CardContent
+                  sx={{
+                    overflow: "hidden", // Allows content to scroll if it overflows
+                    flexGrow: 1, // Allows content area to grow and fill available space
                   }}
                 >
-                  Run
-                </Button>
-              </CardActions>{" "}
-            </div>
-          )}
-        </Card>
-      </div>
-    </Fade>
+                  <div>
+                    <Typography
+                      gutterBottom
+                      variant="h5"
+                      component="div"
+                      color="white"
+                      fontSize="1.5em"
+                      sx={{ userSelect: "none" }}
+                    >
+                      {algoTitle}
+                    </Typography>
+                  </div>
+                  <div>
+                    <Typography
+                      variant="body2"
+                      color="white"
+                      fontSize=".75em"
+                      sx={{ userSelect: "none" }}
+                    >
+                      Parameters
+                    </Typography>
+                    <Typography
+                      variant="caption"
+                      color="white"
+                      fontSize=".7em"
+                      sx={{ userSelect: "none" }}
+                    >
+                      <List>
+                        {(
+                          algoParameters[
+                            algoTitle as keyof typeof algoParameters
+                          ] || []
+                        ).map((param, index) => (
+                          <ListItem key={index}>
+                            {param}:
+                            {param === "Source Node" && (
+                              <TextField
+                                className={isSourceValid ? "" : "jiggle"}
+                                variant="standard"
+                                autoComplete="off"
+                                size="small"
+                                value={source}
+                                onKeyDown={handleKeyDown}
+                                onChange={handleInputChange}
+                                onContextMenu={handleRightClick}
+                                onBlur={handleBlur}
+                                InputProps={{
+                                  style: { color: "white" }, // Change input text color
+                                  inputProps: {
+                                    style: { fontSize: ".7em" }, // Set font size for the input
+                                  },
+                                  sx: {
+                                    "&:before": {
+                                      borderBottom: "1px solid lightgray", // Set underline to light gray when not focused
+                                    },
+                                    "&:hover:not(.Mui-disabled):before": {
+                                      borderBottom: "1px solid white", // Keep consistent with your focused state if needed
+                                    },
+                                    "&:after": {
+                                      borderBottom: "1.5px solid white", // Ensure this matches the default state or focused state
+                                    },
+                                  },
+                                }}
+                                sx={{ marginLeft: 1.5, width: "auto" }} // Adjust spacing and width as needed
+                              />
+                            )}
+                            {param === "Show Weights" && (
+                              <ConfigProvider
+                                theme={{
+                                  token: {
+                                    colorBgContainer: "#B2BEB5",
+                                    colorBorder: "dark gray",
+                                    colorPrimary: "black",
+                                  },
+                                }}
+                              >
+                                <Checkbox
+                                  checked={showWeight}
+                                  style={{ paddingLeft: ".5vw" }}
+                                />
+                              </ConfigProvider>
+                            )}
+                            {param === "Weights ≥ 0" && (
+                              <ConfigProvider
+                                theme={{
+                                  token: {
+                                    colorBgContainer: "#B2BEB5",
+                                    colorBorder: "dark gray",
+                                    colorPrimary: "black",
+                                  },
+                                }}
+                              >
+                                <Checkbox
+                                  checked={!hasNegativeWeight}
+                                  style={{ paddingLeft: ".5vw" }}
+                                />
+                              </ConfigProvider>
+                            )}
+                            {param === "Unoriented" && (
+                              <ConfigProvider
+                                theme={{
+                                  token: {
+                                    colorBgContainer: "#B2BEB5",
+                                    colorBorder: "dark gray",
+                                    colorPrimary: "black",
+                                  },
+                                }}
+                              >
+                                <Checkbox
+                                  checked={!isOriented}
+                                  style={{ paddingLeft: ".5vw" }}
+                                />
+                              </ConfigProvider>
+                            )}
+                          </ListItem>
+                        ))}
+                      </List>
+                    </Typography>
+                  </div>
+                </CardContent>
+                <CardActions
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    padding: "0.5rem 1rem",
+                  }}
+                >
+                  <Button
+                    onClick={handleRunClick}
+                    style={{
+                      color: buttonColor === "error" ? "#BA2D0B" : "white",
+                      borderColor:
+                        buttonColor === "error" ? "#BA2D0B" : "white",
+                      border:
+                        buttonColor === "error"
+                          ? "1px solid #BA2D0B"
+                          : "1px solid white",
+                      padding: "6px 10px",
+                      fontSize: "0.65rem",
+                      position: "fixed", // Use fixed positioning
+                      bottom: "2vh", // Distance from the bottom of the viewport
+                      right: "1vw", // Distance from the right of the viewport
+                    }}
+                  >
+                    Run
+                  </Button>
+                </CardActions>{" "}
+              </div>
+            )}
+          </Card>
+        </div>
+      </Fade>
+    </div>
   );
 };
 

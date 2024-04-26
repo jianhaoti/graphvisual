@@ -1,10 +1,10 @@
 import React from "react";
-import { HighlightInstructions } from "../dijkstra/dijkstraHighlightInstructions"; // Ensure this path matches your project structure
-import { useDijkstra } from "./dijkstraContext.js";
+import { HighlightInstructions } from "./primHighlightInstructions"; // Ensure this path matches your project structure
+import { usePrim } from "./primContext.js";
 
-const DijkstraPseudocode = ({ source, name }) => {
-  const { dijkstraState } = useDijkstra();
-  const { currentStepIndex } = dijkstraState;
+const PrimPseudocode = ({ source, name }) => {
+  const { primState } = usePrim();
+  const { currentStepIndex } = primState;
   const highlightInstructions = HighlightInstructions();
 
   // Define colors and styles
@@ -19,7 +19,7 @@ const DijkstraPseudocode = ({ source, name }) => {
   const renderLineWithSyntaxHighlighting = (line) => {
     // Update the regular expression to exclude 'enqueue' and 'dequeue'
     const regex =
-      /\b(init|minHeap|set|hashMap|string|array|currDist|H|Visited|processing)\b/g;
+      /\b(init|minHeap|set|hashMap|string|array|currDist|H|Visited|processing|Neighbors)\b/g;
 
     // Function to replace matched keywords with colored spans, excluding 'enqueue' and 'dequeue'
     const replaceFunc = (match) => {
@@ -39,6 +39,7 @@ const DijkstraPseudocode = ({ source, name }) => {
         case "H":
         case "Visited":
         case "processing":
+        case "Neighbors":
           color = objectColor;
           break;
         default:
@@ -56,16 +57,17 @@ const DijkstraPseudocode = ({ source, name }) => {
 
   // Pseudocode lines
   const pseudocodeLines = [
-    `Dijkstra (${name}, ${modifiedSource}):`,
-    `  init minHeap H = [${modifiedSource}]`,
-    `  init hashMap currDist`,
-    `  currDist[${modifiedSource}] = 0`,
-    `  for node != ${modifiedSource}`,
-    `    currDist[node] = ∞`,
+    `Prim (${name}, ${modifiedSource}):`,
+    `  // use DFS to find connected component`,
+    `  init set Nodes = connComp(${modifiedSource})`,
     `  init set Visited`,
+    `  // iteratively build the mst`,
+    `  init mst = []`,
+    `  // minimize over neighboring edges of mst`,
+    `  init heap H = [((0, ${modifiedSource}, None))]`,
     ``,
     `  while (H is nonempty)`,
-    `    processing = H.heapPop()`,
+    `    (processing, prevNode) = H.heapPop()`,
     `    if processing in Visited`,
     `      skip this iteration`,
     ``,
@@ -73,15 +75,13 @@ const DijkstraPseudocode = ({ source, name }) => {
     `    for n in Neighbors:`,
     `      edge = (processing, n)`,
     `      weight = weight[edge]`,
-    ``,
-    `      // distance from source`,
-    `      dist = currDist[processing]`,
+    `      dis = currentDistance[processing]`,
     ``,
     `      if (n is not in Visited):`,
-    `        newDist = dist + weight`,
-    `        if newDist < currDist[n]:`,
-    `          H.heapPush(newDist, n)`,
-    `          currDist[n] = newDist`,
+    `      newDist = dis + weight`,
+    `      if newDist < currDist[n]:`,
+    `        H.heapPush(newDist, n)`,
+    `        currDist[n] = newDist`,
     `    Visited.add(processing)`,
   ];
 
@@ -95,11 +95,10 @@ const DijkstraPseudocode = ({ source, name }) => {
         wordWrap: "break-word",
         textAlign: "left",
         paddingTop: "20px",
-        // backgroundColor: "red",
       }}
     >
       {pseudocodeLines.map((line, index) => {
-        const isComment = line.includes("//");
+        // Determine the opacity based on the highlightInstructions for this line
         const currentInstructions = highlightInstructions[currentStepIndex];
         const shouldHighlight = currentInstructions
           ? currentInstructions.includes(index)
@@ -110,18 +109,15 @@ const DijkstraPseudocode = ({ source, name }) => {
           opacity = 0.8;
         }
 
-        if (isComment) {
-          opacity = 0.3;
-        }
-
         return (
           <div
             key={index}
             style={{
               display: "flex",
+              flexDirection: "row", // Ensures line number and code are in the same row
+              alignItems: "flex-start", // Aligns items to the start, respecting top alignment
               opacity,
               fontSize: "1em",
-              backgroundColor: "transparent",
             }}
           >
             <span
@@ -136,9 +132,7 @@ const DijkstraPseudocode = ({ source, name }) => {
             >
               {index + 1}
             </span>
-            <span style={{ backgroundColor: "transparent" }}>
-              {renderLineWithSyntaxHighlighting(line)}
-            </span>
+            <span>{renderLineWithSyntaxHighlighting(line)}</span>
           </div>
         );
       })}
@@ -146,4 +140,4 @@ const DijkstraPseudocode = ({ source, name }) => {
   );
 };
 
-export default DijkstraPseudocode;
+export default PrimPseudocode;

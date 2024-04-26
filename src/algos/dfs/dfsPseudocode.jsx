@@ -17,8 +17,7 @@ const DfsPseudocode = ({ source, name }) => {
 
   const renderLineWithSyntaxHighlighting = (line) => {
     // Update the regular expression to exclude 'enqueue' and 'dequeue'
-    const regex =
-      /\b(init|stack|set|string|array|S|Visited|processing|Neighbors)\b/g;
+    const regex = /\b(init|stack|set|string|array|S|Visited|processing)\b/g;
 
     // Function to replace matched keywords with colored spans, excluding 'enqueue' and 'dequeue'
     const replaceFunc = (match) => {
@@ -36,7 +35,6 @@ const DfsPseudocode = ({ source, name }) => {
         case "S":
         case "Visited":
         case "processing":
-        case "Neighbors":
           color = objectColor;
           break;
         default:
@@ -98,7 +96,7 @@ const DfsPseudocode = ({ source, name }) => {
               flexDirection: "row", // Ensures line number and code are in the same row
               alignItems: "flex-start", // Aligns items to the start, respecting top alignment
               opacity,
-              fontSize: "1.1em",
+              fontSize: "1em",
             }}
           >
             <span

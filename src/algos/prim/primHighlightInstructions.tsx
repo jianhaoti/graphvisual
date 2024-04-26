@@ -16,7 +16,7 @@ export const HighlightInstructions = () => {
     if (containsProcessing) {
       // highlight the next three entries
     } else {
-      // hilight the next two entries
+      // higlight this entries with the useles block
     }
   }
 
