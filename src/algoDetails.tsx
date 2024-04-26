@@ -34,6 +34,7 @@ import { useDijkstra } from "./algos/dijkstra/dijkstraContext.js";
 import DijkstraPseudocode from "./algos/dijkstra/dijkstraPseudocode.jsx";
 
 import { usePrim } from "./algos/prim/primContext.js";
+import PrimPseudocode from "./algos/prim/primPseudocode.jsx";
 
 import { ReactComponent as RightArrow } from "./assets/rightArrow.svg";
 import { ReactComponent as LeftArrow } from "./assets/leftArrow.svg";
@@ -200,6 +201,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
     BFS: BfsPseudocode,
     DFS: DfsPseudocode,
     Dijkstra: DijkstraPseudocode,
+    Prim: PrimPseudocode,
   };
 
   const AlgoPseudocode =
@@ -1134,27 +1136,36 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                     flexGrow: 1, // Allows content area to grow and fill available space
                   }}
                 >
-                  <div>
+                  <div style={{ display: "flex", alignItems: "center" }}>
+                    {" "}
                     <Typography
                       gutterBottom
                       variant="h5"
                       component="div"
                       color="white"
                       fontSize="1.5em"
-                      sx={{ userSelect: "none" }}
+                      sx={{ userSelect: "none", marginRight: ".6vw" }} // Adding margin to separate the two items
                     >
                       {algoTitle}
                     </Typography>
+                    <Typography
+                      variant="body2"
+                      color="lightgray"
+                      fontSize=".65em"
+                      sx={{ userSelect: "none" }}
+                    >
+                      parameters
+                    </Typography>
                   </div>
                   <div>
-                    <Typography
+                    {/* <Typography
                       variant="body2"
                       color="white"
                       fontSize=".75em"
                       sx={{ userSelect: "none" }}
                     >
                       Parameters
-                    </Typography>
+                    </Typography> */}
                     <Typography
                       variant="caption"
                       color="white"

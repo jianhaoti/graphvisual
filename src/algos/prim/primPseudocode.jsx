@@ -61,27 +61,26 @@ const PrimPseudocode = ({ source, name }) => {
     `  // use DFS to find connected component`,
     `  init set Nodes = connComp(${modifiedSource})`,
     `  init set Visited`,
+    ``,
     `  // iteratively build the mst`,
     `  init mst = []`,
+    ``,
     `  // minimize over neighboring edges of mst`,
-    `  init heap H = [((0, ${modifiedSource}, None))]`,
+    `  init heap H = [(0, ${modifiedSource}, None)]`,
     ``,
     `  while (H is nonempty)`,
     `    (processing, prevNode) = H.heapPop()`,
     `    if processing in Visited`,
     `      skip this iteration`,
     ``,
-    `    init array Neighbors of processing`,
-    `    for n in Neighbors:`,
-    `      edge = (processing, n)`,
-    `      weight = weight[edge]`,
-    `      dis = currentDistance[processing]`,
+    `    // build the mst`,
+    `    if (prevNode != None):`,
+    `    mst.append((prevNode, processing))`,
     ``,
-    `      if (n is not in Visited):`,
-    `      newDist = dis + weight`,
-    `      if newDist < currDist[n]:`,
-    `        H.heapPush(newDist, n)`,
-    `        currDist[n] = newDist`,
+    `    for n in Neighbor of processing:`,
+    `      if (n not in Visited):`,
+    `        H.heapPush((n, processing))`,
+    ``,
     `    Visited.add(processing)`,
   ];
 
@@ -104,8 +103,8 @@ const PrimPseudocode = ({ source, name }) => {
           ? currentInstructions.includes(index)
           : false;
         let opacity = shouldHighlight ? 1 : 0.2;
-        // Adjust opacity for lines 1-5
-        if (index >= 0 && index <= 8) {
+        // Adjust opacity for beginning lines
+        if (index >= 0 && index <= 9) {
           opacity = 0.8;
         }
 
