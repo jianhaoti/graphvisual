@@ -112,6 +112,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
   const cardSizing = {
     height: "55vh",
     width: "30vw",
+    overflow: "auto",
   };
 
   /* #region Artwork */
@@ -735,7 +736,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
   );
   // /* #endregion */
   return (
-    <div>
+    <div style={{}}>
       <Fade in={true} timeout={500}>
         <div
           style={{
@@ -775,7 +776,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                     flexGrow: 1, // Allows content area to grow and fill available space
                     backgroundColor: "#1E1E1E",
                     justifyContent: "space-between", // Push content to start and buttons to end
-                    overflow: "hidden",
+                    overflow: "auto",
                     position: "relative", // Needed for absolute positioning of children
                   }}
                 >
@@ -809,6 +810,7 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
                             sx={{
                               height: "40vh",
                               width: "40vw",
+                              overflow: "auto",
                             }}
                           >
                             {AlgoPseudocode ? (
