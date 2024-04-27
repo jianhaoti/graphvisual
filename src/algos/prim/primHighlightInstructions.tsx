@@ -8,20 +8,20 @@ export const HighlightInstructions = () => {
 
   let i = 0;
   while (i < highlightInstructions.length) {
-    const nodeStatus = primState.steps[primState.currentStepIndex]?.nodeStatus;
-    const containsProcessing = Object.values(nodeStatus).some(
+    const nodeStatus = primState.steps[i]?.nodeStatus;
+    const containsProcessing = Array.from(nodeStatus.values()).some(
       (status) => status === "processing"
     );
 
     if (containsProcessing) {
       // highlight the next three entries
-      highlightInstructions[i] = [10, 11, 12];
-      highlightInstructions[i + 1] = [14, 15, 16, 17, 18, 19, 20];
-      highlightInstructions[i + 2] = [22];
+      highlightInstructions[i] = [12, 13, 14];
+      highlightInstructions[i + 1] = [16, 17, 18, 19, 20, 21, 22];
+      highlightInstructions[i + 2] = [24];
       i += 3;
     } else {
       // higlight this entries with the useless block
-      highlightInstructions[i] = [10, 11, 12];
+      highlightInstructions[i] = [12, 13, 14];
 
       i += 1;
     }

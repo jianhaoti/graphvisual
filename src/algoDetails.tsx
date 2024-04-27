@@ -725,15 +725,25 @@ const AlgoDetails: React.FC<AlgoDetailsProps> = ({
   /* #endregion */
 
   // /* #region Debugging */
+  const nodeStatus = primState.steps[primState.currentStepIndex]?.nodeStatus;
+  const nodeStatusMap =
+    primState.steps[primState.currentStepIndex]?.nodeStatus || new Map();
+  const containsProcessing = Array.from(nodeStatusMap.values()).some(
+    (status) => status === "processing"
+  );
+
   useEffect(
     () =>
       console.log(
-        primState.steps[primState.currentStepIndex]?.nodeStatus,
+        nodeStatus,
         "Current Index:",
-        primState.currentStepIndex
+        primState.currentStepIndex,
+        "Contains a processing:",
+        containsProcessing
       ),
     [primState]
   );
+
   // /* #endregion */
   return (
     <div style={{}}>

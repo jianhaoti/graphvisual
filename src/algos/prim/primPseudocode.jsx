@@ -104,7 +104,7 @@ const PrimPseudocode = ({ source, name }) => {
           : false;
         let opacity = shouldHighlight ? 1 : 0.2;
         // Adjust opacity for beginning lines
-        if (index >= 0 && index <= 9) {
+        if (index >= 0 && index <= 11) {
           opacity = 0.8;
         }
 
