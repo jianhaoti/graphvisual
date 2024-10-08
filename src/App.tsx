@@ -2,7 +2,6 @@ import React, { useState, useRef } from "react";
 import "./App.css";
 import Graph from "./Graph";
 import ControlRoom from "./controlRoom";
-import { Button, ButtonGroup } from "@mui/material";
 import { ReactComponent as AlgoIcon } from "./assets/algoIcon.svg";
 import { ReactComponent as DataIcon } from "./assets/dataIcon.svg";
 import TextField from "@mui/material/TextField";
@@ -13,10 +12,20 @@ import { DFSProvider } from "./algos/dfs/dfsContext";
 import { DijkstraProvider } from "./algos/dijkstra/dijkstraContext";
 import { PrimProvider } from "./algos/prim/primContext";
 
+import {
+  Button,
+  ButtonGroup,
+  Modal,
+  Box,
+  Typography,
+  List,
+  ListItem,
+} from "@mui/material";
+
 function App() {
   const [showWatermark, setShowWatermark] = useState(true);
   const [mode, setMode] = useState("data");
-  const [name, setName] = useState("Untitled");
+  const [name, setName] = useState("Graph Visual");
   const textFieldRef = useRef<HTMLInputElement>(null);
 
   // Controls functionality of +/- nodes and edges
@@ -29,7 +38,15 @@ function App() {
   const [selectedNode, setSelectedNode] = useState<string | null>(null);
   const [selectedEdge, setSelectedEdge] = useState<string | null>(null);
   const [isOriented, setIsOriented] = useState(true);
-  const [showWeight, setShowWeight] = useState(true);
+  const [showWeight, setShowWeight] = useState(false);
+
+  // instructions state
+  const [openModal, setOpenModal] = useState(true);
+
+  // instructions close
+  const handleCloseModal = () => {
+    setOpenModal(false);
+  };
 
   // name of graph
   const handleTyping = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -191,6 +208,51 @@ function App() {
                 name={name}
               />
             </main>
+
+            {/* Instructions Modal */}
+            <Modal
+              open={openModal}
+              onClose={handleCloseModal}
+              aria-labelledby="instructions-modal-title"
+              aria-describedby="instructions-modal-description"
+            >
+              <Box
+                sx={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  transform: "translate(-50%, -50%)",
+                  width: 400,
+                  bgcolor: "#96AACD",
+                  p: 4,
+                  outline: "none",
+                  borderRadius: "8px",
+                }}
+              >
+                <Typography
+                  id="instructions-modal-title"
+                  variant="h4"
+                  component="h2"
+                >
+                  Instructions
+                </Typography>
+                <List>
+                  <ListItem>1. Left click to create a node</ListItem>
+                  <ListItem>
+                    2. Hold space and drag left click between nodes to create an
+                    edge
+                  </ListItem>
+                  <ListItem>3. Right click to delete edges and nodes</ListItem>
+                  <ListItem>
+                    4. Double left click an edge to reverse orientation
+                  </ListItem>
+                  <ListItem>
+                    5. Double click a node to move the graph, and to copy its
+                    name to your clipboard
+                  </ListItem>
+                </List>
+              </Box>
+            </Modal>
           </BFSProvider>
         </DFSProvider>
       </DijkstraProvider>

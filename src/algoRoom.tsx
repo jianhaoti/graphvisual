@@ -58,17 +58,6 @@ const AlgoRoom: React.FC<AlgoRoomProps> = ({
       grouping: "Shortest Path",
       description: "Gone Fishin'",
     },
-
-    { title: "Prim", grouping: "MST", description: "Greedy Expnasion" },
-    { title: "Kruskal", grouping: "MST", description: "TBD" },
-
-    { title: "TBD", grouping: "TBD", description: "TBD" },
-    { title: "TBD", grouping: "TBD", description: "TBD" },
-    { title: "TBD", grouping: "TBD", description: "TBD" },
-    { title: "TBD", grouping: "TBD", description: "TBD" },
-    { title: "TBD", grouping: "TBD", description: "TBD" },
-    { title: "TBD", grouping: "TBD", description: "TBD" },
-    { title: "TBD", grouping: "TBD", description: "TBD" },
   ];
 
   const handleContextMenu = (e: React.MouseEvent) => {

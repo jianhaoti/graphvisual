@@ -472,8 +472,8 @@ const Graph: React.FC<GraphProps> = ({
   }
   const [config] = useState<WatermarkConfig>({
     content: "Click Me",
-    color: "rgba(0, 0, 0, 0.2)",
-    fontSize: 16,
+    color: "rgba(256, 256, 256, 0.2)",
+    fontSize: 8,
     zIndex: 11,
     rotate: -22,
     gap: [100, 100],
