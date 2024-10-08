@@ -20,7 +20,9 @@ import {
   Typography,
   List,
   ListItem,
+  IconButton,
 } from "@mui/material";
+import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 
 function App() {
   const [showWatermark, setShowWatermark] = useState(true);
@@ -44,8 +46,8 @@ function App() {
   const [openModal, setOpenModal] = useState(true);
 
   // instructions close
-  const handleCloseModal = () => {
-    setOpenModal(false);
+  const handletoggleModal = () => {
+    setOpenModal(!openModal);
   };
 
   // name of graph
@@ -113,34 +115,49 @@ function App() {
           <BFSProvider>
             <main>
               <div className="title-container">
-                <TextField
-                  className="whiteUnderline"
-                  id="standard-multiline-flexible"
-                  value={name}
-                  autoComplete="off"
-                  onChange={handleTyping}
-                  onKeyDown={handleKeyDown}
-                  onFocus={handleFocus}
-                  inputRef={textFieldRef}
-                  inputProps={{ maxLength: 25 }}
-                  InputLabelProps={{
-                    style: { color: "white" }, // Change label color
-                  }}
-                  InputProps={{
-                    style: { color: "white" }, // Change input text color
-                    // Prevent animation on hover by making the underline style consistent
-                    sx: {
-                      "&:hover:not(.Mui-disabled):before": {
-                        borderBottom: "1px solid white", // Keep consistent with your focused state if needed
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  <TextField
+                    className="whiteUnderline"
+                    id="standard-multiline-flexible"
+                    value={name}
+                    autoComplete="off"
+                    onChange={handleTyping}
+                    onKeyDown={handleKeyDown}
+                    onFocus={handleFocus}
+                    inputRef={textFieldRef}
+                    inputProps={{ maxLength: 25 }}
+                    InputLabelProps={{
+                      style: { color: "white" }, // Change label color
+                    }}
+                    InputProps={{
+                      style: { color: "white" }, // Change input text color
+                      // Prevent animation on hover by making the underline style consistent
+                      sx: {
+                        "&:hover:not(.Mui-disabled):before": {
+                          borderBottom: "1px solid white", // Keep consistent with your focused state if needed
+                        },
+                        "&:after": {
+                          borderBottom: "1.5px solid white", // Ensure this matches the default state or focused state
+                        },
                       },
-                      "&:after": {
-                        borderBottom: "1.5px solid white", // Ensure this matches the default state or focused state
-                      },
-                    },
-                  }}
-                  variant="standard"
-                />
+                    }}
+                    variant="standard"
+                  />
+                  <div>
+                    <IconButton
+                      onClick={handletoggleModal}
+                      size="small" // Make the icon smaller
+                      sx={{
+                        marginLeft: 1.5, // Space between TextField and IconButton
+                        padding: 0.5, // Decrease padding to make the button smaller
+                      }}
+                    >
+                      <HelpOutlineIcon sx={{ color: "#96AACD" }} />
+                    </IconButton>
+                  </div>
+                </div>
               </div>
+
               <div className="button-group-container">
                 <ButtonGroup
                   className="control-buttons"
@@ -212,7 +229,7 @@ function App() {
             {/* Instructions Modal */}
             <Modal
               open={openModal}
-              onClose={handleCloseModal}
+              onClose={handletoggleModal}
               aria-labelledby="instructions-modal-title"
               aria-describedby="instructions-modal-description"
             >
