@@ -27,7 +27,7 @@ import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 function App() {
   const [showWatermark, setShowWatermark] = useState(true);
   const [mode, setMode] = useState("data");
-  const [name, setName] = useState("Graph Visual");
+  const [name, setName] = useState("GraphViz");
   const textFieldRef = useRef<HTMLInputElement>(null);
 
   // Controls functionality of +/- nodes and edges
